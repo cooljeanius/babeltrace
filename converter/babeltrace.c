@@ -445,7 +445,14 @@ static int traverse_trace_dir(const char *fpath, const struct stat *sb,
 			"directory file descriptor.\n");
 		return 0;	/* partial error */
 	}
+#ifdef HAVE_OPENAT
 	metafd = openat(dirfd, "metadata", O_RDONLY);
+#else
+	/* use default failure values: */
+	metafd = -1;
+	errno = ENOENT;
+#endif /* HAVE_OPENAT */
+
 	if (metafd < 0) {
 		closeret = close(dirfd);
 		if (closeret < 0) {
@@ -473,7 +480,7 @@ static int traverse_trace_dir(const char *fpath, const struct stat *sb,
 
 		/* Add path to the global list */
 		if (traversed_paths == NULL) {
-			fprintf(stderr, "[error] [Context] Invalid open path array.\n");	
+			fprintf(stderr, "[error] [Context] Invalid open path array.\n");
 			return -1;
 		}
 		g_ptr_array_add(traversed_paths, g_string_new(fpath));

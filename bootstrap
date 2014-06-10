@@ -1,9 +1,14 @@
 #! /bin/sh
 
-set -x
+set -ex
 if [ ! -e config ]; then
 	mkdir config
 fi
 
-libtoolize --force --copy
-autoreconf -i
+if [ -x "`which libtoolize 2>/dev/null`" ]; then
+  libtoolize --force --copy --automake
+elif [ -x "`which glibtoolize 2>/dev/null`" ]; then
+  glibtoolize --force --copy --automake
+fi
+
+autoreconf -fvi -Wall

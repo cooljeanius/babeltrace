@@ -328,7 +328,12 @@ void trace_text(FILE *input, int output)
 	write_packet_header(&pos, s_uuid);
 	write_packet_context(&pos);
 	for (;;) {
+#ifdef HAVE_GETLINE
 		len = getline(&line, &linesize, input);
+#else
+		/* fail: */
+		len = -1;
+#endif /* HAVE_GETLINE */
 		if (len < 0)
 			break;
 		nl = strrchr(line, '\n');
@@ -418,15 +423,27 @@ int main(int argc, char **argv)
 		goto error_closedir;
 	}
 
+#ifdef HAVE_OPENAT
 	fd = openat(dir_fd, "datastream", O_RDWR|O_CREAT,
 		    S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP);
+#else
+	/* use default failure values: */
+	fd = -1;
+	errno = ENOENT;
+#endif /* HAVE_OPENAT */
 	if (fd < 0) {
 		perror("openat");
 		goto error_closedirfd;
 	}
 
+#ifdef HAVE_OPENAT
 	metadata_fd = openat(dir_fd, "metadata", O_RDWR|O_CREAT,
 			     S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP);
+#else
+	/* use default failure values: */
+	metadata_fd = -1;
+	errno = ENOENT;
+#endif /* HAVE_OPENAT */
 	if (metadata_fd < 0) {
 		perror("openat");
 		goto error_closedatastream;
