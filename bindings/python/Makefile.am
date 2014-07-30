@@ -1,6 +1,5 @@
 babeltrace.i: babeltrace.i.in
-	sed "s/BABELTRACE_VERSION_STR/Babeltrace $(PACKAGE_VERSION)/g" < \
-		$(top_srcdir)/bindings/python/babeltrace.i.in > \
+	$(SED) "s/BABELTRACE_VERSION_STR/Babeltrace $(PACKAGE_VERSION)/g" \		< $(top_srcdir)/bindings/python/babeltrace.i.in > \
 		$(top_builddir)/bindings/python/babeltrace.i
 
 AM_CFLAGS = $(PYTHON_INCLUDE) -I$(top_srcdir)/include/

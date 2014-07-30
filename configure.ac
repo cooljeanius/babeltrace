@@ -15,6 +15,8 @@ AM_INIT_AUTOMAKE([foreign dist-bzip2 no-dist-gzip])
 AM_MAINTAINER_MODE([enable])
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 
+AC_CONFIG_LIBOBJ_DIR([compat])dnl
+
 AC_CONFIG_MACRO_DIR([m4])dnl
 
 AC_PROG_MKDIR_P
