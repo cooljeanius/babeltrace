@@ -14,6 +14,7 @@
 
 @SET_MAKE@
 
+
 VPATH = @srcdir@
 am__is_gnu_make = test -n '$(MAKEFILE_LIST)' && test -n '$(MAKELEVEL)'
 am__make_running_with_option = \
@@ -79,15 +80,19 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
+check_PROGRAMS = mktimetest$(EXEEXT)
 @BABELTRACE_BUILD_WITH_MINGW_TRUE@am__append_1 = compat_uuid.c
+@BABELTRACE_BUILD_WITH_MINGW_FALSE@am__append_2 = dummy.c
 subdir = compat
-DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
-	$(top_srcdir)/config/depcomp
+DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am realloc.c \
+	mktime.c strnlen.c malloc.c alloca.c \
+	$(top_srcdir)/config/depcomp $(noinst_HEADERS) TODO
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/m4/ax_pkg_swig.m4 \
-	$(top_srcdir)/m4/glib-2.0.m4 $(top_srcdir)/m4/libtool.m4 \
-	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
-	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
+am__aclocal_m4_deps = $(top_srcdir)/m4/alloca.m4 \
+	$(top_srcdir)/m4/ax_pkg_swig.m4 $(top_srcdir)/m4/glib-2.0.m4 \
+	$(top_srcdir)/m4/libtool.m4 $(top_srcdir)/m4/ltoptions.m4 \
+	$(top_srcdir)/m4/ltsugar.m4 $(top_srcdir)/m4/ltversion.m4 \
+	$(top_srcdir)/m4/lt~obsolete.m4 $(top_srcdir)/m4/malloc.m4 \
 	$(top_srcdir)/m4/pkg.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
@@ -96,10 +101,11 @@ CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 LTLIBRARIES = $(noinst_LTLIBRARIES)
-libcompat_la_LIBADD =
-am__libcompat_la_SOURCES_DIST = compat_uuid.c
+libcompat_la_DEPENDENCIES = $(LIBOBJS) $(ALLOCA)
+am__libcompat_la_SOURCES_DIST = compat_uuid.c dummy.c
 @BABELTRACE_BUILD_WITH_MINGW_TRUE@am__objects_1 = compat_uuid.lo
-am_libcompat_la_OBJECTS = $(am__objects_1)
+@BABELTRACE_BUILD_WITH_MINGW_FALSE@am__objects_2 = dummy.lo
+am_libcompat_la_OBJECTS = $(am__objects_1) $(am__objects_2)
 libcompat_la_OBJECTS = $(am_libcompat_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -108,6 +114,12 @@ am__v_lt_1 =
 libcompat_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(libcompat_la_LDFLAGS) $(LDFLAGS) -o $@
+am_mktimetest_OBJECTS = mktimetest-mktime.$(OBJEXT)
+mktimetest_OBJECTS = $(am_mktimetest_OBJECTS)
+mktimetest_DEPENDENCIES = libUnixToOSX.la
+mktimetest_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(mktimetest_CFLAGS) \
+	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -142,13 +154,14 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(libcompat_la_SOURCES)
-DIST_SOURCES = $(am__libcompat_la_SOURCES_DIST)
+SOURCES = $(libcompat_la_SOURCES) $(mktimetest_SOURCES)
+DIST_SOURCES = $(am__libcompat_la_SOURCES_DIST) $(mktimetest_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
+HEADERS = $(noinst_HEADERS)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 # Read a list of newline-separated strings from the standard input,
 # and print each of them once, without duplicates.  Input order is
@@ -171,6 +184,7 @@ CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 ALLOCA = @ALLOCA@
+ALLOCA_H = @ALLOCA_H@
 AMTAR = @AMTAR@
 AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
 AR = @AR@
@@ -280,6 +294,7 @@ am__quote = @am__quote@
 am__tar = @am__tar@
 am__untar = @am__untar@
 babeltracectfincludedir = @babeltracectfincludedir@
+babeltracectfirincludedir = @babeltracectfirincludedir@
 babeltracectfwriterincludedir = @babeltracectfwriterincludedir@
 babeltraceincludedir = @babeltraceincludedir@
 bindir = @bindir@
@@ -331,12 +346,20 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AM_CFLAGS = $(PACKAGE_CFLAGS) -I$(top_srcdir)/include
+noinst_HEADERS = mktime-internal.h
+BUILT_SOURCES = $(ALLOCA_H)
+MOSTLYCLEANFILES = .DS_Store alloca.h alloca.h-t
+EXTRA_DIST = alloca.in.h
 noinst_LTLIBRARIES = libcompat.la
-libcompat_la_SOURCES = $(am__append_1)
-libcompat_la_LDFLAGS = \
-	-Wl,--no-as-needed
-
-all: all-am
+libcompat_la_SOURCES = $(am__append_1) $(am__append_2)
+libcompat_la_LDFLAGS = 
+libcompat_la_LIBADD = $(LIBOBJS) $(ALLOCA)
+mktimetest_SOURCES = mktime.c mktime-internal.h
+mktimetest_LDADD = libUnixToOSX.la
+mktimetest_CPPFLAGS = -DDEBUG -I.
+mktimetest_CFLAGS = $(mktimetest_CPPFLAGS) -Wall -Wextra -Os -ggdb3 -fwrapv
+all: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) all-am
 
 .SUFFIXES:
 .SUFFIXES: .c .lo .o .obj
@@ -385,13 +408,33 @@ clean-noinstLTLIBRARIES:
 libcompat.la: $(libcompat_la_OBJECTS) $(libcompat_la_DEPENDENCIES) $(EXTRA_libcompat_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(libcompat_la_LINK)  $(libcompat_la_OBJECTS) $(libcompat_la_LIBADD) $(LIBS)
 
+clean-checkPROGRAMS:
+	@list='$(check_PROGRAMS)'; test -n "$$list" || exit 0; \
+	echo " rm -f" $$list; \
+	rm -f $$list || exit $$?; \
+	test -n "$(EXEEXT)" || exit 0; \
+	list=`for p in $$list; do echo "$$p"; done | sed 's/$(EXEEXT)$$//'`; \
+	echo " rm -f" $$list; \
+	rm -f $$list
+
+mktimetest$(EXEEXT): $(mktimetest_OBJECTS) $(mktimetest_DEPENDENCIES) $(EXTRA_mktimetest_DEPENDENCIES) 
+	@rm -f mktimetest$(EXEEXT)
+	$(AM_V_CCLD)$(mktimetest_LINK) $(mktimetest_OBJECTS) $(mktimetest_LDADD) $(LIBS)
+
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/alloca.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/malloc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/mktime.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/realloc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strnlen.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/compat_uuid.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dummy.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mktimetest-mktime.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -413,6 +456,20 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LTCOMPILE) -c -o $@ $<
+
+mktimetest-mktime.o: mktime.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mktimetest_CPPFLAGS) $(CPPFLAGS) $(mktimetest_CFLAGS) $(CFLAGS) -MT mktimetest-mktime.o -MD -MP -MF $(DEPDIR)/mktimetest-mktime.Tpo -c -o mktimetest-mktime.o `test -f 'mktime.c' || echo '$(srcdir)/'`mktime.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/mktimetest-mktime.Tpo $(DEPDIR)/mktimetest-mktime.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='mktime.c' object='mktimetest-mktime.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mktimetest_CPPFLAGS) $(CPPFLAGS) $(mktimetest_CFLAGS) $(CFLAGS) -c -o mktimetest-mktime.o `test -f 'mktime.c' || echo '$(srcdir)/'`mktime.c
+
+mktimetest-mktime.obj: mktime.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mktimetest_CPPFLAGS) $(CPPFLAGS) $(mktimetest_CFLAGS) $(CFLAGS) -MT mktimetest-mktime.obj -MD -MP -MF $(DEPDIR)/mktimetest-mktime.Tpo -c -o mktimetest-mktime.obj `if test -f 'mktime.c'; then $(CYGPATH_W) 'mktime.c'; else $(CYGPATH_W) '$(srcdir)/mktime.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/mktimetest-mktime.Tpo $(DEPDIR)/mktimetest-mktime.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='mktime.c' object='mktimetest-mktime.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mktimetest_CPPFLAGS) $(CPPFLAGS) $(mktimetest_CFLAGS) $(CFLAGS) -c -o mktimetest-mktime.obj `if test -f 'mktime.c'; then $(CYGPATH_W) 'mktime.c'; else $(CYGPATH_W) '$(srcdir)/mktime.c'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -503,10 +560,13 @@ distdir: $(DISTFILES)
 	  fi; \
 	done
 check-am: all-am
-check: check-am
-all-am: Makefile $(LTLIBRARIES)
+	$(MAKE) $(AM_MAKEFLAGS) $(check_PROGRAMS)
+check: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) check-am
+all-am: Makefile $(LTLIBRARIES) $(HEADERS)
 installdirs:
-install: install-am
+install: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) install-am
 install-exec: install-exec-am
 install-data: install-data-am
 uninstall: uninstall-am
@@ -526,6 +586,7 @@ install-strip:
 	    "INSTALL_PROGRAM_ENV=STRIPPROG='$(STRIP)'" install; \
 	fi
 mostlyclean-generic:
+	-test -z "$(MOSTLYCLEANFILES)" || rm -f $(MOSTLYCLEANFILES)
 
 clean-generic:
 
@@ -536,13 +597,14 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
+	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 clean: clean-am
 
-clean-am: clean-generic clean-libtool clean-noinstLTLIBRARIES \
-	mostlyclean-am
+clean-am: clean-checkPROGRAMS clean-generic clean-libtool \
+	clean-noinstLTLIBRARIES mostlyclean-am
 
 distclean: distclean-am
-	-rm -rf ./$(DEPDIR)
+	-rm -rf $(DEPDIR) ./$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -588,7 +650,7 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-	-rm -rf ./$(DEPDIR)
+	-rm -rf $(DEPDIR) ./$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
@@ -607,22 +669,37 @@ ps-am:
 
 uninstall-am:
 
-.MAKE: install-am install-strip
+.MAKE: all check check-am install install-am install-strip
 
-.PHONY: CTAGS GTAGS TAGS all all-am check check-am clean clean-generic \
-	clean-libtool clean-noinstLTLIBRARIES cscopelist-am ctags \
-	ctags-am distclean distclean-compile distclean-generic \
-	distclean-libtool distclean-tags distdir dvi dvi-am html \
-	html-am info info-am install install-am install-data \
-	install-data-am install-dvi install-dvi-am install-exec \
-	install-exec-am install-html install-html-am install-info \
-	install-info-am install-man install-pdf install-pdf-am \
-	install-ps install-ps-am install-strip installcheck \
-	installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags tags-am uninstall uninstall-am
+.PHONY: CTAGS GTAGS TAGS all all-am check check-am clean \
+	clean-checkPROGRAMS clean-generic clean-libtool \
+	clean-noinstLTLIBRARIES cscopelist-am ctags ctags-am distclean \
+	distclean-compile distclean-generic distclean-libtool \
+	distclean-tags distdir dvi dvi-am html html-am info info-am \
+	install install-am install-data install-data-am install-dvi \
+	install-dvi-am install-exec install-exec-am install-html \
+	install-html-am install-info install-info-am install-man \
+	install-pdf install-pdf-am install-ps install-ps-am \
+	install-strip installcheck installcheck-am installdirs \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
+	pdf pdf-am ps ps-am tags tags-am uninstall uninstall-am
 
+# We need the following in order to create <alloca.h> when the system
+# does NOT have one that works with the given compiler.
+@GL_GENERATE_ALLOCA_H_TRUE@alloca.h: alloca.in.h $(top_builddir)/config.status
+@GL_GENERATE_ALLOCA_H_TRUE@	$(AM_V_GEN)rm -f $@-t $@ && \
+@GL_GENERATE_ALLOCA_H_TRUE@	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */'; \
+@GL_GENERATE_ALLOCA_H_TRUE@	  cat $(srcdir)/alloca.in.h; \
+@GL_GENERATE_ALLOCA_H_TRUE@	} > $@-t && \
+@GL_GENERATE_ALLOCA_H_TRUE@	mv -fv $@-t $@
+@GL_GENERATE_ALLOCA_H_FALSE@alloca.h: $(top_builddir)/config.status
+@GL_GENERATE_ALLOCA_H_FALSE@	rm -fv $@
+
+test-clean: clean-checkPROGRAMS
+	-rm -fv $(mktimetest_OBJECTS)
+	-rm -fv $(check_PROGRAMS)
+.PHONY: test-clean
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

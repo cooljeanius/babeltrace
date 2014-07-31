@@ -637,6 +637,7 @@ ac_func_list=
 ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
+babeltracectfirincludedir
 babeltracectfwriterincludedir
 babeltracectfincludedir
 babeltraceincludedir
@@ -666,6 +667,9 @@ BABELTRACE_BUILD_WITH_LIBUUID_TRUE
 BABELTRACE_BUILD_WITH_MINGW_FALSE
 BABELTRACE_BUILD_WITH_MINGW_TRUE
 LIBOBJS
+GL_GENERATE_ALLOCA_H_FALSE
+GL_GENERATE_ALLOCA_H_TRUE
+ALLOCA_H
 ALLOCA
 GLIB_COMPILE_RESOURCES
 GLIB_MKENUMS
@@ -18933,6 +18937,58 @@ _ACEOF
 
 fi
 
+
+
+  if test "x${ac_cv_func_alloca_works}" = "xno"; then
+    :
+  fi
+
+  # Define an additional variable used in the Makefile substitution:
+  if test "x${ac_cv_working_alloca_h}" = "xyes"; then
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for alloca as a compiler built-in" >&5
+$as_echo_n "checking for alloca as a compiler built-in... " >&6; }
+if ${gl_cv_rpl_alloca+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+      cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+#if defined(__GNUC__) || defined(_AIX) || defined(_MSC_VER)
+        Need_own_alloca
+#endif /* __GNUC__ || _AIX || _MSVC_VER */
+
+_ACEOF
+if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
+  $EGREP "Need_own_alloca" >/dev/null 2>&1; then :
+  gl_cv_rpl_alloca=yes
+else
+  gl_cv_rpl_alloca=no
+fi
+rm -f conftest*
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $gl_cv_rpl_alloca" >&5
+$as_echo "$gl_cv_rpl_alloca" >&6; }
+    if test "x${gl_cv_rpl_alloca}" = "xyes"; then
+
+$as_echo "#define HAVE_ALLOCA 1" >>confdefs.h
+
+      ALLOCA_H=alloca.h
+    else
+                  ALLOCA_H=""
+    fi
+  else
+    ALLOCA_H=alloca.h
+  fi
+     if test -n "${ALLOCA_H}"; then
+  GL_GENERATE_ALLOCA_H_TRUE=
+  GL_GENERATE_ALLOCA_H_FALSE='#'
+else
+  GL_GENERATE_ALLOCA_H_TRUE='#'
+  GL_GENERATE_ALLOCA_H_FALSE=
+fi
+
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether closedir returns void" >&5
 $as_echo_n "checking whether closedir returns void... " >&6; }
 if ${ac_cv_func_closedir_void+:} false; then :
@@ -19188,7 +19244,8 @@ $as_echo "#define HAVE_WORKING_FORK 1" >>confdefs.h
 
 fi
 
-for ac_header in stdlib.h
+
+      for ac_header in stdlib.h
 do :
   ac_fn_c_check_header_mongrel "$LINENO" "stdlib.h" "ac_cv_header_stdlib_h" "$ac_includes_default"
 if test "x$ac_cv_header_stdlib_h" = xyes; then :
@@ -19200,29 +19257,38 @@ fi
 
 done
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for GNU libc compatible malloc" >&5
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for GNU libc compatible malloc" >&5
 $as_echo_n "checking for GNU libc compatible malloc... " >&6; }
 if ${ac_cv_func_malloc_0_nonnull+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if test "$cross_compiling" = yes; then :
-  ac_cv_func_malloc_0_nonnull=no
+  case "${host_os}" in
+          # Guess yes on platforms where we know the result.
+          *-gnu* | freebsd* | netbsd* | openbsd* \
+          | hpux* | solaris* | cygwin* | mingw*)
+            ac_cv_func_malloc_0_nonnull=yes ;;
+          # If we do NOT know, then assume the worst.
+          *) ac_cv_func_malloc_0_nonnull=no ;;
+        esac
+
 else
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 #if defined STDC_HEADERS || defined HAVE_STDLIB_H
-# include <stdlib.h>
-#else
-char *malloc ();
-#endif
+            # include <stdlib.h>
+            #else
+            char *malloc();
+            #endif /* STDC_HEADERS || HAVE_STDLIB_H */
 
 int
 main ()
 {
-return ! malloc (0);
+return ! malloc(0);
   ;
   return 0;
 }
+
 _ACEOF
 if ac_fn_c_try_run "$LINENO"; then :
   ac_cv_func_malloc_0_nonnull=yes
@@ -19233,10 +19299,11 @@ rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
   conftest.$ac_objext conftest.beam conftest.$ac_ext
 fi
 
+
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_func_malloc_0_nonnull" >&5
 $as_echo "$ac_cv_func_malloc_0_nonnull" >&6; }
-if test $ac_cv_func_malloc_0_nonnull = yes; then :
+  if test "x${ac_cv_func_malloc_0_nonnull}" = "xyes"; then :
 
 $as_echo "#define HAVE_MALLOC 1" >>confdefs.h
 
@@ -19254,6 +19321,119 @@ $as_echo "#define malloc rpl_malloc" >>confdefs.h
 
 fi
 
+
+
+  :
+
+      for ac_header in stdlib.h
+do :
+  ac_fn_c_check_header_mongrel "$LINENO" "stdlib.h" "ac_cv_header_stdlib_h" "$ac_includes_default"
+if test "x$ac_cv_header_stdlib_h" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_STDLIB_H 1
+_ACEOF
+
+fi
+
+done
+
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for GNU libc compatible malloc" >&5
+$as_echo_n "checking for GNU libc compatible malloc... " >&6; }
+if ${ac_cv_func_malloc_0_nonnull+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test "$cross_compiling" = yes; then :
+  case "${host_os}" in
+          # Guess yes on platforms where we know the result.
+          *-gnu* | freebsd* | netbsd* | openbsd* \
+          | hpux* | solaris* | cygwin* | mingw*)
+            ac_cv_func_malloc_0_nonnull=yes ;;
+          # If we do NOT know, then assume the worst.
+          *) ac_cv_func_malloc_0_nonnull=no ;;
+        esac
+
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#if defined STDC_HEADERS || defined HAVE_STDLIB_H
+            # include <stdlib.h>
+            #else
+            char *malloc();
+            #endif /* STDC_HEADERS || HAVE_STDLIB_H */
+
+int
+main ()
+{
+return ! malloc(0);
+  ;
+  return 0;
+}
+
+_ACEOF
+if ac_fn_c_try_run "$LINENO"; then :
+  ac_cv_func_malloc_0_nonnull=yes
+else
+  ac_cv_func_malloc_0_nonnull=no
+fi
+rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
+  conftest.$ac_objext conftest.beam conftest.$ac_ext
+fi
+
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_func_malloc_0_nonnull" >&5
+$as_echo "$ac_cv_func_malloc_0_nonnull" >&6; }
+  if test "x${ac_cv_func_malloc_0_nonnull}" = "xyes"; then :
+
+$as_echo "#define HAVE_MALLOC_GNU 1" >>confdefs.h
+
+else
+  $as_echo "#define HAVE_MALLOC_GNU 0" >>confdefs.h
+
+     REPLACE_MALLOC=1
+
+fi
+
+
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether malloc, realloc, calloc are POSIX compliant" >&5
+$as_echo_n "checking whether malloc, realloc, calloc are POSIX compliant... " >&6; }
+if ${gl_cv_func_malloc_posix+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+                        cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+#if (defined(_WIN32) || defined(__WIN32__)) && ! defined(__CYGWIN__)
+             choke me
+             #endif /* (_WIN32 || __WIN32__) && !__CYGWIN__ */
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  gl_cv_func_malloc_posix=yes
+else
+  gl_cv_func_malloc_posix=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $gl_cv_func_malloc_posix" >&5
+$as_echo "$gl_cv_func_malloc_posix" >&6; }
+
+  :
+
+  if test "x${gl_cv_func_malloc_posix}" = "xyes"; then
+
+$as_echo "#define HAVE_MALLOC_POSIX 1" >>confdefs.h
+
+  else
+    REPLACE_MALLOC=1
+  fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether time.h and sys/time.h may both be included" >&5
 $as_echo_n "checking whether time.h and sys/time.h may both be included... " >&6; }
@@ -20027,7 +20207,7 @@ done
 
 for ac_func in atexit be32toh be64toh bzero dup2 faccessat ftruncate \
                 getdelim gethostbyname gethostname getline gettimeofday \
-                htobe32 htobe64 localtime_r memset mkdir munmap \
+                htobe32 htobe64 localtime_r memchr memset mkdir munmap \
                 open openat posix_fallocate rmdir send setenv socket \
                 strchr strdup strerror strndup strrchr strtoul strtoull \
                 sysconf tzset uname unlinkat
@@ -21125,7 +21305,10 @@ babeltracectfincludedir="${includedir}/babeltrace/ctf"
 
 babeltracectfwriterincludedir="${includedir}/babeltrace/ctf-writer"
 
-ac_config_files="$ac_config_files Makefile types/Makefile compat/Makefile formats/Makefile formats/ctf/Makefile formats/ctf/types/Makefile formats/ctf-text/Makefile formats/ctf-text/types/Makefile formats/ctf-metadata/Makefile formats/bt-dummy/Makefile formats/lttng-live/Makefile formats/ctf/metadata/Makefile formats/ctf/writer/Makefile converter/Makefile doc/Makefile lib/Makefile lib/prio_heap/Makefile include/Makefile bindings/Makefile bindings/python/Makefile tests/Makefile tests/bin/Makefile tests/lib/Makefile tests/utils/Makefile tests/utils/tap/Makefile extras/Makefile extras/valgrind/Makefile babeltrace.pc babeltrace-ctf.pc"
+babeltracectfirincludedir="${includedir}/babeltrace/ctf-ir"
+
+# Output:
+ac_config_files="$ac_config_files Makefile types/Makefile compat/Makefile formats/Makefile formats/ctf/Makefile formats/ctf/types/Makefile formats/ctf-text/Makefile formats/ctf-text/types/Makefile formats/ctf-metadata/Makefile formats/bt-dummy/Makefile formats/lttng-live/Makefile formats/ctf/ir/Makefile formats/ctf/metadata/Makefile formats/ctf/writer/Makefile converter/Makefile doc/Makefile lib/Makefile lib/prio_heap/Makefile include/Makefile bindings/Makefile bindings/python/Makefile tests/Makefile tests/bin/Makefile tests/lib/Makefile tests/utils/Makefile tests/utils/tap/Makefile extras/Makefile extras/valgrind/Makefile babeltrace.pc babeltrace-ctf.pc"
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
 # tests run on this system so they can be shared between configure
@@ -21265,6 +21448,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${am__fastdepCXX_TRUE}" && test -z "${am__fastdepCXX_FALSE}"; then
   as_fn_error $? "conditional \"am__fastdepCXX\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${GL_GENERATE_ALLOCA_H_TRUE}" && test -z "${GL_GENERATE_ALLOCA_H_FALSE}"; then
+  as_fn_error $? "conditional \"GL_GENERATE_ALLOCA_H\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${BABELTRACE_BUILD_WITH_MINGW_TRUE}" && test -z "${BABELTRACE_BUILD_WITH_MINGW_FALSE}"; then
@@ -22266,6 +22453,7 @@ do
     "formats/ctf-metadata/Makefile") CONFIG_FILES="$CONFIG_FILES formats/ctf-metadata/Makefile" ;;
     "formats/bt-dummy/Makefile") CONFIG_FILES="$CONFIG_FILES formats/bt-dummy/Makefile" ;;
     "formats/lttng-live/Makefile") CONFIG_FILES="$CONFIG_FILES formats/lttng-live/Makefile" ;;
+    "formats/ctf/ir/Makefile") CONFIG_FILES="$CONFIG_FILES formats/ctf/ir/Makefile" ;;
     "formats/ctf/metadata/Makefile") CONFIG_FILES="$CONFIG_FILES formats/ctf/metadata/Makefile" ;;
     "formats/ctf/writer/Makefile") CONFIG_FILES="$CONFIG_FILES formats/ctf/writer/Makefile" ;;
     "converter/Makefile") CONFIG_FILES="$CONFIG_FILES converter/Makefile" ;;

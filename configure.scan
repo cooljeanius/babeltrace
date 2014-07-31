@@ -35,7 +35,8 @@ AC_CHECK_LIB([rpcrt4], [main])
 AC_CHECK_LIB([uuid], [main])
 
 # Checks for header files.
-AC_CHECK_HEADERS([fcntl.h float.h inttypes.h limits.h netdb.h netinet/in.h stddef.h stdint.h stdlib.h string.h sys/socket.h unistd.h])
+AC_FUNC_ALLOCA
+AC_CHECK_HEADERS([fcntl.h float.h inttypes.h libintl.h limits.h malloc.h netdb.h netinet/in.h stddef.h stdint.h stdlib.h string.h sys/socket.h unistd.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_CHECK_HEADER_STDBOOL
@@ -61,7 +62,7 @@ AC_FUNC_MMAP
 AC_FUNC_REALLOC
 AC_FUNC_STRERROR_R
 AC_FUNC_STRNLEN
-AC_CHECK_FUNCS([atexit bzero dup2 ftruncate gethostbyname gethostname localtime_r memset mkdir munmap rmdir setenv socket strchr strdup strerror strndup strrchr strtoul strtoull tzset uname])
+AC_CHECK_FUNCS([atexit bzero dup2 ftruncate gethostbyname gethostname localtime_r memchr memset mkdir munmap rmdir setenv socket strchr strdup strerror strndup strrchr strtoul strtoull tzset uname])
 
 AC_CONFIG_FILES([Makefile
                  bindings/Makefile
@@ -77,6 +78,7 @@ AC_CONFIG_FILES([Makefile
                  formats/ctf-text/Makefile
                  formats/ctf-text/types/Makefile
                  formats/ctf/Makefile
+                 formats/ctf/ir/Makefile
                  formats/ctf/metadata/Makefile
                  formats/ctf/types/Makefile
                  formats/ctf/writer/Makefile

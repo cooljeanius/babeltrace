@@ -133,9 +133,12 @@ AC_STRUCT_TIMEZONE dnl# also does the "_TM" one
 
 # Checks for library functions.
 AC_FUNC_ALLOCA
+gl_FUNC_ALLOCA
 AC_FUNC_CLOSEDIR_VOID
 AC_FUNC_FORK
 AC_FUNC_MALLOC
+gl_FUNC_MALLOC_GNU
+gl_FUNC_MALLOC_POSIX
 AC_FUNC_MKTIME
 AC_FUNC_MMAP
 AC_FUNC_REALLOC
@@ -145,7 +148,7 @@ AC_FUNC_STRNLEN
 AC_FUNC_VPRINTF
 AC_CHECK_FUNCS([atexit be32toh be64toh bzero dup2 faccessat ftruncate \
                 getdelim gethostbyname gethostname getline gettimeofday \
-                htobe32 htobe64 localtime_r memset mkdir munmap \
+                htobe32 htobe64 localtime_r memchr memset mkdir munmap \
                 open openat posix_fallocate rmdir send setenv socket \
                 strchr strdup strerror strndup strrchr strtoul strtoull \
                 sysconf tzset uname unlinkat])dnl
@@ -388,6 +391,7 @@ AC_CONFIG_FILES([
   formats/ctf-metadata/Makefile
   formats/bt-dummy/Makefile
   formats/lttng-live/Makefile
+  formats/ctf/ir/Makefile
   formats/ctf/metadata/Makefile
   formats/ctf/writer/Makefile
   converter/Makefile

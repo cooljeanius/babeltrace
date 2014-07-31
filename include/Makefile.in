@@ -82,13 +82,15 @@ target_triplet = @target@
 subdir = include
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(babeltracectfinclude_HEADERS) \
+	$(babeltracectfirinclude_HEADERS) \
 	$(babeltracectfwriterinclude_HEADERS) \
 	$(babeltraceinclude_HEADERS) $(noinst_HEADERS)
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/m4/ax_pkg_swig.m4 \
-	$(top_srcdir)/m4/glib-2.0.m4 $(top_srcdir)/m4/libtool.m4 \
-	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
-	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
+am__aclocal_m4_deps = $(top_srcdir)/m4/alloca.m4 \
+	$(top_srcdir)/m4/ax_pkg_swig.m4 $(top_srcdir)/m4/glib-2.0.m4 \
+	$(top_srcdir)/m4/libtool.m4 $(top_srcdir)/m4/ltoptions.m4 \
+	$(top_srcdir)/m4/ltsugar.m4 $(top_srcdir)/m4/ltversion.m4 \
+	$(top_srcdir)/m4/lt~obsolete.m4 $(top_srcdir)/m4/malloc.m4 \
 	$(top_srcdir)/m4/pkg.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
@@ -143,9 +145,11 @@ am__uninstall_files_from_dir = { \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
 am__installdirs = "$(DESTDIR)$(babeltracectfincludedir)" \
+	"$(DESTDIR)$(babeltracectfirincludedir)" \
 	"$(DESTDIR)$(babeltracectfwriterincludedir)" \
 	"$(DESTDIR)$(babeltraceincludedir)"
 HEADERS = $(babeltracectfinclude_HEADERS) \
+	$(babeltracectfirinclude_HEADERS) \
 	$(babeltracectfwriterinclude_HEADERS) \
 	$(babeltraceinclude_HEADERS) $(noinst_HEADERS)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
@@ -170,6 +174,7 @@ CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 ALLOCA = @ALLOCA@
+ALLOCA_H = @ALLOCA_H@
 AMTAR = @AMTAR@
 AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
 AR = @AR@
@@ -279,6 +284,7 @@ am__quote = @am__quote@
 am__tar = @am__tar@
 am__untar = @am__untar@
 babeltracectfincludedir = @babeltracectfincludedir@
+babeltracectfirincludedir = @babeltracectfirincludedir@
 babeltracectfwriterincludedir = @babeltracectfwriterincludedir@
 babeltraceincludedir = @babeltraceincludedir@
 bindir = @bindir@
@@ -349,7 +355,16 @@ babeltracectfwriterinclude_HEADERS = \
 	babeltrace/ctf-writer/event-fields.h \
 	babeltrace/ctf-writer/event-types.h \
 	babeltrace/ctf-writer/event.h \
-	babeltrace/ctf-writer/stream.h
+	babeltrace/ctf-writer/stream.h \
+	babeltrace/ctf-writer/stream-class.h
+
+babeltracectfirinclude_HEADERS = \
+	babeltrace/ctf-ir/clock.h \
+	babeltrace/ctf-ir/event-fields.h \
+	babeltrace/ctf-ir/event-types.h \
+	babeltrace/ctf-ir/event.h \
+	babeltrace/ctf-ir/stream.h \
+	babeltrace/ctf-ir/stream-class.h
 
 noinst_HEADERS = \
 	babeltrace/align.h \
@@ -372,11 +387,12 @@ noinst_HEADERS = \
 	babeltrace/ctf/ctf-index.h \
 	babeltrace/ctf-writer/ref-internal.h \
 	babeltrace/ctf-writer/writer-internal.h \
-	babeltrace/ctf-writer/event-types-internal.h \
-	babeltrace/ctf-writer/event-fields-internal.h \
-	babeltrace/ctf-writer/event-internal.h \
-	babeltrace/ctf-writer/clock-internal.h \
-	babeltrace/ctf-writer/stream-internal.h \
+	babeltrace/ctf-ir/event-types-internal.h \
+	babeltrace/ctf-ir/event-fields-internal.h \
+	babeltrace/ctf-ir/event-internal.h \
+	babeltrace/ctf-ir/clock-internal.h \
+	babeltrace/ctf-ir/stream-class-internal.h \
+	babeltrace/ctf-ir/stream-internal.h \
 	babeltrace/ctf-writer/functor-internal.h \
 	babeltrace/trace-handle-internal.h \
 	babeltrace/compat/uuid.h \
@@ -446,6 +462,27 @@ uninstall-babeltracectfincludeHEADERS:
 	@list='$(babeltracectfinclude_HEADERS)'; test -n "$(babeltracectfincludedir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(babeltracectfincludedir)'; $(am__uninstall_files_from_dir)
+install-babeltracectfirincludeHEADERS: $(babeltracectfirinclude_HEADERS)
+	@$(NORMAL_INSTALL)
+	@list='$(babeltracectfirinclude_HEADERS)'; test -n "$(babeltracectfirincludedir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(babeltracectfirincludedir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(babeltracectfirincludedir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_HEADER) $$files '$(DESTDIR)$(babeltracectfirincludedir)'"; \
+	  $(INSTALL_HEADER) $$files "$(DESTDIR)$(babeltracectfirincludedir)" || exit $$?; \
+	done
+
+uninstall-babeltracectfirincludeHEADERS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(babeltracectfirinclude_HEADERS)'; test -n "$(babeltracectfirincludedir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(babeltracectfirincludedir)'; $(am__uninstall_files_from_dir)
 install-babeltracectfwriterincludeHEADERS: $(babeltracectfwriterinclude_HEADERS)
 	@$(NORMAL_INSTALL)
 	@list='$(babeltracectfwriterinclude_HEADERS)'; test -n "$(babeltracectfwriterincludedir)" || list=; \
@@ -575,7 +612,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(HEADERS)
 installdirs:
-	for dir in "$(DESTDIR)$(babeltracectfincludedir)" "$(DESTDIR)$(babeltracectfwriterincludedir)" "$(DESTDIR)$(babeltraceincludedir)"; do \
+	for dir in "$(DESTDIR)$(babeltracectfincludedir)" "$(DESTDIR)$(babeltracectfirincludedir)" "$(DESTDIR)$(babeltracectfwriterincludedir)" "$(DESTDIR)$(babeltraceincludedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -629,6 +666,7 @@ info: info-am
 info-am:
 
 install-data-am: install-babeltracectfincludeHEADERS \
+	install-babeltracectfirincludeHEADERS \
 	install-babeltracectfwriterincludeHEADERS \
 	install-babeltraceincludeHEADERS
 
@@ -675,6 +713,7 @@ ps: ps-am
 ps-am:
 
 uninstall-am: uninstall-babeltracectfincludeHEADERS \
+	uninstall-babeltracectfirincludeHEADERS \
 	uninstall-babeltracectfwriterincludeHEADERS \
 	uninstall-babeltraceincludeHEADERS
 
@@ -685,6 +724,7 @@ uninstall-am: uninstall-babeltracectfincludeHEADERS \
 	distclean-generic distclean-libtool distclean-tags distdir dvi \
 	dvi-am html html-am info info-am install install-am \
 	install-babeltracectfincludeHEADERS \
+	install-babeltracectfirincludeHEADERS \
 	install-babeltracectfwriterincludeHEADERS \
 	install-babeltraceincludeHEADERS install-data install-data-am \
 	install-dvi install-dvi-am install-exec install-exec-am \
@@ -695,6 +735,7 @@ uninstall-am: uninstall-babeltracectfincludeHEADERS \
 	mostlyclean mostlyclean-generic mostlyclean-libtool pdf pdf-am \
 	ps ps-am tags tags-am uninstall uninstall-am \
 	uninstall-babeltracectfincludeHEADERS \
+	uninstall-babeltracectfirincludeHEADERS \
 	uninstall-babeltracectfwriterincludeHEADERS \
 	uninstall-babeltraceincludeHEADERS
 

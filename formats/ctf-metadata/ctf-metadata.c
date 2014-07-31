@@ -142,3 +142,6 @@ void __attribute__((destructor)) ctf_metadata_exit(void)
 {
 	bt_unregister_format(&ctf_metadata_format);
 }
+
+/* make sure we export at least one global symbol: */
+typedef int ctf_metadata_dummy_t;

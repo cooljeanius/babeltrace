@@ -1,0 +1,7 @@
+gnulib modules to add (in order that warnings for them were printed):
+- openat
+- unlinkat
+- posix_fallocate (no such module yet? docs page exists though...)
+- faccessat
+- strndup
+- getline

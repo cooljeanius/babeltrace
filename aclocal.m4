@@ -1418,6 +1418,7 @@ AC_SUBST([am__tar])
 AC_SUBST([am__untar])
 ]) # _AM_PROG_TAR
 
+m4_include([m4/alloca.m4])
 m4_include([m4/ax_pkg_swig.m4])
 m4_include([m4/glib-2.0.m4])
 m4_include([m4/libtool.m4])
@@ -1425,4 +1426,5 @@ m4_include([m4/ltoptions.m4])
 m4_include([m4/ltsugar.m4])
 m4_include([m4/ltversion.m4])
 m4_include([m4/lt~obsolete.m4])
+m4_include([m4/malloc.m4])
 m4_include([m4/pkg.m4])
