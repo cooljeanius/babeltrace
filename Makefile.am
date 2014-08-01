@@ -11,6 +11,8 @@ dist_doc_DATA = ChangeLog LICENSE mit-license.txt gpl-2.0.txt \
 
 dist_noinst_DATA = CodingStyle
 
+EXTRA_DIST = po/Makevars.in
+
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = babeltrace.pc babeltrace-ctf.pc
 

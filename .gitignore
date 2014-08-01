@@ -18,7 +18,9 @@ ctf-parser.c
 ctf-parser.h
 ctf-parser-test
 converter/babeltrace
+confdefs.h
 config.h
+conftest*
 *.status
 *.log
 libtool

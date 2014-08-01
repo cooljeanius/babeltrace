@@ -111,8 +111,7 @@ AM_PATH_GLIB_2_0([2.22.0],[],
 
 # Check for gettext.
 AM_GNU_GETTEXT([external])dnl
-AM_GNU_GETTEXT_VERSION([0.18.3])dnl
-dnl# (0.18.3 is oldest version on my system, newest is 0.19.2)
+AM_GNU_GETTEXT_VERSION([0.19.2])dnl
 m4_ifdef([AM_LANGINFO_CODESET],[
   if test "x${am_cv_langinfo_codeset}" = "x"; then
     test -z "${am_cv_langinfo_codeset}"
