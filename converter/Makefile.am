@@ -1,3 +1,5 @@
+## automake Makefile for babeltrace binaries
+
 AM_CFLAGS = $(PACKAGE_CFLAGS) -I$(top_srcdir)/include
 AM_LDFLAGS = -lpopt
 

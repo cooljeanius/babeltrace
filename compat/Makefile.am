@@ -6,6 +6,7 @@ AM_CFLAGS = $(PACKAGE_CFLAGS) -I$(top_srcdir)/include
 noinst_HEADERS =
 BUILT_SOURCES =
 MOSTLYCLEANFILES = .DS_Store
+CLEANFILES = .DS_Store
 EXTRA_DIST =
 check_PROGRAMS =
 
@@ -16,7 +17,7 @@ libcompat_la_SOURCES =
 
 libcompat_la_LDFLAGS =
 
-libcompat_la_LIBADD = $(LIBOBJS) $(ALLOCA)
+libcompat_la_LIBADD = $(LTLIBOBJS) $(ALLOCA)
 
 if BABELTRACE_BUILD_WITH_MINGW
 libcompat_la_SOURCES += compat_uuid.c
@@ -45,11 +46,218 @@ endif
 MOSTLYCLEANFILES += alloca.h alloca.h-t
 EXTRA_DIST += alloca.in.h
 
+## The BUILT_SOURCES created by the following Makefile snippet
+## (for c++defs.h) are NOT used via "#include" statements, but through
+## direct file reference. Therefore this snippet must be present in all
+## Makefile.am files that need it, such as this one:
+BUILT_SOURCES += c++defs.h
+# The c++defs.h that gets inserted into generated .h files is the same as
+# config/snippet/c++defs.h, except that it has the copyright header cut
+# off.
+c++defs.h: $(top_srcdir)/config/snippet/c++defs.h
+	$(AM_V_GEN)rm -f $@-t $@ && \
+	$(SED) -n -e '/_GL_CXXDEFS/,$$p' \
+	  < $(top_srcdir)/config/snippet/c++defs.h \
+	  > $@-t && \
+	mv -v $@-t $@
+MOSTLYCLEANFILES += c++defs.h c++defs.h-t
+EXTRA_DIST += $(top_srcdir)/config/snippet/c++defs.h
+CXXDEFS_H = c++defs.h
+
+## The BUILT_SOURCES created by the following Makefile snippet
+## (for arg-nonnul.h) are NOT used via "#include" statements, but through
+## direct file reference. Therefore this snippet must be present in all
+## Makefile.am that need it, such as this one:
+BUILT_SOURCES += arg-nonnull.h
+# The arg-nonnull.h that gets inserted into generated .h files is the same
+# as config/snippet/arg-nonnull.h, except that it has the copyright
+# header cut off.
+arg-nonnull.h: $(top_srcdir)/config/snippet/arg-nonnull.h
+	$(AM_V_GEN)rm -f $@-t $@ && \
+	$(SED) -n -e '/GL_ARG_NONNULL/,$$p' \
+	  < $(top_srcdir)/config/snippet/arg-nonnull.h \
+	  > $@-t && \
+	mv -v $@-t $@
+MOSTLYCLEANFILES += arg-nonnull.h arg-nonnull.h-t
+EXTRA_DIST += $(top_srcdir)/config/snippet/arg-nonnull.h
+ARG_NONNULL_H = arg-nonnull.h
+
+## likewise with the warn-on-use.h snippet:
+BUILT_SOURCES += warn-on-use.h
+# The warn-on-use.h that gets inserted into generated .h files is the same
+# as config/snippet/warn-on-use.h, except that it has the copyright
+# header cut off.
+warn-on-use.h: $(top_srcdir)/config/snippet/warn-on-use.h
+	$(AM_V_GEN)rm -f $@-t $@ && \
+	$(SED) -n -e '/^.ifndef/,$$p' \
+	  < $(top_srcdir)/config/snippet/warn-on-use.h \
+	  > $@-t && \
+	mv -v $@-t $@
+MOSTLYCLEANFILES += warn-on-use.h warn-on-use.h-t
+EXTRA_DIST += $(top_srcdir)/config/snippet/warn-on-use.h
+WARN_ON_USE_H = warn-on-use.h
+
+## now do the fcntl.h header:
+BUILT_SOURCES += fcntl.h
+# We need the following in order to create <fcntl.h> when the system
+# does NOT have one that works with the given compiler.
+fcntl.h: fcntl.in.h $(top_builddir)/config.status $(CXXDEFS_H) $(ARG_NONNULL_H) $(WARN_ON_USE_H)
+	$(AM_V_GEN)rm -f $@-t $@ && \
+	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */'; \
+	  $(SED) -e 's|@''GUARD_PREFIX''@|${gl_include_guard_prefix}|g' \
+	      -e 's|@''INCLUDE_NEXT''@|$(INCLUDE_NEXT)|g' \
+	      -e 's|@''PRAGMA_SYSTEM_HEADER''@|@PRAGMA_SYSTEM_HEADER@|g' \
+	      -e 's|@''PRAGMA_COLUMNS''@|@PRAGMA_COLUMNS@|g' \
+	      -e 's|@''NEXT_FCNTL_H''@|$(NEXT_FCNTL_H)|g' \
+	      -e 's/@''GNULIB_FCNTL''@/$(GNULIB_FCNTL)/g' \
+	      -e 's/@''GNULIB_NONBLOCKING''@/$(GNULIB_NONBLOCKING)/g' \
+	      -e 's/@''GNULIB_OPEN''@/$(GNULIB_OPEN)/g' \
+	      -e 's/@''GNULIB_OPENAT''@/$(GNULIB_OPENAT)/g' \
+	      -e 's|@''HAVE_FCNTL''@|$(HAVE_FCNTL)|g' \
+	      -e 's|@''HAVE_OPENAT''@|$(HAVE_OPENAT)|g' \
+	      -e 's|@''REPLACE_FCNTL''@|$(REPLACE_FCNTL)|g' \
+	      -e 's|@''REPLACE_OPEN''@|$(REPLACE_OPEN)|g' \
+	      -e 's|@''REPLACE_OPENAT''@|$(REPLACE_OPENAT)|g' \
+	      -e '/definitions of _GL_FUNCDECL_RPL/r $(CXXDEFS_H)' \
+	      -e '/definition of _GL_ARG_NONNULL/r $(ARG_NONNULL_H)' \
+	      -e '/definition of _GL_WARN_ON_USE/r $(WARN_ON_USE_H)' \
+	      < $(srcdir)/fcntl.in.h; \
+	} > $@-t && \
+	mv -v $@-t $@
+MOSTLYCLEANFILES += fcntl.h fcntl.h-t
+EXTRA_DIST += fcntl.in.h
+## ...and related fcntl headers and sources:
+EXTRA_DIST += fcntl-safer.h
+noinst_HEADERS += fcntl-safer.h
+
+# Listed in the same order as the GNU makefile conventions, and
+# provided by autoconf 2.59c+.
+# The Automake-defined pkg* macros are appended, in the order
+# listed in the Automake 1.10a+ documentation.
+configmake.h: Makefile
+	$(AM_V_GEN)rm -f $@-t && \
+	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */'; \
+	  echo '#define PREFIX "$(prefix)"'; \
+	  echo '#define EXEC_PREFIX "$(exec_prefix)"'; \
+	  echo '#define BINDIR "$(bindir)"'; \
+	  echo '#define SBINDIR "$(sbindir)"'; \
+	  echo '#define LIBEXECDIR "$(libexecdir)"'; \
+	  echo '#define DATAROOTDIR "$(datarootdir)"'; \
+	  echo '#define DATADIR "$(datadir)"'; \
+	  echo '#define SYSCONFDIR "$(sysconfdir)"'; \
+	  echo '#define SHAREDSTATEDIR "$(sharedstatedir)"'; \
+	  echo '#define LOCALSTATEDIR "$(localstatedir)"'; \
+	  echo '#define INCLUDEDIR "$(includedir)"'; \
+	  echo '#define OLDINCLUDEDIR "$(oldincludedir)"'; \
+	  echo '#define DOCDIR "$(docdir)"'; \
+	  echo '#define INFODIR "$(infodir)"'; \
+	  echo '#define HTMLDIR "$(htmldir)"'; \
+	  echo '#define DVIDIR "$(dvidir)"'; \
+	  echo '#define PDFDIR "$(pdfdir)"'; \
+	  echo '#define PSDIR "$(psdir)"'; \
+	  echo '#define LIBDIR "$(libdir)"'; \
+	  echo '#define LISPDIR "$(lispdir)"'; \
+	  echo '#define LOCALEDIR "$(localedir)"'; \
+	  echo '#define MANDIR "$(mandir)"'; \
+	  echo '#define MANEXT "$(manext)"'; \
+	  echo '#define PKGDATADIR "$(pkgdatadir)"'; \
+	  echo '#define PKGINCLUDEDIR "$(pkgincludedir)"'; \
+	  echo '#define PKGLIBDIR "$(pkglibdir)"'; \
+	  echo '#define PKGLIBEXECDIR "$(pkglibexecdir)"'; \
+	} | $(SED) '/""/d' > $@-t && \
+	mv -fv $@-t $@
+BUILT_SOURCES += configmake.h
+CLEANFILES += configmake.h configmake.h-t
+
+## initialize, so we can add on to it:
+DEFS = @DEFS@
+DEFS += -DEXEEXT=\"@EXEEXT@\"
+
+## cloexec sources:
+libcompat_la_SOURCES += cloexec.c
+EXTRA_DIST += cloexec.h
+noinst_HEADERS += cloexec.h
+
+## close-stream sources:
+libcompat_la_SOURCES += close-stream.c
+EXTRA_DIST += close-stream.h
+noinst_HEADERS += close-stream.h
+
+## closeout sources:
+libcompat_la_SOURCES += closeout.c
+EXTRA_DIST += closeout.h
+noinst_HEADERS += closeout.h
+
+## ctype sources:
+libcompat_la_SOURCES += c-ctype.h c-ctype.c
+libcompat_la_SOURCES += c-strcase.h c-strcasecmp.c
+EXTRA_DIST += c-strcaseeq.h
+noinst_HEADERS += c-strcaseeq.h
+
+## dosname sources:
+EXTRA_DIST += dosname.h
+noinst_HEADERS += dosname.h
+
+## exitfail sources:
+libcompat_la_SOURCES += exitfail.c
+EXTRA_DIST += exitfail.h
+noinst_HEADERS += exitfail.h
+
+## localcharset sources:
+libcompat_la_SOURCES += localcharset.h localcharset.c
+
+## openat sources:
+libcompat_la_SOURCES += openat-safer.c
+libcompat_la_SOURCES += openat-die.c
+EXTRA_DIST += openat-priv.h openat-proc.c openat.h pathmax.h
+noinst_HEADERS += openat-priv.h openat.h pathmax.h
+
+## progname sources:
+libcompat_la_SOURCES += progname.h progname.c
+noinst_HEADERS += progname.h
+
+## "quote" sources:
+libcompat_la_SOURCES += quotearg.c
+EXTRA_DIST += quote.h quotearg.h
+noinst_HEADERS += quote.h quotearg.h
+
+## safer sources:
+libcompat_la_SOURCES += dup-safer.c fd-safer.c
+EXTRA_DIST += dup-safer-flag.c
+
+## save-cwd sources:
+libcompat_la_SOURCES += save-cwd.c
+EXTRA_DIST += save-cwd.h
+noinst_HEADERS += save-cwd.h
+
+## xalloc sources:
+libcompat_la_SOURCES += xalloc-die.c
+EXTRA_DIST += xalloc-oversized.h xalloc.h
+noinst_HEADERS += xalloc-oversized.h xalloc.h
+
+## xmalloc sources:
+libcompat_la_SOURCES += xmalloc.c
+
+## other misc. headers and sources that need to be distributed:
+EXTRA_DIST += at-func.c intprops.h unistd--.h unistd-safer.h
+noinst_HEADERS += intprops.h unistd--.h unistd-safer.h gettext.h
+
+## more misc. headers that need to be distributed:
+EXTRA_DIST += fpending.h
+noinst_HEADERS += fpending.h
+
+## the program to test chdirlong:
+check_PROGRAMS += chdirlongtest
+chdirlongtest_SOURCES = chdir-long.c chdir-long.h closeout.h error.h
+chdirlongtest_LDADD = libcompat.la
+chdirlongtest_CPPFLAGS = -DTEST_CHDIR=1
+chdirlongtest_CFLAGS = $(chdirlongtest_CPPFLAGS) -O -ggdb3
+
 ## the program to test mktime:
 check_PROGRAMS += mktimetest
 mktimetest_SOURCES = mktime.c mktime-internal.h
 noinst_HEADERS += mktime-internal.h
-mktimetest_LDADD = libUnixToOSX.la
+mktimetest_LDADD = libcompat.la
 mktimetest_CPPFLAGS = -DDEBUG -I.
 mktimetest_CFLAGS = $(mktimetest_CPPFLAGS) -Wall -Wextra -Os -ggdb3 -fwrapv
 

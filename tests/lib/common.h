@@ -18,6 +18,7 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
+
 #ifndef _TESTS_COMMON_H
 #define _TESTS_COMMON_H
 
@@ -26,3 +27,5 @@ struct bt_context;
 struct bt_context *create_context_with_path(const char *path);
 
 #endif /* _TESTS_COMMON_H */
+
+/* EOF */

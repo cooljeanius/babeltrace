@@ -1,3 +1,5 @@
+## automake Makefile for the libctf metadata parser
+
 AM_CFLAGS = $(PACKAGE_CFLAGS) -I$(top_srcdir)/include
 BUILT_SOURCES = ctf-parser.h
 AM_YFLAGS = -t -d -v
@@ -31,7 +33,7 @@ if BABELTRACE_BUILD_WITH_MINGW
 libctf_ast_la_LIBADD += -lrpcrt4 -lintl -liconv -lole32 -lpopt
 endif
 
-noinst_PROGRAMS = ctf-parser-test
+check_PROGRAMS = ctf-parser-test
 ctf_parser_test_SOURCES = ctf-parser-test.c
 
 ctf_parser_test_LDADD = \

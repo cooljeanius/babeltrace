@@ -1,3 +1,5 @@
+## automake Makefile for the lttng-live trace format
+
 AM_CFLAGS = $(PACKAGE_CFLAGS) -I$(top_srcdir)/include -I$(top_builddir)/include -I$(top_srcdir)
 
 lib_LTLIBRARIES = libbabeltrace-lttng-live.la
@@ -9,7 +11,8 @@ noinst_HEADERS = \
 libbabeltrace_lttng_live_la_SOURCES = \
 	lttng-live-plugin.c lttng-live-comm.c
 
-# Request that the linker keeps all static libraries objects.
+# We should request that the linker keeps all static libraries objects,
+# but unfortunately not all linkers support the necessary flag.
 libbabeltrace_lttng_live_la_LDFLAGS = \
 	-version-info $(BABELTRACE_LIBRARY_VERSION)
 

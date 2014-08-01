@@ -27,7 +27,10 @@
  * SOFTWARE.
  */
 
-#define _GNU_SOURCE
+#ifndef _GNU_SOURCE
+# define _GNU_SOURCE 1
+#endif /* !_GNU_SOURCE */
+
 #include <config.h>
 
 #ifdef BABELTRACE_HAVE_FMEMOPEN

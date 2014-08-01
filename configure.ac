@@ -10,9 +10,13 @@ AC_SUBST([BABELTRACE_LIBRARY_VERSION],[1:0:0])dnl
 
 AC_CONFIG_AUX_DIR([config])dnl
 AC_CANONICAL_TARGET dnl# also checks the "_HOST" version
-AC_USE_SYSTEM_EXTENSIONS
-AM_INIT_AUTOMAKE([foreign dist-bzip2 no-dist-gzip])
-AM_MAINTAINER_MODE([enable])
+gl_USE_SYSTEM_EXTENSIONS
+AM_INIT_AUTOMAKE([1.9 gnits dist-bzip2 no-dist-gzip])
+if test -d .git; then
+  AM_MAINTAINER_MODE([enable])
+else
+  AM_MAINTAINER_MODE
+fi
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 
 AC_CONFIG_LIBOBJ_DIR([compat])dnl
@@ -25,6 +29,19 @@ AC_CONFIG_HEADERS([config.h])dnl
 
 AC_SYS_LARGEFILE
 
+gl_COMMON_JUST_BODY
+gl_CONFIGMAKE_PREP
+
+case ${host_os} in
+  darwin*)
+    # dirty hack to get ./include/babeltrace/endian.h to use the correct
+    # header on darwin (freebsd should already define this by default):
+    if test "x${CPPFLAGS}" = "x"; then
+      test -z "${CPPFLAGS}" && export CPPFLAGS='-D__FreeBSD__=5'
+    fi
+    ;;
+esac
+
 # Checks for programs.
 if test "x${ac_cv_prog_cc_stdc}" = "x"; then
   test -z "${CC}" && test -z "${ac_cv_prog_cc_stdc}"
@@ -35,7 +52,7 @@ if test "x${ac_cv_prog_make_make_set}" = "x"; then
   AC_PROG_MAKE_SET
 fi
 AC_PROG_CXX
-LT_INIT([win32-dll])dnl
+LT_INIT([win32-dll dlopen])dnl
 AC_DEFUN([AC_REQUIRE_RANLIB],[
   AC_REQUIRE([AC_PROG_RANLIB])dnl
 ])
@@ -47,7 +64,8 @@ else
   AC_SUBST([RANLIB])
 fi
 AC_PROG_YACC
-AC_PROG_LEX
+AM_PROG_LEX
+AC_PATH_PROG([PROVE_BIN],[prove])dnl
 
 if test ! -f "${srcdir}/formats/ctf/metadata/ctf-parser.h"; then
   if test x"${YACC}" != x"bison -y"; then
@@ -64,6 +82,7 @@ if test ! -f "${srcdir}/formats/ctf/metadata/ctf-lexer.c"; then
 fi
 
 # Checks for libraries.
+LT_LIB_M
 AC_CHECK_LIB([iconv],[iconv],[],[
   AC_CHECK_LIB([iconv],[libiconv],[],[
     AC_CHECK_LIB([iconv],[main],[],[])dnl
@@ -74,7 +93,7 @@ AC_CHECK_LIB([intl],[gettext],[],[
 ])dnl
 
 # the first two functions checked in pthreads apparently can be used
-# as a replacement for thread-local storage in darwin:
+# as a replacement for thread-local storage on older versions of darwin:
 AC_CHECK_LIB([pthread],[pthread_getspecific],[],[
   AC_CHECK_LIB([pthread],[pthread_setspecific],[],[
     AC_CHECK_LIB([pthread],[main],[],[])dnl
@@ -84,9 +103,22 @@ AC_CHECK_LIB([pthread],[pthread_getspecific],[],[
 dnl# (ole32 and rpcrt4 are mingw-specific and done below in that section)
 dnl# (uuid, c, and popt are done even further below that)
 
+
+# Check for glib.
 AM_PATH_GLIB_2_0([2.22.0],[],
                  [AC_MSG_ERROR([glib is required in order to compile BabelTrace - download it from ftp://ftp.gtk.org/pub/gtk])],
                  [gmodule])dnl
+
+# Check for gettext.
+AM_GNU_GETTEXT([external])dnl
+AM_GNU_GETTEXT_VERSION([0.18.3])dnl
+dnl# (0.18.3 is oldest version on my system, newest is 0.19.2)
+m4_ifdef([AM_LANGINFO_CODESET],[
+  if test "x${am_cv_langinfo_codeset}" = "x"; then
+    test -z "${am_cv_langinfo_codeset}"
+    AM_LANGINFO_CODESET
+  fi
+],[:])dnl
 
 # Checks for header files.
 AC_DEFUN([AC_REQUIRE_HEADER_STDC],[
@@ -97,10 +129,29 @@ AC_HEADER_DIRENT
 AC_HEADER_STAT
 AC_HEADER_STDBOOL dnl# also "_CHECK"s it
 AC_HEADER_SYS_WAIT
-AC_CHECK_HEADERS([endian.h errno.h fcntl.h float.h libintl.h limits.h \
+AC_CHECK_HEADERS([argz.h endian.h errno.h fcntl.h float.h \
+                  langinfo.h libintl.h limits.h \
                   machine/endian.h malloc.h malloc/malloc.h \
-                  netdb.h netinet/in.h osreldate.h stddef.h stdio.h \
-                  sys/mman.h sys/socket.h])dnl
+                  netdb.h netinet/in.h osreldate.h \
+                  stddef.h stdio.h stdio_ext.h \
+                  sys/mman.h sys/socket.h wctype.h])dnl
+
+# Keep autoscan from complaining about headers we check in other ways.
+if test "x${ac_cv_header_locale_h}" = "x"; then
+  test -z "${ac_cv_header_locale_h}"
+  AC_CHECK_HEADERS([locale.h])
+fi
+if test "x${ac_cv_header_sys_param_h}" = "x"; then
+  test -z "${ac_cv_header_sys_param_h}"
+  AC_CHECK_HEADERS([sys/param.h])
+fi
+if test "x${ac_cv_header_wchar_h}" = "x"; then
+  test -z "${ac_cv_header_wchar_h}"
+  AC_CHECK_HEADERS([wchar.h])
+fi
+
+# Checks for headers that gnulib can replace (libcompat here).
+gl_FCNTL_H
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_BIGENDIAN([
@@ -115,15 +166,21 @@ AC_C_CONST
 AC_C_INLINE
 AC_C_PROTOTYPES
 AC_C_VOLATILE
+AC_DEFUN([AC_REQUIRE_SOME_C_TYPES],[
+  AC_REQUIRE([AC_TYPE_MODE_T])dnl
+  AC_REQUIRE([AC_TYPE_PID_T])dnl
+])dnl
+AC_REQUIRE_SOME_C_TYPES
 AC_TYPE_INT8_T
 AC_TYPE_INT16_T
 AC_TYPE_INT32_T
 AC_TYPE_INT64_T
 AC_TYPE_INTMAX_T
 AC_TYPE_OFF_T
-AC_TYPE_PID_T
+AC_CHECK_TYPES([ptrdiff_t])dnl
 AC_TYPE_SIZE_T
 AC_TYPE_SSIZE_T
+AC_TYPE_UID_T
 AC_TYPE_UINT8_T
 AC_TYPE_UINT16_T
 AC_TYPE_UINT32_T
@@ -133,12 +190,11 @@ AC_STRUCT_TIMEZONE dnl# also does the "_TM" one
 
 # Checks for library functions.
 AC_FUNC_ALLOCA
-gl_FUNC_ALLOCA
 AC_FUNC_CLOSEDIR_VOID
+AC_FUNC_ERROR_AT_LINE
 AC_FUNC_FORK
 AC_FUNC_MALLOC
-gl_FUNC_MALLOC_GNU
-gl_FUNC_MALLOC_POSIX
+AC_FUNC_MBRTOWC
 AC_FUNC_MKTIME
 AC_FUNC_MMAP
 AC_FUNC_REALLOC
@@ -146,12 +202,84 @@ AC_FUNC_STRERROR_R
 AC_FUNC_STRFTIME
 AC_FUNC_STRNLEN
 AC_FUNC_VPRINTF
-AC_CHECK_FUNCS([atexit be32toh be64toh bzero dup2 faccessat ftruncate \
-                getdelim gethostbyname gethostname getline gettimeofday \
-                htobe32 htobe64 localtime_r memchr memset mkdir munmap \
-                open openat posix_fallocate rmdir send setenv socket \
-                strchr strdup strerror strndup strrchr strtoul strtoull \
-                sysconf tzset uname unlinkat])dnl
+AC_CHECK_FUNCS([__argz_count __argz_next __argz_stringify __fpending \
+                atexit be32toh be64toh bzero dup2 \
+                faccessat fchdir ftruncate \
+                getcwd gethostbyname gethostname gettimeofday \
+                htobe32 htobe64 iswprint localeconv localtime_r \
+                mblen mbrlen memchr mempcpy memset mkdir munmap \
+                nl_langinfo open posix_fallocate rmdir \
+                send setenv setlocale socket stpcpy strcasecmp strcspn \
+                strchr strdup strerror strrchr strspn strstr \
+                strtoul strtoull sysconf tzset uname])dnl
+
+# Checks for functions from gnulib (libcompat here).
+gl_FUNC_ALLOCA
+dnl# fpending module:
+gl_FUNC_FPENDING
+if test "x${ac_cv_func___fpending}" = "xno"; then
+  AC_LIBOBJ([fpending])dnl
+  gl_PREREQ_FPENDING
+fi
+dnl# getline module:
+gl_FUNC_GETLINE
+if test ${REPLACE_GETLINE} = 1; then
+  AC_LIBOBJ([getline])dnl
+  gl_PREREQ_GETLINE
+fi
+m4_ifdef([gl_STDIO_MODULE_INDICATOR],[
+  gl_STDIO_MODULE_INDICATOR([getline])dnl
+],[:])dnl
+dnl# malloc modules:
+AC_DEFUN([gl_MALLOC_MODULES],[
+  AC_REQUIRE([gl_FUNC_MALLOC_GNU])dnl
+  AC_REQUIRE([gl_FUNC_MALLOC_POSIX])dnl
+])dnl
+gl_MALLOC_MODULES
+dnl# openat module:
+gl_FUNC_OPENAT
+if test ${HAVE_OPENAT} = 0 || test ${REPLACE_OPENAT} = 1; then
+  AC_LIBOBJ([openat])dnl
+  AC_LIBOBJ([openat-proc])dnl
+  gl_PREREQ_OPENAT
+fi
+m4_ifdef([gl_MODULE_INDICATOR],[
+  gl_MODULE_INDICATOR([openat]) dnl# for lib/getcwd.c (if it exists)
+],[:])dnl
+m4_ifdef([gl_FCNTL_MODULE_INDICATOR],[
+  gl_FCNTL_MODULE_INDICATOR([openat])dnl
+])dnl
+dnl# unlinkat module:
+gl_FUNC_UNLINKAT
+if test ${HAVE_UNLINKAT} = 0 || test ${REPLACE_UNLINKAT} = 1; then
+  AC_LIBOBJ([unlinkat])
+fi
+m4_ifdef([gl_UNISTD_MODULE_INDICATOR],[
+  gl_UNISTD_MODULE_INDICATOR([unlinkat])dnl
+],[:])dnl
+
+# Functions for which we have replacement sources, and for which we would
+# rather avoid the official gnulib macros:
+AC_REPLACE_FUNCS([getdelim strndup])dnl
+AC_LIBOBJ([memrchr])dnl
+
+# Keep autoscan from complaining about functions we replace.
+if test "x${ac_cv_func_strndup}" = "x"; then
+  test -z "${ac_cv_func_strndup}"
+  AC_CHECK_FUNCS([strndup])
+fi
+if test "x${ac_cv_func_getdelim}" = "x"; then
+  test -z "${ac_cv_func_getdelim}"
+  AC_CHECK_FUNCS([getdelim])
+fi
+if test "x${ac_cv_func_getline}" = "x"; then
+  test -z "${ac_cv_func_getline}"
+  AC_CHECK_FUNCS([getline])
+fi
+if test "x${ac_cv_func_unlinkat}" = "x"; then
+  test -z "${ac_cv_func_unlinkat}"
+  AC_CHECK_FUNCS([unlinkat])
+fi
 
 # Checks for declarations.
 AC_CHECK_DECLS([MSG_NOSIGNAL],[],[
@@ -401,6 +529,8 @@ AC_CONFIG_FILES([
   include/Makefile
   bindings/Makefile
   bindings/python/Makefile
+  po/Makefile.in
+  po/Makevars
   tests/Makefile
   tests/bin/Makefile
   tests/lib/Makefile
@@ -412,3 +542,14 @@ AC_CONFIG_FILES([
   babeltrace-ctf.pc
 ])dnl
 AC_OUTPUT
+
+echo ""
+echo "Configuration results:"
+echo ""
+echo "Compiler: '${CC}'"
+echo "Ordinary compiler flags: '${CFLAGS}'"
+echo "Package compiler flags: '${PACKAGE_CFLAGS}'"
+echo "Preprocessor flags: '${CPPFLAGS}'"
+echo "Linker flags: '${LDFLAGS}'"
+echo "Ordinary libraries to link against: '${LIBS}'"
+echo ""

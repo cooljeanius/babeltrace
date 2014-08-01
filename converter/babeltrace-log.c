@@ -28,7 +28,10 @@
  * Depends on glibc 2.10 for getline().
  */
 
-#define _GNU_SOURCE
+#ifndef _GNU_SOURCE
+# define _GNU_SOURCE 1
+#endif /* !_GNU_SOURCE */
+
 #include <config.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -316,7 +319,7 @@ void trace_text(FILE *input, int output)
 	struct ctf_stream_pos pos;
 	ssize_t len;
 	char *line = NULL, *nl;
-	size_t linesize;
+	size_t linesize = 0L;
 	int ret;
 
 	memset(&pos, 0, sizeof(pos));
@@ -334,14 +337,15 @@ void trace_text(FILE *input, int output)
 		/* fail: */
 		len = -1;
 #endif /* HAVE_GETLINE */
-		if (len < 0)
+		if (len < 0) {
 			break;
+        }
 		nl = strrchr(line, '\n');
 		if (nl) {
 			*nl = '\0';
-			trace_string(line, &pos, nl - line + 1);
+			trace_string(line, &pos, (nl - line + 1));
 		} else {
-			trace_string(line, &pos, strlen(line) + 1);
+			trace_string(line, &pos, (strlen(line) + 1));
 		}
 	}
 	ret = ctf_fini_pos(&pos);
@@ -424,8 +428,8 @@ int main(int argc, char **argv)
 	}
 
 #ifdef HAVE_OPENAT
-	fd = openat(dir_fd, "datastream", O_RDWR|O_CREAT,
-		    S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP);
+	fd = openat(dir_fd, "datastream", (O_RDWR | O_CREAT),
+                (S_IRUSR | S_IWUSR | S_IRGRP| S_IWGRP));
 #else
 	/* use default failure values: */
 	fd = -1;
@@ -437,8 +441,8 @@ int main(int argc, char **argv)
 	}
 
 #ifdef HAVE_OPENAT
-	metadata_fd = openat(dir_fd, "metadata", O_RDWR|O_CREAT,
-			     S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP);
+	metadata_fd = openat(dir_fd, "metadata", (O_RDWR | O_CREAT),
+                         (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP));
 #else
 	/* use default failure values: */
 	metadata_fd = -1;
@@ -459,31 +463,39 @@ int main(int argc, char **argv)
 	trace_text(stdin, fd);
 
 	ret = close(fd);
-	if (ret)
+	if (ret) {
 		perror("close");
+    }
 	exit(EXIT_SUCCESS);
 
-	/* error handling */
+	/* error handling: */
 error_closemetadatafd:
 	ret = close(metadata_fd);
-	if (ret)
+	if (ret) {
 		perror("close");
+    }
 error_closedatastream:
 	ret = close(fd);
-	if (ret)
+	if (ret) {
 		perror("close");
+    }
 error_closedirfd:
 	ret = close(dir_fd);
-	if (ret)
+	if (ret) {
 		perror("close");
+    }
 error_closedir:
 	ret = closedir(dir);
-	if (ret)
+	if (ret) {
 		perror("closedir");
+    }
 error_rmdir:
 	ret = rmdir(s_outputname);
-	if (ret)
+	if (ret) {
 		perror("rmdir");
+    }
 error:
 	exit(EXIT_FAILURE);
 }
+
+/* EOF */

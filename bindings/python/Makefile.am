@@ -1,3 +1,5 @@
+## automake Makefile for swig-based Python bindings to libbabeltrace
+
 babeltrace.i: babeltrace.i.in
 	$(SED) "s/BABELTRACE_VERSION_STR/Babeltrace $(PACKAGE_VERSION)/g" \		< $(top_srcdir)/bindings/python/babeltrace.i.in > \
 		$(top_builddir)/bindings/python/babeltrace.i

@@ -1,3 +1,5 @@
+## automake Makefile for libbabeltrace headers
+
 babeltraceinclude_HEADERS = \
 	babeltrace/babeltrace.h \
 	babeltrace/format.h \

@@ -18,7 +18,10 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-#define _GNU_SOURCE
+
+#ifndef _GNU_SOURCE
+# define _GNU_SOURCE 1
+#endif /* !_GNU_SOURCE */
 
 #include <babeltrace/context.h>
 #include <babeltrace/iterator.h>
@@ -40,3 +43,5 @@ struct bt_context *create_context_with_path(const char *path)
 	}
 	return ctx;
 }
+
+/* EOF */

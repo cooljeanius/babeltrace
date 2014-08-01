@@ -1,3 +1,5 @@
+## automake Makefile for the ctf-text trace format
+
 AM_CFLAGS = $(PACKAGE_CFLAGS) -I$(top_srcdir)/include
 
 SUBDIRS = types .

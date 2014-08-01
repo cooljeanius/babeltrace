@@ -1,6 +1,8 @@
+## automake Makefile for libbabeltrace test libraries
+
 AM_CFLAGS = $(PACKAGE_CFLAGS) -I$(top_srcdir)/include -I$(top_srcdir)/tests/utils
 
-noinst_LIBRARIES = libtestcommon.a
+check_LIBRARIES = libtestcommon.a
 
 LIBTAP=$(top_builddir)/tests/utils/tap/libtap.la
 
@@ -20,7 +22,7 @@ test_ctf_writer_LDADD = $(LIBTAP) \
 	$(top_builddir)/lib/libbabeltrace.la \
 	$(top_builddir)/formats/ctf/libbabeltrace-ctf.la
 
-noinst_PROGRAMS = test_seek test_bitfield test_ctf_writer
+check_PROGRAMS = test_seek test_bitfield test_ctf_writer
 
 test_seek_SOURCES = test_seek.c
 test_bitfield_SOURCES = test_bitfield.c
@@ -30,18 +32,20 @@ SCRIPT_LIST = test_seek_big_trace \
 	test_seek_empty_packet \
 	test_ctf_writer_complete
 
-dist_noinst_SCRIPTS = $(SCRIPT_LIST)
+dist_check_SCRIPTS = $(SCRIPT_LIST)
 
 all-local:
 	@if [ x"$(srcdir)" != x"$(builddir)" ]; then \
 		for script in $(SCRIPT_LIST); do \
-			cp -f $(srcdir)/$$script $(builddir); \
+			cp -fv $(srcdir)/$${script} $(builddir); \
 		done; \
 	fi
+.PHONY: all-local
 
 clean-local:
 	@if [ x"$(srcdir)" != x"$(builddir)" ]; then \
 		for script in $(SCRIPT_LIST); do \
-			rm -f $(builddir)/$$script; \
+			rm -f $(builddir)/$${script}; \
 		done; \
 	fi
+.PHONY: clean-local

@@ -1,3 +1,5 @@
+## automake Makefile for libbabeltrace_types
+
 AM_CFLAGS = $(PACKAGE_CFLAGS) -I$(top_srcdir)/include
 
 noinst_LTLIBRARIES = libbabeltrace_types.la

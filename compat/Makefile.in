@@ -64,7 +64,6 @@ am__make_keepgoing = (target_option=k; $(am__make_running_with_option))
 pkgdatadir = $(datadir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
 pkglibdir = $(libdir)/@PACKAGE@
-pkglibexecdir = $(libexecdir)/@PACKAGE@
 am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd
 install_sh_DATA = $(install_sh) -c -m 644
 install_sh_PROGRAM = $(install_sh) -c
@@ -80,20 +79,35 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
-check_PROGRAMS = mktimetest$(EXEEXT)
+check_PROGRAMS = chdirlongtest$(EXEEXT) mktimetest$(EXEEXT)
 @BABELTRACE_BUILD_WITH_MINGW_TRUE@am__append_1 = compat_uuid.c
 @BABELTRACE_BUILD_WITH_MINGW_FALSE@am__append_2 = dummy.c
 subdir = compat
-DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am realloc.c \
-	mktime.c strnlen.c malloc.c alloca.c \
-	$(top_srcdir)/config/depcomp $(noinst_HEADERS) TODO
+DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am mktime.c \
+	getdelim.c error.c openat-proc.c memrchr.c realloc.c error.h \
+	fpending.c openat.c getline.c malloc.c strnlen.c strndup.c \
+	unlinkat.c alloca.c $(top_srcdir)/config/depcomp \
+	$(noinst_HEADERS) TODO
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/alloca.m4 \
-	$(top_srcdir)/m4/ax_pkg_swig.m4 $(top_srcdir)/m4/glib-2.0.m4 \
-	$(top_srcdir)/m4/libtool.m4 $(top_srcdir)/m4/ltoptions.m4 \
+	$(top_srcdir)/m4/ax_pkg_swig.m4 $(top_srcdir)/m4/codeset.m4 \
+	$(top_srcdir)/m4/configmake.m4 $(top_srcdir)/m4/extensions.m4 \
+	$(top_srcdir)/m4/fcntl-o.m4 $(top_srcdir)/m4/fcntl_h.m4 \
+	$(top_srcdir)/m4/fpending.m4 $(top_srcdir)/m4/getline.m4 \
+	$(top_srcdir)/m4/gettext.m4 $(top_srcdir)/m4/glib-2.0.m4 \
+	$(top_srcdir)/m4/gnulib-common.m4 $(top_srcdir)/m4/iconv.m4 \
+	$(top_srcdir)/m4/include_next.m4 \
+	$(top_srcdir)/m4/intlmacosx.m4 $(top_srcdir)/m4/lib-ld.m4 \
+	$(top_srcdir)/m4/lib-link.m4 $(top_srcdir)/m4/lib-prefix.m4 \
+	$(top_srcdir)/m4/libtool.m4 $(top_srcdir)/m4/longlong.m4 \
+	$(top_srcdir)/m4/lstat.m4 $(top_srcdir)/m4/ltoptions.m4 \
 	$(top_srcdir)/m4/ltsugar.m4 $(top_srcdir)/m4/ltversion.m4 \
 	$(top_srcdir)/m4/lt~obsolete.m4 $(top_srcdir)/m4/malloc.m4 \
-	$(top_srcdir)/m4/pkg.m4 $(top_srcdir)/configure.ac
+	$(top_srcdir)/m4/mode_t.m4 $(top_srcdir)/m4/nls.m4 \
+	$(top_srcdir)/m4/openat.m4 $(top_srcdir)/m4/pkg.m4 \
+	$(top_srcdir)/m4/po.m4 $(top_srcdir)/m4/progtest.m4 \
+	$(top_srcdir)/m4/unlinkat.m4 $(top_srcdir)/m4/warn-on-use.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -101,11 +115,19 @@ CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 LTLIBRARIES = $(noinst_LTLIBRARIES)
-libcompat_la_DEPENDENCIES = $(LIBOBJS) $(ALLOCA)
-am__libcompat_la_SOURCES_DIST = compat_uuid.c dummy.c
+libcompat_la_DEPENDENCIES = $(LTLIBOBJS) $(ALLOCA)
+am__libcompat_la_SOURCES_DIST = compat_uuid.c dummy.c cloexec.c \
+	close-stream.c closeout.c c-ctype.h c-ctype.c c-strcase.h \
+	c-strcasecmp.c exitfail.c localcharset.h localcharset.c \
+	openat-safer.c openat-die.c progname.h progname.c quotearg.c \
+	dup-safer.c fd-safer.c save-cwd.c xalloc-die.c xmalloc.c
 @BABELTRACE_BUILD_WITH_MINGW_TRUE@am__objects_1 = compat_uuid.lo
 @BABELTRACE_BUILD_WITH_MINGW_FALSE@am__objects_2 = dummy.lo
-am_libcompat_la_OBJECTS = $(am__objects_1) $(am__objects_2)
+am_libcompat_la_OBJECTS = $(am__objects_1) $(am__objects_2) cloexec.lo \
+	close-stream.lo closeout.lo c-ctype.lo c-strcasecmp.lo \
+	exitfail.lo localcharset.lo openat-safer.lo openat-die.lo \
+	progname.lo quotearg.lo dup-safer.lo fd-safer.lo save-cwd.lo \
+	xalloc-die.lo xmalloc.lo
 libcompat_la_OBJECTS = $(am_libcompat_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -114,9 +136,15 @@ am__v_lt_1 =
 libcompat_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(libcompat_la_LDFLAGS) $(LDFLAGS) -o $@
+am_chdirlongtest_OBJECTS = chdirlongtest-chdir-long.$(OBJEXT)
+chdirlongtest_OBJECTS = $(am_chdirlongtest_OBJECTS)
+chdirlongtest_DEPENDENCIES = libcompat.la
+chdirlongtest_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(chdirlongtest_CFLAGS) \
+	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 am_mktimetest_OBJECTS = mktimetest-mktime.$(OBJEXT)
 mktimetest_OBJECTS = $(am_mktimetest_OBJECTS)
-mktimetest_DEPENDENCIES = libUnixToOSX.la
+mktimetest_DEPENDENCIES = libcompat.la
 mktimetest_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(mktimetest_CFLAGS) \
 	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
@@ -154,8 +182,10 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(libcompat_la_SOURCES) $(mktimetest_SOURCES)
-DIST_SOURCES = $(am__libcompat_la_SOURCES_DIST) $(mktimetest_SOURCES)
+SOURCES = $(libcompat_la_SOURCES) $(chdirlongtest_SOURCES) \
+	$(mktimetest_SOURCES)
+DIST_SOURCES = $(am__libcompat_la_SOURCES_DIST) \
+	$(chdirlongtest_SOURCES) $(mktimetest_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -182,6 +212,7 @@ am__define_uniq_tagged_files = \
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+pkglibexecdir = @pkglibexecdir@
 ACLOCAL = @ACLOCAL@
 ALLOCA = @ALLOCA@
 ALLOCA_H = @ALLOCA_H@
@@ -204,7 +235,7 @@ CXXCPP = @CXXCPP@
 CXXDEPMODE = @CXXDEPMODE@
 CXXFLAGS = @CXXFLAGS@
 CYGPATH_W = @CYGPATH_W@
-DEFS = @DEFS@
+DEFS = @DEFS@ -DEXEEXT=\"@EXEEXT@\"
 DEPDIR = @DEPDIR@
 DLLTOOL = @DLLTOOL@
 DSYMUTIL = @DSYMUTIL@
@@ -215,6 +246,7 @@ ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 FGREP = @FGREP@
+GETTEXT_MACRO_VERSION = @GETTEXT_MACRO_VERSION@
 GLIB_CFLAGS = @GLIB_CFLAGS@
 GLIB_COMPILE_RESOURCES = @GLIB_COMPILE_RESOURCES@
 GLIB_GENMARSHAL = @GLIB_GENMARSHAL@
@@ -222,28 +254,50 @@ GLIB_LIBS = @GLIB_LIBS@
 GLIB_MKENUMS = @GLIB_MKENUMS@
 GMODULE_CFLAGS = @GMODULE_CFLAGS@
 GMODULE_LIBS = @GMODULE_LIBS@
+GMSGFMT = @GMSGFMT@
+GMSGFMT_015 = @GMSGFMT_015@
+GNULIB_FCNTL = @GNULIB_FCNTL@
+GNULIB_NONBLOCKING = @GNULIB_NONBLOCKING@
+GNULIB_OPEN = @GNULIB_OPEN@
+GNULIB_OPENAT = @GNULIB_OPENAT@
 GOBJECT_QUERY = @GOBJECT_QUERY@
 GREP = @GREP@
+HAVE_FCNTL = @HAVE_FCNTL@
+HAVE_OPENAT = @HAVE_OPENAT@
+INCLUDE_NEXT = @INCLUDE_NEXT@
+INCLUDE_NEXT_AS_FIRST_DIRECTIVE = @INCLUDE_NEXT_AS_FIRST_DIRECTIVE@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
+INTLLIBS = @INTLLIBS@
+INTL_MACOSX_LIBS = @INTL_MACOSX_LIBS@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
 LEX = @LEX@
 LEXLIB = @LEXLIB@
 LEX_OUTPUT_ROOT = @LEX_OUTPUT_ROOT@
+LIBICONV = @LIBICONV@
+LIBINTL = @LIBINTL@
+LIBM = @LIBM@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
 LIPO = @LIPO@
 LN_S = @LN_S@
+LTLIBICONV = @LTLIBICONV@
+LTLIBINTL = @LTLIBINTL@
 LTLIBOBJS = @LTLIBOBJS@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
 MANIFEST_TOOL = @MANIFEST_TOOL@
 MKDIR_P = @MKDIR_P@
+MSGFMT = @MSGFMT@
+MSGFMT_015 = @MSGFMT_015@
+MSGMERGE = @MSGMERGE@
+NEXT_AS_FIRST_DIRECTIVE_FCNTL_H = @NEXT_AS_FIRST_DIRECTIVE_FCNTL_H@
+NEXT_FCNTL_H = @NEXT_FCNTL_H@
 NM = @NM@
 NMEDIT = @NMEDIT@
 OBJDUMP = @OBJDUMP@
@@ -263,6 +317,10 @@ PATH_SEPARATOR = @PATH_SEPARATOR@
 PKG_CONFIG = @PKG_CONFIG@
 PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
 PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+POSUB = @POSUB@
+PRAGMA_COLUMNS = @PRAGMA_COLUMNS@
+PRAGMA_SYSTEM_HEADER = @PRAGMA_SYSTEM_HEADER@
+PROVE_BIN = @PROVE_BIN@
 PYTHON = @PYTHON@
 PYTHON_CONFIG = @PYTHON_CONFIG@
 PYTHON_EXEC_PREFIX = @PYTHON_EXEC_PREFIX@
@@ -271,13 +329,20 @@ PYTHON_PLATFORM = @PYTHON_PLATFORM@
 PYTHON_PREFIX = @PYTHON_PREFIX@
 PYTHON_VERSION = @PYTHON_VERSION@
 RANLIB = @RANLIB@
+REPLACE_FCNTL = @REPLACE_FCNTL@
+REPLACE_OPEN = @REPLACE_OPEN@
+REPLACE_OPENAT = @REPLACE_OPENAT@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
 SWIG = @SWIG@
 SWIG_LIB = @SWIG_LIB@
+USE_NLS = @USE_NLS@
 VERSION = @VERSION@
+XGETTEXT = @XGETTEXT@
+XGETTEXT_015 = @XGETTEXT_015@
+XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
 YACC = @YACC@
 YFLAGS = @YFLAGS@
 abs_builddir = @abs_builddir@
@@ -320,6 +385,7 @@ infodir = @infodir@
 install_sh = @install_sh@
 libdir = @libdir@
 libexecdir = @libexecdir@
+lispdir = @lispdir@
 localedir = @localedir@
 localstatedir = @localstatedir@
 mandir = @mandir@
@@ -346,16 +412,42 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AM_CFLAGS = $(PACKAGE_CFLAGS) -I$(top_srcdir)/include
-noinst_HEADERS = mktime-internal.h
-BUILT_SOURCES = $(ALLOCA_H)
-MOSTLYCLEANFILES = .DS_Store alloca.h alloca.h-t
-EXTRA_DIST = alloca.in.h
+noinst_HEADERS = fcntl-safer.h cloexec.h close-stream.h closeout.h \
+	c-strcaseeq.h dosname.h exitfail.h openat-priv.h openat.h \
+	pathmax.h progname.h quote.h quotearg.h save-cwd.h \
+	xalloc-oversized.h xalloc.h intprops.h unistd--.h \
+	unistd-safer.h gettext.h fpending.h mktime-internal.h
+BUILT_SOURCES = $(ALLOCA_H) c++defs.h arg-nonnull.h warn-on-use.h \
+	fcntl.h configmake.h
+MOSTLYCLEANFILES = .DS_Store alloca.h alloca.h-t c++defs.h c++defs.h-t \
+	arg-nonnull.h arg-nonnull.h-t warn-on-use.h warn-on-use.h-t \
+	fcntl.h fcntl.h-t
+CLEANFILES = .DS_Store configmake.h configmake.h-t
+EXTRA_DIST = alloca.in.h $(top_srcdir)/config/snippet/c++defs.h \
+	$(top_srcdir)/config/snippet/arg-nonnull.h \
+	$(top_srcdir)/config/snippet/warn-on-use.h fcntl.in.h \
+	fcntl-safer.h cloexec.h close-stream.h closeout.h \
+	c-strcaseeq.h dosname.h exitfail.h openat-priv.h openat-proc.c \
+	openat.h pathmax.h quote.h quotearg.h dup-safer-flag.c \
+	save-cwd.h xalloc-oversized.h xalloc.h at-func.c intprops.h \
+	unistd--.h unistd-safer.h fpending.h
 noinst_LTLIBRARIES = libcompat.la
-libcompat_la_SOURCES = $(am__append_1) $(am__append_2)
+libcompat_la_SOURCES = $(am__append_1) $(am__append_2) cloexec.c \
+	close-stream.c closeout.c c-ctype.h c-ctype.c c-strcase.h \
+	c-strcasecmp.c exitfail.c localcharset.h localcharset.c \
+	openat-safer.c openat-die.c progname.h progname.c quotearg.c \
+	dup-safer.c fd-safer.c save-cwd.c xalloc-die.c xmalloc.c
 libcompat_la_LDFLAGS = 
-libcompat_la_LIBADD = $(LIBOBJS) $(ALLOCA)
+libcompat_la_LIBADD = $(LTLIBOBJS) $(ALLOCA)
+CXXDEFS_H = c++defs.h
+ARG_NONNULL_H = arg-nonnull.h
+WARN_ON_USE_H = warn-on-use.h
+chdirlongtest_SOURCES = chdir-long.c chdir-long.h closeout.h error.h
+chdirlongtest_LDADD = libcompat.la
+chdirlongtest_CPPFLAGS = -DTEST_CHDIR=1
+chdirlongtest_CFLAGS = $(chdirlongtest_CPPFLAGS) -O -ggdb3
 mktimetest_SOURCES = mktime.c mktime-internal.h
-mktimetest_LDADD = libUnixToOSX.la
+mktimetest_LDADD = libcompat.la
 mktimetest_CPPFLAGS = -DDEBUG -I.
 mktimetest_CFLAGS = $(mktimetest_CPPFLAGS) -Wall -Wextra -Os -ggdb3 -fwrapv
 all: $(BUILT_SOURCES)
@@ -372,9 +464,9 @@ $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__confi
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign compat/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnits compat/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --foreign compat/Makefile
+	  $(AUTOMAKE) --gnits compat/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
@@ -417,6 +509,10 @@ clean-checkPROGRAMS:
 	echo " rm -f" $$list; \
 	rm -f $$list
 
+chdirlongtest$(EXEEXT): $(chdirlongtest_OBJECTS) $(chdirlongtest_DEPENDENCIES) $(EXTRA_chdirlongtest_DEPENDENCIES) 
+	@rm -f chdirlongtest$(EXEEXT)
+	$(AM_V_CCLD)$(chdirlongtest_LINK) $(chdirlongtest_OBJECTS) $(chdirlongtest_LDADD) $(LIBS)
+
 mktimetest$(EXEEXT): $(mktimetest_OBJECTS) $(mktimetest_DEPENDENCIES) $(EXTRA_mktimetest_DEPENDENCIES) 
 	@rm -f mktimetest$(EXEEXT)
 	$(AM_V_CCLD)$(mktimetest_LINK) $(mktimetest_OBJECTS) $(mktimetest_LDADD) $(LIBS)
@@ -428,13 +524,39 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/alloca.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/malloc.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/mktime.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/realloc.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strnlen.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/error.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fpending.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/getdelim.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/getline.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/malloc.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/memrchr.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/mktime.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/openat-proc.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/openat.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/realloc.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strndup.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strnlen.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/unlinkat.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/c-ctype.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/c-strcasecmp.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/chdirlongtest-chdir-long.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cloexec.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/close-stream.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/closeout.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/compat_uuid.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dummy.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dup-safer.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/exitfail.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fd-safer.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/localcharset.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mktimetest-mktime.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/openat-die.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/openat-safer.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/progname.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/quotearg.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/save-cwd.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xalloc-die.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xmalloc.Plo@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -456,6 +578,20 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LTCOMPILE) -c -o $@ $<
+
+chdirlongtest-chdir-long.o: chdir-long.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(chdirlongtest_CPPFLAGS) $(CPPFLAGS) $(chdirlongtest_CFLAGS) $(CFLAGS) -MT chdirlongtest-chdir-long.o -MD -MP -MF $(DEPDIR)/chdirlongtest-chdir-long.Tpo -c -o chdirlongtest-chdir-long.o `test -f 'chdir-long.c' || echo '$(srcdir)/'`chdir-long.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/chdirlongtest-chdir-long.Tpo $(DEPDIR)/chdirlongtest-chdir-long.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='chdir-long.c' object='chdirlongtest-chdir-long.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(chdirlongtest_CPPFLAGS) $(CPPFLAGS) $(chdirlongtest_CFLAGS) $(CFLAGS) -c -o chdirlongtest-chdir-long.o `test -f 'chdir-long.c' || echo '$(srcdir)/'`chdir-long.c
+
+chdirlongtest-chdir-long.obj: chdir-long.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(chdirlongtest_CPPFLAGS) $(CPPFLAGS) $(chdirlongtest_CFLAGS) $(CFLAGS) -MT chdirlongtest-chdir-long.obj -MD -MP -MF $(DEPDIR)/chdirlongtest-chdir-long.Tpo -c -o chdirlongtest-chdir-long.obj `if test -f 'chdir-long.c'; then $(CYGPATH_W) 'chdir-long.c'; else $(CYGPATH_W) '$(srcdir)/chdir-long.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/chdirlongtest-chdir-long.Tpo $(DEPDIR)/chdirlongtest-chdir-long.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='chdir-long.c' object='chdirlongtest-chdir-long.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(chdirlongtest_CPPFLAGS) $(CPPFLAGS) $(chdirlongtest_CFLAGS) $(CFLAGS) -c -o chdirlongtest-chdir-long.obj `if test -f 'chdir-long.c'; then $(CYGPATH_W) 'chdir-long.c'; else $(CYGPATH_W) '$(srcdir)/chdir-long.c'; fi`
 
 mktimetest-mktime.o: mktime.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mktimetest_CPPFLAGS) $(CPPFLAGS) $(mktimetest_CFLAGS) $(CFLAGS) -MT mktimetest-mktime.o -MD -MP -MF $(DEPDIR)/mktimetest-mktime.Tpo -c -o mktimetest-mktime.o `test -f 'mktime.c' || echo '$(srcdir)/'`mktime.c
@@ -589,6 +725,7 @@ mostlyclean-generic:
 	-test -z "$(MOSTLYCLEANFILES)" || rm -f $(MOSTLYCLEANFILES)
 
 clean-generic:
+	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
@@ -695,6 +832,95 @@ uninstall-am:
 @GL_GENERATE_ALLOCA_H_TRUE@	mv -fv $@-t $@
 @GL_GENERATE_ALLOCA_H_FALSE@alloca.h: $(top_builddir)/config.status
 @GL_GENERATE_ALLOCA_H_FALSE@	rm -fv $@
+# The c++defs.h that gets inserted into generated .h files is the same as
+# config/snippet/c++defs.h, except that it has the copyright header cut
+# off.
+c++defs.h: $(top_srcdir)/config/snippet/c++defs.h
+	$(AM_V_GEN)rm -f $@-t $@ && \
+	$(SED) -n -e '/_GL_CXXDEFS/,$$p' \
+	  < $(top_srcdir)/config/snippet/c++defs.h \
+	  > $@-t && \
+	mv -v $@-t $@
+# The arg-nonnull.h that gets inserted into generated .h files is the same
+# as config/snippet/arg-nonnull.h, except that it has the copyright
+# header cut off.
+arg-nonnull.h: $(top_srcdir)/config/snippet/arg-nonnull.h
+	$(AM_V_GEN)rm -f $@-t $@ && \
+	$(SED) -n -e '/GL_ARG_NONNULL/,$$p' \
+	  < $(top_srcdir)/config/snippet/arg-nonnull.h \
+	  > $@-t && \
+	mv -v $@-t $@
+# The warn-on-use.h that gets inserted into generated .h files is the same
+# as config/snippet/warn-on-use.h, except that it has the copyright
+# header cut off.
+warn-on-use.h: $(top_srcdir)/config/snippet/warn-on-use.h
+	$(AM_V_GEN)rm -f $@-t $@ && \
+	$(SED) -n -e '/^.ifndef/,$$p' \
+	  < $(top_srcdir)/config/snippet/warn-on-use.h \
+	  > $@-t && \
+	mv -v $@-t $@
+# We need the following in order to create <fcntl.h> when the system
+# does NOT have one that works with the given compiler.
+fcntl.h: fcntl.in.h $(top_builddir)/config.status $(CXXDEFS_H) $(ARG_NONNULL_H) $(WARN_ON_USE_H)
+	$(AM_V_GEN)rm -f $@-t $@ && \
+	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */'; \
+	  $(SED) -e 's|@''GUARD_PREFIX''@|${gl_include_guard_prefix}|g' \
+	      -e 's|@''INCLUDE_NEXT''@|$(INCLUDE_NEXT)|g' \
+	      -e 's|@''PRAGMA_SYSTEM_HEADER''@|@PRAGMA_SYSTEM_HEADER@|g' \
+	      -e 's|@''PRAGMA_COLUMNS''@|@PRAGMA_COLUMNS@|g' \
+	      -e 's|@''NEXT_FCNTL_H''@|$(NEXT_FCNTL_H)|g' \
+	      -e 's/@''GNULIB_FCNTL''@/$(GNULIB_FCNTL)/g' \
+	      -e 's/@''GNULIB_NONBLOCKING''@/$(GNULIB_NONBLOCKING)/g' \
+	      -e 's/@''GNULIB_OPEN''@/$(GNULIB_OPEN)/g' \
+	      -e 's/@''GNULIB_OPENAT''@/$(GNULIB_OPENAT)/g' \
+	      -e 's|@''HAVE_FCNTL''@|$(HAVE_FCNTL)|g' \
+	      -e 's|@''HAVE_OPENAT''@|$(HAVE_OPENAT)|g' \
+	      -e 's|@''REPLACE_FCNTL''@|$(REPLACE_FCNTL)|g' \
+	      -e 's|@''REPLACE_OPEN''@|$(REPLACE_OPEN)|g' \
+	      -e 's|@''REPLACE_OPENAT''@|$(REPLACE_OPENAT)|g' \
+	      -e '/definitions of _GL_FUNCDECL_RPL/r $(CXXDEFS_H)' \
+	      -e '/definition of _GL_ARG_NONNULL/r $(ARG_NONNULL_H)' \
+	      -e '/definition of _GL_WARN_ON_USE/r $(WARN_ON_USE_H)' \
+	      < $(srcdir)/fcntl.in.h; \
+	} > $@-t && \
+	mv -v $@-t $@
+
+# Listed in the same order as the GNU makefile conventions, and
+# provided by autoconf 2.59c+.
+# The Automake-defined pkg* macros are appended, in the order
+# listed in the Automake 1.10a+ documentation.
+configmake.h: Makefile
+	$(AM_V_GEN)rm -f $@-t && \
+	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */'; \
+	  echo '#define PREFIX "$(prefix)"'; \
+	  echo '#define EXEC_PREFIX "$(exec_prefix)"'; \
+	  echo '#define BINDIR "$(bindir)"'; \
+	  echo '#define SBINDIR "$(sbindir)"'; \
+	  echo '#define LIBEXECDIR "$(libexecdir)"'; \
+	  echo '#define DATAROOTDIR "$(datarootdir)"'; \
+	  echo '#define DATADIR "$(datadir)"'; \
+	  echo '#define SYSCONFDIR "$(sysconfdir)"'; \
+	  echo '#define SHAREDSTATEDIR "$(sharedstatedir)"'; \
+	  echo '#define LOCALSTATEDIR "$(localstatedir)"'; \
+	  echo '#define INCLUDEDIR "$(includedir)"'; \
+	  echo '#define OLDINCLUDEDIR "$(oldincludedir)"'; \
+	  echo '#define DOCDIR "$(docdir)"'; \
+	  echo '#define INFODIR "$(infodir)"'; \
+	  echo '#define HTMLDIR "$(htmldir)"'; \
+	  echo '#define DVIDIR "$(dvidir)"'; \
+	  echo '#define PDFDIR "$(pdfdir)"'; \
+	  echo '#define PSDIR "$(psdir)"'; \
+	  echo '#define LIBDIR "$(libdir)"'; \
+	  echo '#define LISPDIR "$(lispdir)"'; \
+	  echo '#define LOCALEDIR "$(localedir)"'; \
+	  echo '#define MANDIR "$(mandir)"'; \
+	  echo '#define MANEXT "$(manext)"'; \
+	  echo '#define PKGDATADIR "$(pkgdatadir)"'; \
+	  echo '#define PKGINCLUDEDIR "$(pkgincludedir)"'; \
+	  echo '#define PKGLIBDIR "$(pkglibdir)"'; \
+	  echo '#define PKGLIBEXECDIR "$(pkglibexecdir)"'; \
+	} | $(SED) '/""/d' > $@-t && \
+	mv -fv $@-t $@
 
 test-clean: clean-checkPROGRAMS
 	-rm -fv $(mktimetest_OBJECTS)

@@ -1,3 +1,5 @@
+## automake Makefile for libbabeltrace (the actual library)
+
 SUBDIRS = prio_heap .
 
 AM_CFLAGS = $(PACKAGE_CFLAGS) -I$(top_srcdir)/include

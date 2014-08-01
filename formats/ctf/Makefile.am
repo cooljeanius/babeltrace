@@ -1,3 +1,5 @@
+## automake Makefile for the CTF (Common Trace Format)
+
 AM_CFLAGS = $(PACKAGE_CFLAGS) -I$(top_srcdir)/include
 
 SUBDIRS = types metadata writer ir .
@@ -11,7 +13,8 @@ libbabeltrace_ctf_la_SOURCES = \
 	callbacks.c \
 	events-private.h
 
-# Request that the linker keeps all static libraries objects.
+# We should request that the linker keeps all static libraries objects,
+# but unfortunately not all linkers support the necessary flag.
 libbabeltrace_ctf_la_LDFLAGS = \
 	-version-info $(BABELTRACE_LIBRARY_VERSION)
 

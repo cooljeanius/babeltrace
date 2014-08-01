@@ -642,6 +642,24 @@ fi
 rmdir .tst 2>/dev/null
 AC_SUBST([am__leading_dot])])
 
+# Copyright (C) 1998-2013 Free Software Foundation, Inc.
+#
+# This file is free software; the Free Software Foundation
+# gives unlimited permission to copy and/or distribute it,
+# with or without modifications, as long as this notice is preserved.
+
+# AM_PROG_LEX
+# -----------
+# Autoconf leaves LEX=: if lex or flex can't be found.  Change that to a
+# "missing" invocation, for better error output.
+AC_DEFUN([AM_PROG_LEX],
+[AC_PREREQ([2.50])dnl
+AC_REQUIRE([AM_MISSING_HAS_RUN])dnl
+AC_REQUIRE([AC_PROG_LEX])dnl
+if test "$LEX" = :; then
+  LEX=${am_missing_run}flex
+fi])
+
 # Add --enable-maintainer-mode option to configure.         -*- Autoconf -*-
 # From Jim Meyering
 
@@ -1420,11 +1438,35 @@ AC_SUBST([am__untar])
 
 m4_include([m4/alloca.m4])
 m4_include([m4/ax_pkg_swig.m4])
+m4_include([m4/codeset.m4])
+m4_include([m4/configmake.m4])
+m4_include([m4/extensions.m4])
+m4_include([m4/fcntl-o.m4])
+m4_include([m4/fcntl_h.m4])
+m4_include([m4/fpending.m4])
+m4_include([m4/getline.m4])
+m4_include([m4/gettext.m4])
 m4_include([m4/glib-2.0.m4])
+m4_include([m4/gnulib-common.m4])
+m4_include([m4/iconv.m4])
+m4_include([m4/include_next.m4])
+m4_include([m4/intlmacosx.m4])
+m4_include([m4/lib-ld.m4])
+m4_include([m4/lib-link.m4])
+m4_include([m4/lib-prefix.m4])
 m4_include([m4/libtool.m4])
+m4_include([m4/longlong.m4])
+m4_include([m4/lstat.m4])
 m4_include([m4/ltoptions.m4])
 m4_include([m4/ltsugar.m4])
 m4_include([m4/ltversion.m4])
 m4_include([m4/lt~obsolete.m4])
 m4_include([m4/malloc.m4])
+m4_include([m4/mode_t.m4])
+m4_include([m4/nls.m4])
+m4_include([m4/openat.m4])
 m4_include([m4/pkg.m4])
+m4_include([m4/po.m4])
+m4_include([m4/progtest.m4])
+m4_include([m4/unlinkat.m4])
+m4_include([m4/warn-on-use.m4])

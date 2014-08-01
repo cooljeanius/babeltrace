@@ -17,6 +17,8 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 
+set -ex
+
 [ -z "$1" ] && echo "Error: No testlist. Please specify a testlist to run." && exit 1
 
 prove --merge --exec '' - < $1

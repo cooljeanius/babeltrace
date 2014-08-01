@@ -1,3 +1,5 @@
+## automake Makefile for libctf-types
+
 AM_CFLAGS = $(PACKAGE_CFLAGS) -I$(top_srcdir)/include
 
 noinst_LTLIBRARIES = libctf-types.la
