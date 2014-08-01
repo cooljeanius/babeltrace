@@ -1,1 +1,8 @@
 alloca.h
+arg-nonnull.h
+c++defs.h
+chdirlongtest
+configmake.h
+fcntl.h
+mktimetest
+warn-on-use.h

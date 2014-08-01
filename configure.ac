@@ -132,14 +132,17 @@ AC_HEADER_SYS_WAIT
 AC_CHECK_HEADERS([argz.h endian.h errno.h fcntl.h float.h \
                   langinfo.h libintl.h limits.h \
                   machine/endian.h malloc.h malloc/malloc.h \
-                  netdb.h netinet/in.h osreldate.h \
-                  stddef.h stdio.h stdio_ext.h \
+                  netdb.h netinet/in.h osreldate.h stddef.h stdio.h \
                   sys/mman.h sys/socket.h wctype.h])dnl
 
 # Keep autoscan from complaining about headers we check in other ways.
 if test "x${ac_cv_header_locale_h}" = "x"; then
   test -z "${ac_cv_header_locale_h}"
   AC_CHECK_HEADERS([locale.h])
+fi
+if test "x${ac_cv_header_stdio_ext_h}" = "x"; then
+  test -z "${ac_cv_header_stdio_ext_h}"
+  AC_CHECK_HEADERS([stdio_ext.h])
 fi
 if test "x${ac_cv_header_sys_param_h}" = "x"; then
   test -z "${ac_cv_header_sys_param_h}"
@@ -202,7 +205,7 @@ AC_FUNC_STRERROR_R
 AC_FUNC_STRFTIME
 AC_FUNC_STRNLEN
 AC_FUNC_VPRINTF
-AC_CHECK_FUNCS([__argz_count __argz_next __argz_stringify __fpending \
+AC_CHECK_FUNCS([__argz_count __argz_next __argz_stringify \
                 atexit be32toh be64toh bzero dup2 \
                 faccessat fchdir ftruncate \
                 getcwd gethostbyname gethostname gettimeofday \
@@ -264,9 +267,9 @@ AC_REPLACE_FUNCS([getdelim strndup])dnl
 AC_LIBOBJ([memrchr])dnl
 
 # Keep autoscan from complaining about functions we replace.
-if test "x${ac_cv_func_strndup}" = "x"; then
-  test -z "${ac_cv_func_strndup}"
-  AC_CHECK_FUNCS([strndup])
+if test "x${ac_cv_func___fpending}" = "x"; then
+  test -z "${ac_cv_func___fpending}"
+  AC_CHECK_FUNCS([__fpending])
 fi
 if test "x${ac_cv_func_getdelim}" = "x"; then
   test -z "${ac_cv_func_getdelim}"
@@ -275,6 +278,10 @@ fi
 if test "x${ac_cv_func_getline}" = "x"; then
   test -z "${ac_cv_func_getline}"
   AC_CHECK_FUNCS([getline])
+fi
+if test "x${ac_cv_func_strndup}" = "x"; then
+  test -z "${ac_cv_func_strndup}"
+  AC_CHECK_FUNCS([strndup])
 fi
 if test "x${ac_cv_func_unlinkat}" = "x"; then
   test -z "${ac_cv_func_unlinkat}"
