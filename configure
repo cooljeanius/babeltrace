@@ -667,6 +667,13 @@ BABELTRACE_BUILD_WITH_LIBUUID_FALSE
 BABELTRACE_BUILD_WITH_LIBUUID_TRUE
 BABELTRACE_BUILD_WITH_MINGW_FALSE
 BABELTRACE_BUILD_WITH_MINGW_TRUE
+REPLACE_PWRITE
+HAVE_PWRITE
+REPLACE_PREAD
+HAVE_PREAD
+REPLACE_FTRUNCATE
+HAVE_FTRUNCATE
+HAVE_FACCESSAT
 GL_GENERATE_ALLOCA_H_FALSE
 GL_GENERATE_ALLOCA_H_TRUE
 ALLOCA_H
@@ -678,6 +685,9 @@ PRAGMA_COLUMNS
 PRAGMA_SYSTEM_HEADER
 INCLUDE_NEXT_AS_FIRST_DIRECTIVE
 INCLUDE_NEXT
+REPLACE_POSIX_FALLOCATE64
+REPLACE_POSIX_FALLOCATE
+REPLACE_FALLOCATE
 REPLACE_OPENAT
 REPLACE_OPEN
 REPLACE_FCNTL
@@ -2310,6 +2320,189 @@ $as_echo "$ac_res" >&6; }
 
 } # ac_fn_c_find_intX_t
 
+# ac_fn_c_compute_int LINENO EXPR VAR INCLUDES
+# --------------------------------------------
+# Tries to find the compile-time value of EXPR in a program that includes
+# INCLUDES, setting VAR accordingly. Returns whether the value could be
+# computed
+ac_fn_c_compute_int ()
+{
+  as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
+  if test "$cross_compiling" = yes; then
+    # Depending upon the size, compute the lo and hi bounds.
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+$4
+int
+main ()
+{
+static int test_array [1 - 2 * !(($2) >= 0)];
+test_array [0] = 0;
+return test_array [0];
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  ac_lo=0 ac_mid=0
+  while :; do
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+$4
+int
+main ()
+{
+static int test_array [1 - 2 * !(($2) <= $ac_mid)];
+test_array [0] = 0;
+return test_array [0];
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  ac_hi=$ac_mid; break
+else
+  as_fn_arith $ac_mid + 1 && ac_lo=$as_val
+			if test $ac_lo -le $ac_mid; then
+			  ac_lo= ac_hi=
+			  break
+			fi
+			as_fn_arith 2 '*' $ac_mid + 1 && ac_mid=$as_val
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+  done
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+$4
+int
+main ()
+{
+static int test_array [1 - 2 * !(($2) < 0)];
+test_array [0] = 0;
+return test_array [0];
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  ac_hi=-1 ac_mid=-1
+  while :; do
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+$4
+int
+main ()
+{
+static int test_array [1 - 2 * !(($2) >= $ac_mid)];
+test_array [0] = 0;
+return test_array [0];
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  ac_lo=$ac_mid; break
+else
+  as_fn_arith '(' $ac_mid ')' - 1 && ac_hi=$as_val
+			if test $ac_mid -le $ac_hi; then
+			  ac_lo= ac_hi=
+			  break
+			fi
+			as_fn_arith 2 '*' $ac_mid && ac_mid=$as_val
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+  done
+else
+  ac_lo= ac_hi=
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+# Binary search between lo and hi bounds.
+while test "x$ac_lo" != "x$ac_hi"; do
+  as_fn_arith '(' $ac_hi - $ac_lo ')' / 2 + $ac_lo && ac_mid=$as_val
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+$4
+int
+main ()
+{
+static int test_array [1 - 2 * !(($2) <= $ac_mid)];
+test_array [0] = 0;
+return test_array [0];
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  ac_hi=$ac_mid
+else
+  as_fn_arith '(' $ac_mid ')' + 1 && ac_lo=$as_val
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+done
+case $ac_lo in #((
+?*) eval "$3=\$ac_lo"; ac_retval=0 ;;
+'') ac_retval=1 ;;
+esac
+  else
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+$4
+static long int longval () { return $2; }
+static unsigned long int ulongval () { return $2; }
+#include <stdio.h>
+#include <stdlib.h>
+int
+main ()
+{
+
+  FILE *f = fopen ("conftest.val", "w");
+  if (! f)
+    return 1;
+  if (($2) < 0)
+    {
+      long int i = longval ();
+      if (i != ($2))
+	return 1;
+      fprintf (f, "%ld", i);
+    }
+  else
+    {
+      unsigned long int i = ulongval ();
+      if (i != ($2))
+	return 1;
+      fprintf (f, "%lu", i);
+    }
+  /* Do not output a trailing newline, as this causes \r\n confusion
+     on some platforms.  */
+  return ferror (f) || fclose (f) != 0;
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_run "$LINENO"; then :
+  echo >>conftest.val; read $3 <conftest.val; ac_retval=0
+else
+  ac_retval=1
+fi
+rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
+  conftest.$ac_objext conftest.beam conftest.$ac_ext
+rm -f conftest.val
+
+  fi
+  eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
+  as_fn_set_status $ac_retval
+
+} # ac_fn_c_compute_int
+
 # ac_fn_c_find_uintX_t LINENO BITS VAR
 # ------------------------------------
 # Finds an unsigned integer type with width BITS, setting cache variable VAR
@@ -2712,9 +2905,16 @@ as_fn_append ac_header_list " sys/time.h"
 as_fn_append ac_func_list " alarm"
 as_fn_append ac_header_list " stdlib.h"
 as_fn_append ac_header_list " sys/param.h"
+as_fn_append ac_func_list " faccessat"
+as_fn_append ac_func_list " access"
 as_fn_append ac_header_list " stdio_ext.h"
 as_fn_append ac_func_list " __fpending"
+as_fn_append ac_func_list " ftruncate"
 as_fn_append ac_func_list " openat"
+as_fn_append ac_header_list " sys/falloc.h"
+as_fn_append ac_header_list " linux/falloc.h"
+as_fn_append ac_func_list " pread"
+as_fn_append ac_func_list " pwrite"
 as_fn_append ac_func_list " unlinkat"
 # Check that the precious variables saved in the cache have kept the same
 # value.
@@ -20398,11 +20598,12 @@ $as_echo "#define HAVE_SYS_WAIT_H 1" >>confdefs.h
 
 fi
 
-for ac_header in argz.h endian.h errno.h fcntl.h float.h \
+for ac_header in argz.h bits/wordsize.h endian.h errno.h fcntl.h float.h \
                   langinfo.h libintl.h limits.h \
                   machine/endian.h malloc.h malloc/malloc.h \
-                  netdb.h netinet/in.h osreldate.h stddef.h stdio.h \
-                  sys/mman.h sys/socket.h wctype.h
+                  netdb.h netinet/in.h osreldate.h shlib-compat.h \
+                  stddef.h stdio.h sys/mount.h sys/mman.h \
+                  sys/socket.h sys/statfs.h sys/statvfs.h wctype.h
 do :
   as_ac_Header=`$as_echo "ac_cv_header_$ac_header" | $as_tr_sh`
 ac_fn_c_check_header_mongrel "$LINENO" "$ac_header" "$as_ac_Header" "$ac_includes_default"
@@ -20488,6 +20689,9 @@ fi
   REPLACE_FCNTL=0;
   REPLACE_OPEN=0;
   REPLACE_OPENAT=0;
+  REPLACE_FALLOCATE=0;
+  REPLACE_POSIX_FALLOCATE=0;
+  REPLACE_POSIX_FALLOCATE64=0;
 
 
 
@@ -21524,6 +21728,195 @@ _ACEOF
 
 fi
 
+if test "x${ac_cv_type_off_t}" = "xyes"; then
+  # The cast to long int works around a bug in the HP C Compiler
+# version HP92453-01 B.11.11.23709.GP, which incorrectly rejects
+# declarations like `int a3[[(sizeof (unsigned char)) >= 0]];'.
+# This bug is HP SR number 8606223364.
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking size of off_t" >&5
+$as_echo_n "checking size of off_t... " >&6; }
+if ${ac_cv_sizeof_off_t+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if ac_fn_c_compute_int "$LINENO" "(long int) (sizeof (off_t))" "ac_cv_sizeof_off_t"        "$ac_includes_default"; then :
+
+else
+  if test "$ac_cv_type_off_t" = yes; then
+     { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error 77 "cannot compute sizeof (off_t)
+See \`config.log' for more details" "$LINENO" 5; }
+   else
+     ac_cv_sizeof_off_t=0
+   fi
+fi
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_sizeof_off_t" >&5
+$as_echo "$ac_cv_sizeof_off_t" >&6; }
+
+
+
+cat >>confdefs.h <<_ACEOF
+#define SIZEOF_OFF_T $ac_cv_sizeof_off_t
+_ACEOF
+
+
+  # The cast to long int works around a bug in the HP C Compiler,
+# see AC_CHECK_SIZEOF for more information.
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking alignment of off_t" >&5
+$as_echo_n "checking alignment of off_t... " >&6; }
+if ${ac_cv_alignof_off_t+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if ac_fn_c_compute_int "$LINENO" "(long int) offsetof (ac__type_alignof_, y)" "ac_cv_alignof_off_t"        "$ac_includes_default
+#ifndef offsetof
+# define offsetof(type, member) ((char *) &((type *) 0)->member - (char *) 0)
+#endif
+typedef struct { char x; off_t y; } ac__type_alignof_;"; then :
+
+else
+  if test "$ac_cv_type_off_t" = yes; then
+     { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error 77 "cannot compute alignment of off_t
+See \`config.log' for more details" "$LINENO" 5; }
+   else
+     ac_cv_alignof_off_t=0
+   fi
+fi
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_alignof_off_t" >&5
+$as_echo "$ac_cv_alignof_off_t" >&6; }
+
+
+
+cat >>confdefs.h <<_ACEOF
+#define ALIGNOF_OFF_T $ac_cv_alignof_off_t
+_ACEOF
+
+
+fi
+ac_fn_c_check_type "$LINENO" "off64_t" "ac_cv_type_off64_t" "$ac_includes_default"
+if test "x$ac_cv_type_off64_t" = xyes; then :
+
+cat >>confdefs.h <<_ACEOF
+#define HAVE_OFF64_T 1
+_ACEOF
+
+
+  # The cast to long int works around a bug in the HP C Compiler
+# version HP92453-01 B.11.11.23709.GP, which incorrectly rejects
+# declarations like `int a3[[(sizeof (unsigned char)) >= 0]];'.
+# This bug is HP SR number 8606223364.
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking size of off64_t" >&5
+$as_echo_n "checking size of off64_t... " >&6; }
+if ${ac_cv_sizeof_off64_t+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if ac_fn_c_compute_int "$LINENO" "(long int) (sizeof (off64_t))" "ac_cv_sizeof_off64_t"        "$ac_includes_default"; then :
+
+else
+  if test "$ac_cv_type_off64_t" = yes; then
+     { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error 77 "cannot compute sizeof (off64_t)
+See \`config.log' for more details" "$LINENO" 5; }
+   else
+     ac_cv_sizeof_off64_t=0
+   fi
+fi
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_sizeof_off64_t" >&5
+$as_echo "$ac_cv_sizeof_off64_t" >&6; }
+
+
+
+cat >>confdefs.h <<_ACEOF
+#define SIZEOF_OFF64_T $ac_cv_sizeof_off64_t
+_ACEOF
+
+  # The cast to long int works around a bug in the HP C Compiler,
+# see AC_CHECK_SIZEOF for more information.
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking alignment of off64_t" >&5
+$as_echo_n "checking alignment of off64_t... " >&6; }
+if ${ac_cv_alignof_off64_t+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if ac_fn_c_compute_int "$LINENO" "(long int) offsetof (ac__type_alignof_, y)" "ac_cv_alignof_off64_t"        "$ac_includes_default
+#ifndef offsetof
+# define offsetof(type, member) ((char *) &((type *) 0)->member - (char *) 0)
+#endif
+typedef struct { char x; off64_t y; } ac__type_alignof_;"; then :
+
+else
+  if test "$ac_cv_type_off64_t" = yes; then
+     { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error 77 "cannot compute alignment of off64_t
+See \`config.log' for more details" "$LINENO" 5; }
+   else
+     ac_cv_alignof_off64_t=0
+   fi
+fi
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_alignof_off64_t" >&5
+$as_echo "$ac_cv_alignof_off64_t" >&6; }
+
+
+
+cat >>confdefs.h <<_ACEOF
+#define ALIGNOF_OFF64_T $ac_cv_alignof_off64_t
+_ACEOF
+
+
+else
+
+  if test "x${ac_cv_type_off64_t}" != "x"; then
+    test -n "${ac_cv_type_off64_t}" && unset ac_cv_type_off64_t
+  fi
+  if test "x${ac_cv_type_off_t}" = "xyes"; then
+    ac_fn_c_check_type "$LINENO" "off64_t" "ac_cv_type_off64_t" "$ac_includes_default"
+if test "x$ac_cv_type_off64_t" = xyes; then :
+
+else
+
+cat >>confdefs.h <<_ACEOF
+#define off64_t off_t
+_ACEOF
+
+fi
+
+  elif test "x${ac_cv_type_long_long_int}" = "xyes"; then
+    ac_fn_c_check_type "$LINENO" "off64_t" "ac_cv_type_off64_t" "$ac_includes_default"
+if test "x$ac_cv_type_off64_t" = xyes; then :
+
+else
+
+cat >>confdefs.h <<_ACEOF
+#define off64_t long long int
+_ACEOF
+
+fi
+
+  else
+    ac_fn_c_check_type "$LINENO" "off64_t" "ac_cv_type_off64_t" "$ac_includes_default"
+if test "x$ac_cv_type_off64_t" = xyes; then :
+
+else
+
+cat >>confdefs.h <<_ACEOF
+#define off64_t long int
+_ACEOF
+
+fi
+
+  fi
+
+fi
 ac_fn_c_check_type "$LINENO" "ptrdiff_t" "ac_cv_type_ptrdiff_t" "$ac_includes_default"
 if test "x$ac_cv_type_ptrdiff_t" = xyes; then :
 
@@ -23088,16 +23481,16 @@ fi
 done
 
 
-for ac_func in __argz_count __argz_next __argz_stringify \
-                atexit be32toh be64toh bzero dup2 \
-                faccessat fchdir ftruncate \
+for ac_func in __argz_count __argz_next __argz_stringify atexit \
+                be32toh be64toh bzero dup2 faccessat fchdir \
+                ftruncate64 fstatfs fstatfs64 fstat64 fxstat64 \
                 getcwd gethostbyname gethostname gettimeofday \
                 htobe32 htobe64 iswprint localeconv localtime_r \
                 mblen mbrlen memchr mempcpy memset mkdir munmap \
-                nl_langinfo open posix_fallocate rmdir \
-                send setenv setlocale socket stpcpy strcasecmp strcspn \
-                strchr strdup strerror strrchr strspn strstr \
-                strtoul strtoull sysconf tzset uname
+                nl_langinfo open posix_fallocate pread64 pwrite64 rmdir \
+                send setenv setlocale socket statfs statfs64 stpcpy \
+                strcasecmp strcspn strchr strdup strerror strrchr \
+                strspn strstr strtoul strtoull sysconf tzset uname
 do :
   as_ac_var=`$as_echo "ac_cv_func_$ac_func" | $as_tr_sh`
 ac_fn_c_check_func "$LINENO" "$ac_func" "$as_ac_var"
@@ -23161,6 +23554,36 @@ else
   GL_GENERATE_ALLOCA_H_TRUE='#'
   GL_GENERATE_ALLOCA_H_FALSE=
 fi
+
+
+
+
+
+    HAVE_FACCESSAT=1;
+
+
+
+  if test "x${ac_cv_func_faccessat}" = "xno"; then
+    HAVE_FACCESSAT=0
+  fi
+
+if test ${HAVE_FACCESSAT} = 0; then
+  case " $LIBOBJS " in
+  *" faccessat.$ac_objext "* ) ;;
+  *) LIBOBJS="$LIBOBJS faccessat.$ac_objext"
+ ;;
+esac
+
+
+
+
+fi
+
+
+
+cat >>confdefs.h <<_ACEOF
+#define GNULIB_FACCESSAT 1
+_ACEOF
 
 
 
@@ -23269,6 +23692,40 @@ $as_echo "$ac_cv_sys_pending_output_n_bytes" >&6; }
 cat >>confdefs.h <<_ACEOF
 #define PENDING_OUTPUT_N_BYTES ${ac_cv_sys_pending_output_n_bytes}
 _ACEOF
+
+fi
+
+
+
+
+    HAVE_FTRUNCATE=1;
+    REPLACE_FTRUNCATE=0;
+
+  if test "x${ac_cv_func_ftruncate}" = "xyes"; then
+
+      REPLACE_FTRUNCATE=0
+
+  else
+    HAVE_FTRUNCATE=0
+  fi
+
+if test ${HAVE_FTRUNCATE} = 0 || test ${REPLACE_FTRUNCATE} = 1; then
+  case " $LIBOBJS " in
+  *" ftruncate.$ac_objext "* ) ;;
+  *) LIBOBJS="$LIBOBJS ftruncate.$ac_objext"
+ ;;
+esac
+
+    for ac_func in chsize
+do :
+  ac_fn_c_check_func "$LINENO" "chsize" "ac_cv_func_chsize"
+if test "x$ac_cv_func_chsize" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_CHSIZE 1
+_ACEOF
+
+fi
+done
 
 fi
 ac_fn_c_check_decl "$LINENO" "getline" "ac_cv_have_decl_getline" "$ac_includes_default"
@@ -23389,7 +23846,7 @@ if test ${REPLACE_GETLINE} = 1; then
 esac
   :
 fi
-:
+
   :
 
       for ac_header in stdlib.h
@@ -23653,6 +24110,372 @@ $as_echo "#define GNULIB_TEST_OPENAT 1" >>confdefs.h
 
 
 
+
+
+
+
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for fallocate" >&5
+$as_echo_n "checking for fallocate... " >&6; }
+if ${gl_cv_func_fallocate+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+#include <fcntl.h>        /* fallocate() declaration */
+#include <linux/falloc.h> /* FALLOC_FL_KEEP_SIZE define */
+
+int
+main ()
+{
+fallocate(-1, FALLOC_FL_KEEP_SIZE, 0, 0);
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  gl_cv_func_fallocate=yes
+else
+  gl_cv_func_fallocate=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $gl_cv_func_fallocate" >&5
+$as_echo "$gl_cv_func_fallocate" >&6; }
+  if test "x${gl_cv_func_fallocate}" = "xyes"; then
+
+$as_echo "#define HAVE_FALLOCATE 1" >>confdefs.h
+
+  else
+
+    REPLACE_FALLOCATE=1;
+    case " $LIBOBJS " in
+  *" fallocate.$ac_objext "* ) ;;
+  *) LIBOBJS="$LIBOBJS fallocate.$ac_objext"
+ ;;
+esac
+
+  fi
+
+
+
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for posix_fallocate" >&5
+$as_echo_n "checking for posix_fallocate... " >&6; }
+if ${gl_cv_func_posix_fallocate+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+#include <fcntl.h>        /* posix_fallocate() declaration */
+#include <limits.h>       /* CHAR_BITS declaration */
+
+int
+main ()
+{
+posix_fallocate(-1, 0, (400000 / CHAR_BITS));
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  gl_cv_func_posix_fallocate=yes
+else
+  gl_cv_func_posix_fallocate=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $gl_cv_func_posix_fallocate" >&5
+$as_echo "$gl_cv_func_posix_fallocate" >&6; }
+  if test "x${gl_cv_func_posix_fallocate}" = "xyes"; then
+
+$as_echo "#define HAVE_POSIX_FALLOCATE 1" >>confdefs.h
+
+  else
+    REPLACE_POSIX_FALLOCATE=1;
+    case " $LIBOBJS " in
+  *" posix_fallocate.$ac_objext "* ) ;;
+  *) LIBOBJS="$LIBOBJS posix_fallocate.$ac_objext"
+ ;;
+esac
+
+  fi
+
+
+
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for posix_fallocate64" >&5
+$as_echo_n "checking for posix_fallocate64... " >&6; }
+if ${gl_cv_func_posix_fallocate64+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+#include <fcntl.h>        /* posix_fallocate64() declaration */
+#include <limits.h>       /* CHAR_BITS declaration */
+
+int
+main ()
+{
+posix_fallocate64(-1, 0, ((400000 / CHAR_BITS) * 2));
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  gl_cv_func_posix_fallocate64=yes
+else
+  gl_cv_func_posix_fallocate64=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $gl_cv_func_posix_fallocate64" >&5
+$as_echo "$gl_cv_func_posix_fallocate64" >&6; }
+  if test "x${gl_cv_func_posix_fallocate64}" = "xyes"; then
+
+$as_echo "#define HAVE_POSIX_FALLOCATE64 1" >>confdefs.h
+
+  else
+    REPLACE_POSIX_FALLOCATE64=1;
+    case " $LIBOBJS " in
+  *" posix_fallocate64.$ac_objext "* ) ;;
+  *) LIBOBJS="$LIBOBJS posix_fallocate64.$ac_objext"
+ ;;
+esac
+
+  fi
+
+
+
+
+
+    HAVE_PREAD=1;
+    REPLACE_PREAD=0;
+
+
+
+  if test $ac_cv_func_pread = yes; then
+                { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether pread works" >&5
+$as_echo_n "checking whether pread works... " >&6; }
+if ${gl_cv_func_pread_works+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+                case "$host_os" in
+                 # Guess no on HP-UX.
+          hpux*) gl_cv_func_pread_works="guessing no" ;;
+                 # Guess yes otherwise.
+          *)     gl_cv_func_pread_works="guessing yes" ;;
+        esac
+        gl_save_CPPFLAGS="$CPPFLAGS"
+        CPPFLAGS="$CPPFLAGS -D_FILE_OFFSET_BITS=64"
+        if test "$cross_compiling" = yes; then :
+  :
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+#include <sys/types.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <stdio.h>
+
+int
+main ()
+{
+
+{
+  int result = 0;
+  /* This test fails on HP-UX 11.00..11.11.  */
+  {
+    int fd = open ("conftest.c", O_RDONLY);
+    if (fd < 0)
+      result |= 1;
+    else
+      {
+        char byte_buf;
+        if (pread (fd, &byte_buf, 1, (off_t) 0) != 1)
+          result |= 2;
+        close (fd);
+      }
+  }
+  /* This test fails on HP-UX 11.00..11.31.  */
+  {
+    FILE *fp = popen ("echo", "r");
+    if (fp == NULL)
+      result |= 1;
+    else
+      {
+        int fd = fileno (fp);
+        char byte_buf;
+        if (pread (fd, &byte_buf, 1, (off_t) 0) >= 0)
+          result |= 4;
+        pclose (fp);
+      }
+  }
+  return result;
+}
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_run "$LINENO"; then :
+  gl_cv_func_pread_works=yes
+else
+  gl_cv_func_pread_works=no
+fi
+rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
+  conftest.$ac_objext conftest.beam conftest.$ac_ext
+fi
+
+        CPPFLAGS="$gl_save_CPPFLAGS"
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $gl_cv_func_pread_works" >&5
+$as_echo "$gl_cv_func_pread_works" >&6; }
+    case "$gl_cv_func_pread_works" in
+      *yes) ;;
+      *) REPLACE_PREAD=1 ;;
+    esac
+  else
+    HAVE_PREAD=0
+  fi
+
+if test ${HAVE_PREAD} = 0 || test ${REPLACE_PREAD} = 1; then
+  case " $LIBOBJS " in
+  *" pread.$ac_objext "* ) ;;
+  *) LIBOBJS="$LIBOBJS pread.$ac_objext"
+ ;;
+esac
+
+fi
+
+
+
+
+    HAVE_PWRITE=1;
+    REPLACE_PWRITE=0;
+
+
+
+  if test $ac_cv_func_pwrite = yes; then
+                { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether pwrite works" >&5
+$as_echo_n "checking whether pwrite works... " >&6; }
+if ${gl_cv_func_pwrite_works+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+                case "$host_os" in
+                 # Guess no on HP-UX.
+          hpux*) gl_cv_func_pwrite_works="guessing no" ;;
+                 # Guess yes otherwise.
+          *)     gl_cv_func_pwrite_works="guessing yes" ;;
+        esac
+        gl_save_CPPFLAGS="$CPPFLAGS"
+        CPPFLAGS="$CPPFLAGS -D_FILE_OFFSET_BITS=64"
+        rm -f conftest.out
+        if test "$cross_compiling" = yes; then :
+  :
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+#include <sys/types.h>
+#include <unistd.h>
+#include <fcntl.h>
+
+int
+main ()
+{
+
+{
+  /* This test fails on HP-UX 11.00..11.11.  */
+  {
+    int fd = open ("conftest.out", O_RDWR | O_CREAT | O_TRUNC, 0600);
+    if (fd < 0)
+      return 1;
+    if (pwrite (fd, "b", 1, (off_t) -1) >= 0)
+      return 2;
+  }
+  /* This test fails on HP-UX 11.00..11.11.  */
+  {
+    int fd;
+    char buf[] = "01";
+
+    fd = open ("conftest.out", O_WRONLY | O_CREAT | O_TRUNC, 0600);
+    if (fd < 0)
+      return 3;
+    if (write (fd, buf, 2) < 2)
+      return 4;
+    if (close (fd) < 0)
+      return 5;
+
+    fd = open ("conftest.out", O_WRONLY, 0600);
+    if (fd < 0)
+      return 6;
+    if (pwrite (fd, "W", 1, (off_t) 0) != 1)
+      return 7;
+    if (close (fd) < 0)
+      return 8;
+
+    fd = open ("conftest.out", O_RDONLY);
+    if (fd < 0)
+      return 9;
+    if (read (fd, buf, 2) < 2)
+      return 10;
+    if (close (fd) < 0)
+      return 11;
+    if (buf[0] != 'W')
+      return 12;
+    if (buf[1] != '1')
+      return 13;
+  }
+  return 0;
+}
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_run "$LINENO"; then :
+  gl_cv_func_pwrite_works=yes
+else
+  gl_cv_func_pwrite_works=no
+fi
+rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
+  conftest.$ac_objext conftest.beam conftest.$ac_ext
+fi
+
+        rm -f conftest.out
+        CPPFLAGS="$gl_save_CPPFLAGS"
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $gl_cv_func_pwrite_works" >&5
+$as_echo "$gl_cv_func_pwrite_works" >&6; }
+    case "$gl_cv_func_pwrite_works" in
+      *yes) ;;
+      *) REPLACE_PWRITE=1 ;;
+    esac
+  else
+    HAVE_PWRITE=0
+  fi
+
+if test ${HAVE_PWRITE} = 0 || test ${REPLACE_PWRITE} = 1; then
+  case " $LIBOBJS " in
+  *" pwrite.$ac_objext "* ) ;;
+  *) LIBOBJS="$LIBOBJS pwrite.$ac_objext"
+ ;;
+esac
+
+fi
+
+
+
   :      :
   if test "x${ac_cv_func_unlinkat}" = "xno"; then
     HAVE_UNLINKAT=0
@@ -23680,7 +24503,7 @@ if test ${HAVE_UNLINKAT} = 0 || test ${REPLACE_UNLINKAT} = 1; then
 esac
 
 fi
-:
+
 # Functions for which we have replacement sources, and for which we would
 # rather avoid the official gnulib macros:
 ac_fn_c_check_func "$LINENO" "getdelim" "ac_cv_func_getdelim"
@@ -23724,6 +24547,20 @@ do :
 if test "x$ac_cv_func___fpending" = xyes; then :
   cat >>confdefs.h <<_ACEOF
 #define HAVE___FPENDING 1
+_ACEOF
+
+fi
+done
+
+fi
+if test "x${ac_cv_func_ftruncate}" = "x"; then
+  test -z "${ac_cv_func_ftruncate}"
+  for ac_func in ftruncate
+do :
+  ac_fn_c_check_func "$LINENO" "ftruncate" "ac_cv_func_ftruncate"
+if test "x$ac_cv_func_ftruncate" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_FTRUNCATE 1
 _ACEOF
 
 fi
@@ -23788,6 +24625,16 @@ done
 fi
 
 # Checks for declarations.
+ac_fn_c_check_decl "$LINENO" "_STAT_VER" "ac_cv_have_decl__STAT_VER" "$ac_includes_default"
+if test "x$ac_cv_have_decl__STAT_VER" = xyes; then :
+  ac_have_decl=1
+else
+  ac_have_decl=0
+fi
+
+cat >>confdefs.h <<_ACEOF
+#define HAVE_DECL__STAT_VER $ac_have_decl
+_ACEOF
 ac_fn_c_check_decl "$LINENO" "MSG_NOSIGNAL" "ac_cv_have_decl_MSG_NOSIGNAL" "
 #if defined(HAVE_SYS_SOCKET_H)
 # include <sys/socket.h>

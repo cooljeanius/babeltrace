@@ -129,11 +129,12 @@ AC_HEADER_DIRENT
 AC_HEADER_STAT
 AC_HEADER_STDBOOL dnl# also "_CHECK"s it
 AC_HEADER_SYS_WAIT
-AC_CHECK_HEADERS([argz.h endian.h errno.h fcntl.h float.h \
+AC_CHECK_HEADERS([argz.h bits/wordsize.h endian.h errno.h fcntl.h float.h \
                   langinfo.h libintl.h limits.h \
                   machine/endian.h malloc.h malloc/malloc.h \
-                  netdb.h netinet/in.h osreldate.h stddef.h stdio.h \
-                  sys/mman.h sys/socket.h wctype.h])dnl
+                  netdb.h netinet/in.h osreldate.h shlib-compat.h \
+                  stddef.h stdio.h sys/mount.h sys/mman.h \
+                  sys/socket.h sys/statfs.h sys/statvfs.h wctype.h])dnl
 
 # Keep autoscan from complaining about headers we check in other ways.
 if test "x${ac_cv_header_locale_h}" = "x"; then
@@ -180,6 +181,25 @@ AC_TYPE_INT32_T
 AC_TYPE_INT64_T
 AC_TYPE_INTMAX_T
 AC_TYPE_OFF_T
+if test "x${ac_cv_type_off_t}" = "xyes"; then
+  AC_CHECK_SIZEOF([off_t])
+  AC_CHECK_ALIGNOF([off_t])
+fi
+AC_CHECK_TYPES([off64_t],[
+  AC_CHECK_SIZEOF([off64_t])dnl
+  AC_CHECK_ALIGNOF([off64_t])dnl
+],[
+  if test "x${ac_cv_type_off64_t}" != "x"; then
+    test -n "${ac_cv_type_off64_t}" && unset ac_cv_type_off64_t
+  fi
+  if test "x${ac_cv_type_off_t}" = "xyes"; then
+    _AC_CHECK_TYPE_OLD([off64_t],[off_t])
+  elif test "x${ac_cv_type_long_long_int}" = "xyes"; then
+    _AC_CHECK_TYPE_OLD([off64_t],[long long int])
+  else
+    _AC_CHECK_TYPE_OLD([off64_t],[long int])
+  fi
+])dnl
 AC_CHECK_TYPES([ptrdiff_t])dnl
 AC_TYPE_SIZE_T
 AC_TYPE_SSIZE_T
@@ -205,25 +225,46 @@ AC_FUNC_STRERROR_R
 AC_FUNC_STRFTIME
 AC_FUNC_STRNLEN
 AC_FUNC_VPRINTF
-AC_CHECK_FUNCS([__argz_count __argz_next __argz_stringify \
-                atexit be32toh be64toh bzero dup2 \
-                faccessat fchdir ftruncate \
+AC_CHECK_FUNCS([__argz_count __argz_next __argz_stringify atexit \
+                be32toh be64toh bzero dup2 faccessat fchdir \
+                ftruncate64 fstatfs fstatfs64 fstat64 fxstat64 \
                 getcwd gethostbyname gethostname gettimeofday \
                 htobe32 htobe64 iswprint localeconv localtime_r \
                 mblen mbrlen memchr mempcpy memset mkdir munmap \
-                nl_langinfo open posix_fallocate rmdir \
-                send setenv setlocale socket stpcpy strcasecmp strcspn \
-                strchr strdup strerror strrchr strspn strstr \
-                strtoul strtoull sysconf tzset uname])dnl
+                nl_langinfo open posix_fallocate pread64 pwrite64 rmdir \
+                send setenv setlocale socket statfs statfs64 stpcpy \
+                strcasecmp strcspn strchr strdup strerror strrchr \
+                strspn strstr strtoul strtoull sysconf tzset uname])dnl
 
 # Checks for functions from gnulib (libcompat here).
 gl_FUNC_ALLOCA
+dnl# faccessat module:
+gl_FUNC_FACCESSAT
+if test ${HAVE_FACCESSAT} = 0; then
+  AC_LIBOBJ([faccessat])dnl
+  gl_PREREQ_FACCESSAT
+fi
+m4_ifdef([gl_MODULE_INDICATOR],[
+  gl_MODULE_INDICATOR([faccessat])dnl
+])dnl
+m4_ifdef([gl_UNISTD_MODULE_INDICATOR],[
+  gl_UNISTD_MODULE_INDICATOR([faccessat])dnl
+])dnl
 dnl# fpending module:
 gl_FUNC_FPENDING
 if test "x${ac_cv_func___fpending}" = "xno"; then
   AC_LIBOBJ([fpending])dnl
   gl_PREREQ_FPENDING
 fi
+dnl# ftruncate module:
+gl_FUNC_FTRUNCATE
+if test ${HAVE_FTRUNCATE} = 0 || test ${REPLACE_FTRUNCATE} = 1; then
+  AC_LIBOBJ([ftruncate])dnl
+  gl_PREREQ_FTRUNCATE
+fi
+m4_ifdef([gl_UNISTD_MODULE_INDICATOR],[
+  gl_UNISTD_MODULE_INDICATOR([ftruncate])dnl
+])dnl
 dnl# getline module:
 gl_FUNC_GETLINE
 if test ${REPLACE_GETLINE} = 1; then
@@ -232,7 +273,7 @@ if test ${REPLACE_GETLINE} = 1; then
 fi
 m4_ifdef([gl_STDIO_MODULE_INDICATOR],[
   gl_STDIO_MODULE_INDICATOR([getline])dnl
-],[:])dnl
+])dnl
 dnl# malloc modules:
 AC_DEFUN([gl_MALLOC_MODULES],[
   AC_REQUIRE([gl_FUNC_MALLOC_GNU])dnl
@@ -248,9 +289,29 @@ if test ${HAVE_OPENAT} = 0 || test ${REPLACE_OPENAT} = 1; then
 fi
 m4_ifdef([gl_MODULE_INDICATOR],[
   gl_MODULE_INDICATOR([openat]) dnl# for lib/getcwd.c (if it exists)
-],[:])dnl
+])dnl
 m4_ifdef([gl_FCNTL_MODULE_INDICATOR],[
   gl_FCNTL_MODULE_INDICATOR([openat])dnl
+])dnl
+dnl# posix_fallocate modules:
+gl_FUNC_FALLOCATE
+gl_FUNC_POSIX_FALLOCATE
+gl_FUNC_POSIX_FALLOCATE64
+dnl# pread module:
+gl_FUNC_PREAD
+if test ${HAVE_PREAD} = 0 || test ${REPLACE_PREAD} = 1; then
+  AC_LIBOBJ([pread])
+fi
+m4_ifdef([gl_UNISTD_MODULE_INDICATOR],[
+  gl_UNISTD_MODULE_INDICATOR([pread])dnl
+])dnl
+dnl# pwrite module:
+gl_FUNC_PWRITE
+if test ${HAVE_PWRITE} = 0 || test ${REPLACE_PWRITE} = 1; then
+  AC_LIBOBJ([pwrite])
+fi
+m4_ifdef([gl_UNISTD_MODULE_INDICATOR],[
+  gl_UNISTD_MODULE_INDICATOR([pwrite])dnl
 ])dnl
 dnl# unlinkat module:
 gl_FUNC_UNLINKAT
@@ -259,7 +320,7 @@ if test ${HAVE_UNLINKAT} = 0 || test ${REPLACE_UNLINKAT} = 1; then
 fi
 m4_ifdef([gl_UNISTD_MODULE_INDICATOR],[
   gl_UNISTD_MODULE_INDICATOR([unlinkat])dnl
-],[:])dnl
+])dnl
 
 # Functions for which we have replacement sources, and for which we would
 # rather avoid the official gnulib macros:
@@ -270,6 +331,10 @@ AC_LIBOBJ([memrchr])dnl
 if test "x${ac_cv_func___fpending}" = "x"; then
   test -z "${ac_cv_func___fpending}"
   AC_CHECK_FUNCS([__fpending])
+fi
+if test "x${ac_cv_func_ftruncate}" = "x"; then
+  test -z "${ac_cv_func_ftruncate}"
+  AC_CHECK_FUNCS([ftruncate])
 fi
 if test "x${ac_cv_func_getdelim}" = "x"; then
   test -z "${ac_cv_func_getdelim}"
@@ -289,6 +354,7 @@ if test "x${ac_cv_func_unlinkat}" = "x"; then
 fi
 
 # Checks for declarations.
+AC_CHECK_DECLS([_STAT_VER])dnl
 AC_CHECK_DECLS([MSG_NOSIGNAL],[],[
   AC_CHECK_DECLS([SO_NOSIGPIPE],[],[],[
 #if defined(HAVE_SYS_SOCKET_H)

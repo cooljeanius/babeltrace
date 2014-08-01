@@ -1,5 +1,11 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
+/* The normal alignment of `off64_t', in bytes. */
+#undef ALIGNOF_OFF64_T
+
+/* The normal alignment of `off_t', in bytes. */
+#undef ALIGNOF_OFF_T
+
 /* Define to 1 if we have fmemopen support in libc. */
 #undef BABELTRACE_HAVE_FMEMOPEN
 
@@ -27,6 +33,11 @@
    language is requested. */
 #undef ENABLE_NLS
 
+/* Define to a C preprocessor expression (for faccessat) that evaluates to 1
+   or 0, depending on whether the gnulib module faccessat shall be considered
+   to be present (i.e. if we can use faccessat). */
+#undef GNULIB_FACCESSAT
+
 /* Define to a C preprocessor expression (for openat) that evaluates to 1 or
    0, depending on whether the gnulib module openat shall be considered to be
    present (i.e. if we can use openat). */
@@ -34,6 +45,9 @@
 
 /* Define to 1 when the gnulib module openat should be tested. */
 #undef GNULIB_TEST_OPENAT
+
+/* Define to 1 if you have the `access' function. */
+#undef HAVE_ACCESS
 
 /* Define to 1 if you have the `alarm' function. */
 #undef HAVE_ALARM
@@ -58,6 +72,9 @@
 /* Define to 1 if you have the `be64toh' function. */
 #undef HAVE_BE64TOH
 
+/* Define to 1 if you have the <bits/wordsize.h> header file. */
+#undef HAVE_BITS_WORDSIZE_H
+
 /* Define to 1 if you have the `bzero' function. */
 #undef HAVE_BZERO
 
@@ -68,6 +85,9 @@
 /* Define to 1 if you have the Mac OS X function CFPreferencesCopyAppValue in
    the CoreFoundation framework. */
 #undef HAVE_CFPREFERENCESCOPYAPPVALUE
+
+/* Define to 1 if you have the `chsize' function. */
+#undef HAVE_CHSIZE
 
 /* Define if the GNU dcgettext() function is already present or preinstalled.
    */
@@ -113,6 +133,10 @@
    you don't. */
 #undef HAVE_DECL__SC_HOST_NAME_MAX
 
+/* Define to 1 if you have the declaration of `_STAT_VER', and to 0 if you
+   don't. */
+#undef HAVE_DECL__STAT_VER
+
 /* Define to 1 if you have the declaration of `__BIG_ENDIAN', and to 0 if you
    don't. */
 #undef HAVE_DECL___BIG_ENDIAN
@@ -147,6 +171,9 @@
 /* Define to 1 if you have the `faccessat' function. */
 #undef HAVE_FACCESSAT
 
+/* Defined if fallocate() exists */
+#undef HAVE_FALLOCATE
+
 /* Define to 1 if you have the `fchdir' function. */
 #undef HAVE_FCHDIR
 
@@ -159,8 +186,23 @@
 /* Define to 1 if you have the `fork' function. */
 #undef HAVE_FORK
 
+/* Define to 1 if you have the `fstat64' function. */
+#undef HAVE_FSTAT64
+
+/* Define to 1 if you have the `fstatfs' function. */
+#undef HAVE_FSTATFS
+
+/* Define to 1 if you have the `fstatfs64' function. */
+#undef HAVE_FSTATFS64
+
 /* Define to 1 if you have the `ftruncate' function. */
 #undef HAVE_FTRUNCATE
+
+/* Define to 1 if you have the `ftruncate64' function. */
+#undef HAVE_FTRUNCATE64
+
+/* Define to 1 if you have the `fxstat64' function. */
+#undef HAVE_FXSTAT64
 
 /* Define to 1 if you have the `getcwd' function. */
 #undef HAVE_GETCWD
@@ -233,6 +275,9 @@
 
 /* Define to 1 if you have the <limits.h> header file. */
 #undef HAVE_LIMITS_H
+
+/* Define to 1 if you have the <linux/falloc.h> header file. */
+#undef HAVE_LINUX_FALLOC_H
 
 /* Define to 1 if you have the `localeconv' function. */
 #undef HAVE_LOCALECONV
@@ -314,6 +359,9 @@
 /* Define to 1 if you have the `nl_langinfo' function. */
 #undef HAVE_NL_LANGINFO
 
+/* Define to 1 if the system has the type `off64_t'. */
+#undef HAVE_OFF64_T
+
 /* Define to 1 if you have the `open' function. */
 #undef HAVE_OPEN
 
@@ -323,11 +371,26 @@
 /* Define to 1 if you have the <osreldate.h> header file. */
 #undef HAVE_OSRELDATE_H
 
-/* Define to 1 if you have the `posix_fallocate' function. */
+/* Define to 1 if posix_fallocate() exists */
 #undef HAVE_POSIX_FALLOCATE
+
+/* Define to 1 if posix_fallocate64() exists */
+#undef HAVE_POSIX_FALLOCATE64
+
+/* Define to 1 if you have the `pread' function. */
+#undef HAVE_PREAD
+
+/* Define to 1 if you have the `pread64' function. */
+#undef HAVE_PREAD64
 
 /* Define to 1 if the system has the type `ptrdiff_t'. */
 #undef HAVE_PTRDIFF_T
+
+/* Define to 1 if you have the `pwrite' function. */
+#undef HAVE_PWRITE
+
+/* Define to 1 if you have the `pwrite64' function. */
+#undef HAVE_PWRITE64
 
 /* Define to 1 if fcntl is declared even after undefining macros. */
 #undef HAVE_RAW_DECL_FCNTL
@@ -351,8 +414,17 @@
 /* Define to 1 if you have the `setlocale' function. */
 #undef HAVE_SETLOCALE
 
+/* Define to 1 if you have the <shlib-compat.h> header file. */
+#undef HAVE_SHLIB_COMPAT_H
+
 /* Define to 1 if you have the `socket' function. */
 #undef HAVE_SOCKET
+
+/* Define to 1 if you have the `statfs' function. */
+#undef HAVE_STATFS
+
+/* Define to 1 if you have the `statfs64' function. */
+#undef HAVE_STATFS64
 
 /* Define to 1 if stdbool.h conforms to C99. */
 #undef HAVE_STDBOOL_H
@@ -433,8 +505,14 @@
    */
 #undef HAVE_SYS_DIR_H
 
+/* Define to 1 if you have the <sys/falloc.h> header file. */
+#undef HAVE_SYS_FALLOC_H
+
 /* Define to 1 if you have the <sys/mman.h> header file. */
 #undef HAVE_SYS_MMAN_H
+
+/* Define to 1 if you have the <sys/mount.h> header file. */
+#undef HAVE_SYS_MOUNT_H
 
 /* Define to 1 if you have the <sys/ndir.h> header file, and it defines `DIR'.
    */
@@ -445,6 +523,12 @@
 
 /* Define to 1 if you have the <sys/socket.h> header file. */
 #undef HAVE_SYS_SOCKET_H
+
+/* Define to 1 if you have the <sys/statfs.h> header file. */
+#undef HAVE_SYS_STATFS_H
+
+/* Define to 1 if you have the <sys/statvfs.h> header file. */
+#undef HAVE_SYS_STATVFS_H
 
 /* Define to 1 if you have the <sys/stat.h> header file. */
 #undef HAVE_SYS_STAT_H
@@ -564,6 +648,12 @@
 
 /* Define to 1 if the C compiler supports function prototypes. */
 #undef PROTOTYPES
+
+/* The size of `off64_t', as computed by sizeof. */
+#undef SIZEOF_OFF64_T
+
+/* The size of `off_t', as computed by sizeof. */
+#undef SIZEOF_OFF_T
 
 /* If using the C implementation of alloca, define if you know the
    direction of stack growth for your system; otherwise it will be
@@ -754,6 +844,9 @@
 
 /* Define to `int' if <sys/types.h> does not define. */
 #undef mode_t
+
+/* Define to `long int' if <sys/types.h> does not define. */
+#undef off64_t
 
 /* Define to `long int' if <sys/types.h> does not define. */
 #undef off_t

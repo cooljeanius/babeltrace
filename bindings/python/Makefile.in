@@ -85,11 +85,12 @@ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/alloca.m4 \
 	$(top_srcdir)/m4/ax_pkg_swig.m4 $(top_srcdir)/m4/codeset.m4 \
 	$(top_srcdir)/m4/configmake.m4 $(top_srcdir)/m4/extensions.m4 \
+	$(top_srcdir)/m4/faccessat.m4 $(top_srcdir)/m4/fallocate.m4 \
 	$(top_srcdir)/m4/fcntl-o.m4 $(top_srcdir)/m4/fcntl_h.m4 \
-	$(top_srcdir)/m4/fpending.m4 $(top_srcdir)/m4/getline.m4 \
-	$(top_srcdir)/m4/gettext.m4 $(top_srcdir)/m4/glib-2.0.m4 \
-	$(top_srcdir)/m4/gnulib-common.m4 $(top_srcdir)/m4/iconv.m4 \
-	$(top_srcdir)/m4/include_next.m4 \
+	$(top_srcdir)/m4/fpending.m4 $(top_srcdir)/m4/ftruncate.m4 \
+	$(top_srcdir)/m4/getline.m4 $(top_srcdir)/m4/gettext.m4 \
+	$(top_srcdir)/m4/glib-2.0.m4 $(top_srcdir)/m4/gnulib-common.m4 \
+	$(top_srcdir)/m4/iconv.m4 $(top_srcdir)/m4/include_next.m4 \
 	$(top_srcdir)/m4/intlmacosx.m4 $(top_srcdir)/m4/lib-ld.m4 \
 	$(top_srcdir)/m4/lib-link.m4 $(top_srcdir)/m4/lib-prefix.m4 \
 	$(top_srcdir)/m4/libtool.m4 $(top_srcdir)/m4/longlong.m4 \
@@ -98,9 +99,11 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/alloca.m4 \
 	$(top_srcdir)/m4/lt~obsolete.m4 $(top_srcdir)/m4/malloc.m4 \
 	$(top_srcdir)/m4/mode_t.m4 $(top_srcdir)/m4/nls.m4 \
 	$(top_srcdir)/m4/openat.m4 $(top_srcdir)/m4/pkg.m4 \
-	$(top_srcdir)/m4/po.m4 $(top_srcdir)/m4/progtest.m4 \
-	$(top_srcdir)/m4/unlinkat.m4 $(top_srcdir)/m4/warn-on-use.m4 \
-	$(top_srcdir)/configure.ac
+	$(top_srcdir)/m4/po.m4 $(top_srcdir)/m4/posix_fallocate.m4 \
+	$(top_srcdir)/m4/posix_fallocate64.m4 \
+	$(top_srcdir)/m4/pread.m4 $(top_srcdir)/m4/progtest.m4 \
+	$(top_srcdir)/m4/pwrite.m4 $(top_srcdir)/m4/unlinkat.m4 \
+	$(top_srcdir)/m4/warn-on-use.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -265,8 +268,12 @@ GNULIB_OPEN = @GNULIB_OPEN@
 GNULIB_OPENAT = @GNULIB_OPENAT@
 GOBJECT_QUERY = @GOBJECT_QUERY@
 GREP = @GREP@
+HAVE_FACCESSAT = @HAVE_FACCESSAT@
 HAVE_FCNTL = @HAVE_FCNTL@
+HAVE_FTRUNCATE = @HAVE_FTRUNCATE@
 HAVE_OPENAT = @HAVE_OPENAT@
+HAVE_PREAD = @HAVE_PREAD@
+HAVE_PWRITE = @HAVE_PWRITE@
 INCLUDE_NEXT = @INCLUDE_NEXT@
 INCLUDE_NEXT_AS_FIRST_DIRECTIVE = @INCLUDE_NEXT_AS_FIRST_DIRECTIVE@
 INSTALL = @INSTALL@
@@ -332,9 +339,15 @@ PYTHON_PLATFORM = @PYTHON_PLATFORM@
 PYTHON_PREFIX = @PYTHON_PREFIX@
 PYTHON_VERSION = @PYTHON_VERSION@
 RANLIB = @RANLIB@
+REPLACE_FALLOCATE = @REPLACE_FALLOCATE@
 REPLACE_FCNTL = @REPLACE_FCNTL@
+REPLACE_FTRUNCATE = @REPLACE_FTRUNCATE@
 REPLACE_OPEN = @REPLACE_OPEN@
 REPLACE_OPENAT = @REPLACE_OPENAT@
+REPLACE_POSIX_FALLOCATE = @REPLACE_POSIX_FALLOCATE@
+REPLACE_POSIX_FALLOCATE64 = @REPLACE_POSIX_FALLOCATE64@
+REPLACE_PREAD = @REPLACE_PREAD@
+REPLACE_PWRITE = @REPLACE_PWRITE@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@

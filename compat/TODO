@@ -1,11 +1,12 @@
 gnulib modules to add (in order that warnings for them were printed):
-- posix_fallocate (no such module yet? docs page exists though...)
-- faccessat
+- ???
 
 gnulib modules that might be incompletely added (alphabetical order):
+- faccessat
 - getdelim
 - getline
 - memrchr
 - openat
+- posix_fallocate (found, based on an unmerged patch by Padraig Brady)
 - strndup
 - unlinkat
