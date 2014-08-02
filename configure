@@ -682,6 +682,8 @@ HAVE_DECL_GETDELIM
 REPLACE_FTRUNCATE
 HAVE_FTRUNCATE
 HAVE_FACCESSAT
+LIB_EACCESS
+HAVE_EUIDACCESS
 GL_GENERATE_ALLOCA_H_FALSE
 GL_GENERATE_ALLOCA_H_TRUE
 ALLOCA_H
@@ -2914,6 +2916,7 @@ as_fn_append ac_func_list " alarm"
 as_fn_append ac_header_list " stdlib.h"
 as_fn_append ac_header_list " sys/param.h"
 as_fn_append ac_func_list " faccessat"
+as_fn_append ac_header_list " libgen.h"
 as_fn_append ac_func_list " access"
 as_fn_append ac_header_list " stdio_ext.h"
 as_fn_append ac_func_list " __fpending"
@@ -23566,6 +23569,289 @@ fi
 
 
 
+    HAVE_EUIDACCESS=1;
+
+
+  for ac_func in euidaccess
+do :
+  ac_fn_c_check_func "$LINENO" "euidaccess" "ac_cv_func_euidaccess"
+if test "x$ac_cv_func_euidaccess" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_EUIDACCESS 1
+_ACEOF
+
+fi
+done
+
+  if test "x${ac_cv_func_euidaccess}" = "xno"; then
+    HAVE_EUIDACCESS=0
+  fi
+
+if test ${HAVE_EUIDACCESS} = 0; then
+  case " $LIBOBJS " in
+  *" euidaccess.$ac_objext "* ) ;;
+  *) LIBOBJS="$LIBOBJS euidaccess.$ac_objext"
+ ;;
+esac
+
+
+
+
+ac_fn_c_check_decl "$LINENO" "setregid" "ac_cv_have_decl_setregid" "$ac_includes_default"
+if test "x$ac_cv_have_decl_setregid" = xyes; then :
+  ac_have_decl=1
+else
+  ac_have_decl=0
+fi
+
+cat >>confdefs.h <<_ACEOF
+#define HAVE_DECL_SETREGID $ac_have_decl
+_ACEOF
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking type of array argument to getgroups" >&5
+$as_echo_n "checking type of array argument to getgroups... " >&6; }
+if ${ac_cv_type_getgroups+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test "$cross_compiling" = yes; then :
+  ac_cv_type_getgroups=cross
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+/* Thanks to Mike Rendell for this test.  */
+$ac_includes_default
+#define NGID 256
+#undef MAX
+#define MAX(x, y) ((x) > (y) ? (x) : (y))
+
+int
+main ()
+{
+  gid_t gidset[NGID];
+  int i, n;
+  union { gid_t gval; long int lval; }  val;
+
+  val.lval = -1;
+  for (i = 0; i < NGID; i++)
+    gidset[i] = val.gval;
+  n = getgroups (sizeof (gidset) / MAX (sizeof (int), sizeof (gid_t)) - 1,
+		 gidset);
+  /* Exit non-zero if getgroups seems to require an array of ints.  This
+     happens when gid_t is short int but getgroups modifies an array
+     of ints.  */
+  return n > 0 && gidset[n] != val.gval;
+}
+_ACEOF
+if ac_fn_c_try_run "$LINENO"; then :
+  ac_cv_type_getgroups=gid_t
+else
+  ac_cv_type_getgroups=int
+fi
+rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
+  conftest.$ac_objext conftest.beam conftest.$ac_ext
+fi
+
+if test $ac_cv_type_getgroups = cross; then
+        cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <unistd.h>
+
+_ACEOF
+if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
+  $EGREP "getgroups.*int.*gid_t" >/dev/null 2>&1; then :
+  ac_cv_type_getgroups=gid_t
+else
+  ac_cv_type_getgroups=int
+fi
+rm -f conftest*
+
+fi
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_type_getgroups" >&5
+$as_echo "$ac_cv_type_getgroups" >&6; }
+
+cat >>confdefs.h <<_ACEOF
+#define GETGROUPS_T $ac_cv_type_getgroups
+_ACEOF
+
+
+ac_fn_c_check_func "$LINENO" "getgroups" "ac_cv_func_getgroups"
+if test "x$ac_cv_func_getgroups" = xyes; then :
+
+fi
+
+
+# If we don't yet have getgroups, see if it's in -lbsd.
+# This is reported to be necessary on an ITOS 3000WS running SEIUX 3.1.
+ac_save_LIBS=$LIBS
+if test $ac_cv_func_getgroups = no; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for getgroups in -lbsd" >&5
+$as_echo_n "checking for getgroups in -lbsd... " >&6; }
+if ${ac_cv_lib_bsd_getgroups+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lbsd  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char getgroups ();
+int
+main ()
+{
+return getgroups ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_lib_bsd_getgroups=yes
+else
+  ac_cv_lib_bsd_getgroups=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_bsd_getgroups" >&5
+$as_echo "$ac_cv_lib_bsd_getgroups" >&6; }
+if test "x$ac_cv_lib_bsd_getgroups" = xyes; then :
+  GETGROUPS_LIB=-lbsd
+fi
+
+fi
+
+# Run the program to test the functionality of the system-supplied
+# getgroups function only if there is such a function.
+if test $ac_cv_func_getgroups = yes; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for working getgroups" >&5
+$as_echo_n "checking for working getgroups... " >&6; }
+if ${ac_cv_func_getgroups_works+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test "$cross_compiling" = yes; then :
+  ac_cv_func_getgroups_works=no
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+$ac_includes_default
+int
+main ()
+{
+/* On Ultrix 4.3, getgroups (0, 0) always fails.  */
+       return getgroups (0, 0) == -1;
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_run "$LINENO"; then :
+  ac_cv_func_getgroups_works=yes
+else
+  ac_cv_func_getgroups_works=no
+fi
+rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
+  conftest.$ac_objext conftest.beam conftest.$ac_ext
+fi
+
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_func_getgroups_works" >&5
+$as_echo "$ac_cv_func_getgroups_works" >&6; }
+else
+  ac_cv_func_getgroups_works=no
+fi
+if test $ac_cv_func_getgroups_works = yes; then
+
+$as_echo "#define HAVE_GETGROUPS 1" >>confdefs.h
+
+fi
+LIBS=$ac_save_LIBS
+
+
+
+  # Solaris 9 and 10 need -lgen to get the eaccess function.
+  # Save and restore LIBS so -lgen is NOT added to it. Otherwise, *all*
+  # programs in the package would end up linked with that
+  # potentially-shared library, inducing unnecessary run-time overhead.
+  LIB_EACCESS=""
+
+  gl_saved_libs="${LIBS}"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing eaccess" >&5
+$as_echo_n "checking for library containing eaccess... " >&6; }
+if ${ac_cv_search_eaccess+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_func_search_save_LIBS=$LIBS
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char eaccess ();
+int
+main ()
+{
+return eaccess ();
+  ;
+  return 0;
+}
+_ACEOF
+for ac_lib in '' gen; do
+  if test -z "$ac_lib"; then
+    ac_res="none required"
+  else
+    ac_res=-l$ac_lib
+    LIBS="-l$ac_lib  $ac_func_search_save_LIBS"
+  fi
+  if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_search_eaccess=$ac_res
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext
+  if ${ac_cv_search_eaccess+:} false; then :
+  break
+fi
+done
+if ${ac_cv_search_eaccess+:} false; then :
+
+else
+  ac_cv_search_eaccess=no
+fi
+rm conftest.$ac_ext
+LIBS=$ac_func_search_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_search_eaccess" >&5
+$as_echo "$ac_cv_search_eaccess" >&6; }
+ac_res=$ac_cv_search_eaccess
+if test "$ac_res" != no; then :
+  test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
+  test "x${ac_cv_search_eaccess}" = "xnone required" ||
+                    LIB_EACCESS="${ac_cv_search_eaccess}"
+fi
+    for ac_func in eaccess
+do :
+  ac_fn_c_check_func "$LINENO" "eaccess" "ac_cv_func_eaccess"
+if test "x$ac_cv_func_eaccess" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_EACCESS 1
+_ACEOF
+
+fi
+done
+
+  LIBS="${gl_saved_libs}"
+
+fi
 
 
     HAVE_FACCESSAT=1;
@@ -24690,6 +24976,20 @@ case " $LIBOBJS " in
 esac
 
 # Keep autoscan from complaining about functions we replace.
+if test "x${ac_cv_func_euidaccess}" = "x"; then
+  test -z "${ac_cv_func_euidaccess}"
+  for ac_func in euidaccess
+do :
+  ac_fn_c_check_func "$LINENO" "euidaccess" "ac_cv_func_euidaccess"
+if test "x$ac_cv_func_euidaccess" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_EUIDACCESS 1
+_ACEOF
+
+fi
+done
+
+fi
 if test "x${ac_cv_func___fpending}" = "x"; then
   test -z "${ac_cv_func___fpending}"
   for ac_func in __fpending

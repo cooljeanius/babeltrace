@@ -33,6 +33,10 @@
    language is requested. */
 #undef ENABLE_NLS
 
+/* Define to the type of elements in the array set by `getgroups'. Usually
+   this is either `int' or `gid_t'. */
+#undef GETGROUPS_T
+
 /* Define to a C preprocessor expression (for faccessat) that evaluates to 1
    or 0, depending on whether the gnulib module faccessat shall be considered
    to be present (i.e. if we can use faccessat). */
@@ -121,6 +125,10 @@
    don't. */
 #undef HAVE_DECL_MSG_NOSIGNAL
 
+/* Define to 1 if you have the declaration of `setregid', and to 0 if you
+   don't. */
+#undef HAVE_DECL_SETREGID
+
 /* Define to 1 if you have the declaration of `SO_NOSIGPIPE', and to 0 if you
    don't. */
 #undef HAVE_DECL_SO_NOSIGPIPE
@@ -170,11 +178,17 @@
 /* Define to 1 if you have the `dup2' function. */
 #undef HAVE_DUP2
 
+/* Define to 1 if you have the `eaccess' function. */
+#undef HAVE_EACCESS
+
 /* Define to 1 if you have the <endian.h> header file. */
 #undef HAVE_ENDIAN_H
 
 /* Define to 1 if you have the <errno.h> header file. */
 #undef HAVE_ERRNO_H
+
+/* Define to 1 if you have the `euidaccess' function. */
+#undef HAVE_EUIDACCESS
 
 /* Define to 1 if you have the `faccessat' function. */
 #undef HAVE_FACCESSAT
@@ -224,6 +238,9 @@
 /* Define to 1 if you have the `getdelim' function. */
 #undef HAVE_GETDELIM
 
+/* Define to 1 if your system has a working `getgroups' function. */
+#undef HAVE_GETGROUPS
+
 /* Define to 1 if you have the `gethostbyname' function. */
 #undef HAVE_GETHOSTBYNAME
 
@@ -265,6 +282,9 @@
 
 /* Define to 1 if you have the <langinfo.h> header file. */
 #undef HAVE_LANGINFO_H
+
+/* Define to 1 if you have the <libgen.h> header file. */
+#undef HAVE_LIBGEN_H
 
 /* Define to 1 if you have the `iconv' library (-liconv). */
 #undef HAVE_LIBICONV

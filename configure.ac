@@ -237,6 +237,15 @@ AC_CHECK_FUNCS([__argz_count __argz_next __argz_stringify atexit \
 
 # Checks for functions from gnulib (libcompat here).
 gl_FUNC_ALLOCA
+dnl# euidaccess module:
+gl_FUNC_EUIDACCESS
+if test ${HAVE_EUIDACCESS} = 0; then
+  AC_LIBOBJ([euidaccess])dnl
+  gl_PREREQ_EUIDACCESS
+fi
+m4_ifdef([gl_UNISTD_MODULE_INDICATOR],[
+  gl_UNISTD_MODULE_INDICATOR([euidaccess])dnl
+])dnl
 dnl# faccessat module:
 gl_FUNC_FACCESSAT
 if test ${HAVE_FACCESSAT} = 0; then
@@ -336,6 +345,10 @@ AC_REPLACE_FUNCS([strndup])dnl
 AC_LIBOBJ([memrchr])dnl
 
 # Keep autoscan from complaining about functions we replace.
+if test "x${ac_cv_func_euidaccess}" = "x"; then
+  test -z "${ac_cv_func_euidaccess}"
+  AC_CHECK_FUNCS([euidaccess])
+fi
 if test "x${ac_cv_func___fpending}" = "x"; then
   test -z "${ac_cv_func___fpending}"
   AC_CHECK_FUNCS([__fpending])

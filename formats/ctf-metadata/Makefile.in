@@ -84,14 +84,14 @@ DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/alloca.m4 \
 	$(top_srcdir)/m4/ax_pkg_swig.m4 $(top_srcdir)/m4/codeset.m4 \
-	$(top_srcdir)/m4/configmake.m4 $(top_srcdir)/m4/extensions.m4 \
-	$(top_srcdir)/m4/faccessat.m4 $(top_srcdir)/m4/fallocate.m4 \
-	$(top_srcdir)/m4/fcntl-o.m4 $(top_srcdir)/m4/fcntl_h.m4 \
-	$(top_srcdir)/m4/fpending.m4 $(top_srcdir)/m4/ftruncate.m4 \
-	$(top_srcdir)/m4/getdelim.m4 $(top_srcdir)/m4/getline.m4 \
-	$(top_srcdir)/m4/gettext.m4 $(top_srcdir)/m4/glib-2.0.m4 \
-	$(top_srcdir)/m4/gnulib-common.m4 $(top_srcdir)/m4/iconv.m4 \
-	$(top_srcdir)/m4/include_next.m4 \
+	$(top_srcdir)/m4/configmake.m4 $(top_srcdir)/m4/euidaccess.m4 \
+	$(top_srcdir)/m4/extensions.m4 $(top_srcdir)/m4/faccessat.m4 \
+	$(top_srcdir)/m4/fallocate.m4 $(top_srcdir)/m4/fcntl-o.m4 \
+	$(top_srcdir)/m4/fcntl_h.m4 $(top_srcdir)/m4/fpending.m4 \
+	$(top_srcdir)/m4/ftruncate.m4 $(top_srcdir)/m4/getdelim.m4 \
+	$(top_srcdir)/m4/getline.m4 $(top_srcdir)/m4/gettext.m4 \
+	$(top_srcdir)/m4/glib-2.0.m4 $(top_srcdir)/m4/gnulib-common.m4 \
+	$(top_srcdir)/m4/iconv.m4 $(top_srcdir)/m4/include_next.m4 \
 	$(top_srcdir)/m4/intlmacosx.m4 $(top_srcdir)/m4/lib-ld.m4 \
 	$(top_srcdir)/m4/lib-link.m4 $(top_srcdir)/m4/lib-prefix.m4 \
 	$(top_srcdir)/m4/libtool.m4 $(top_srcdir)/m4/longlong.m4 \
@@ -266,6 +266,7 @@ GOBJECT_QUERY = @GOBJECT_QUERY@
 GREP = @GREP@
 HAVE_DECL_GETDELIM = @HAVE_DECL_GETDELIM@
 HAVE_DECL_GETLINE = @HAVE_DECL_GETLINE@
+HAVE_EUIDACCESS = @HAVE_EUIDACCESS@
 HAVE_FACCESSAT = @HAVE_FACCESSAT@
 HAVE_FCNTL = @HAVE_FCNTL@
 HAVE_FTRUNCATE = @HAVE_FTRUNCATE@
@@ -293,6 +294,7 @@ LIBM = @LIBM@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
+LIB_EACCESS = @LIB_EACCESS@
 LIPO = @LIPO@
 LN_S = @LN_S@
 LTLIBICONV = @LTLIBICONV@
