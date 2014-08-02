@@ -48,7 +48,11 @@ AC_DEFUN([_AC_FUNC_MALLOC_IF],[
 AC_DEFUN([gl_FUNC_MALLOC_GNU],[
   m4_ifdef([gl_STDLIB_H_DEFAULTS],[
     AC_REQUIRE([gl_STDLIB_H_DEFAULTS])dnl
-  ],[:])dnl
+  ],[
+    if test "x${REPLACE_MALLOC}" = "x"; then
+      test -z "${REPLACE_MALLOC}" && export REPLACE_MALLOC=0; AC_SUBST([REPLACE_MALLOC])
+    fi
+  ])dnl
 
   dnl# _AC_FUNC_MALLOC_IF is defined in Autoconf, and above.
   _AC_FUNC_MALLOC_IF(
@@ -67,7 +71,11 @@ AC_DEFUN([gl_FUNC_MALLOC_GNU],[
 AC_DEFUN([gl_FUNC_MALLOC_POSIX],[
   m4_ifdef([gl_STDLIB_H_DEFAULTS],[
     AC_REQUIRE([gl_STDLIB_H_DEFAULTS])dnl
-  ],[:])dnl
+  ],[
+    if test "x${REPLACE_MALLOC}" = "x"; then
+      test -z "${REPLACE_MALLOC}" && export REPLACE_MALLOC=0; AC_SUBST([REPLACE_MALLOC])
+    fi
+  ])dnl
 
   AC_REQUIRE([gl_CHECK_MALLOC_POSIX])dnl
 
@@ -77,7 +85,7 @@ AC_DEFUN([gl_FUNC_MALLOC_POSIX],[
   else
     REPLACE_MALLOC=1
   fi
-])
+])dnl
 
 # Test whether malloc, realloc, calloc are POSIX compliant,
 # Set gl_cv_func_malloc_posix to yes or no accordingly.

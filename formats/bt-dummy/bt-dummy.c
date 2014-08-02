@@ -89,3 +89,6 @@ void __attribute__((destructor)) bt_dummy_exit(void)
 {
 	bt_unregister_format(&bt_dummy_format);
 }
+
+/* make sure we export at least one global symbol: */
+typedef int bt_dummy_dummy_t;

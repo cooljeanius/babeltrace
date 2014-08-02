@@ -176,6 +176,10 @@ compat_symbol(libc, __posix_fallocate64_l32, posix_fallocate64, GLIBC_2_2);
 # else
 strong_alias(__posix_fallocate64_l64, posix_fallocate64);
 # endif /* other _LIBC junk */
+#else /* outside of _LIBC: */
+# ifndef posix_fallocate64
+#  define posix_fallocate64 __posix_fallocate64_l64
+# endif /* !posix_fallocate64 */
 #endif /* _LIBC */
 
 /* EOF */

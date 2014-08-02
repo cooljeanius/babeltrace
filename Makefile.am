@@ -21,7 +21,7 @@ DISTCLEANFILES = .DS_Store *~ autoscan.log m4/.DS_Store m4/*~
 DISTCLEANFILES += config/*~ po/.DS_Store po/*~
 
 distclean-local:
-	rm -fv @PACKAGE_TARNAME@-@PACKAGE_VERSION@.tar.gz
+	rm -fv @PACKAGE_TARNAME@-@PACKAGE_VERSION@.tar.bz2
 	rm -rfv autom4te.cache || rmdir autom4te.cache
 	rm -rfv .deps || rmdir .deps
 	-(test -w @PACKAGE_TARNAME@-@PACKAGE_VERSION@ && (rm -rf @PACKAGE_TARNAME@-@PACKAGE_VERSION@ || rmdir @PACKAGE_TARNAME@-@PACKAGE_VERSION@)) || stat @PACKAGE_TARNAME@-*.*.* || echo "it can be difficult to distclean the results of distcheck"

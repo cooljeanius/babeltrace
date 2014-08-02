@@ -9,7 +9,12 @@
 dnl# From Jim Meyering.
 
 AC_DEFUN([gl_FUNC_LSTAT],[
-  AC_REQUIRE([gl_SYS_STAT_H_DEFAULTS])dnl
+  m4_ifdef([gl_SYS_STAT_H_DEFAULTS],[
+    AC_REQUIRE([gl_SYS_STAT_H_DEFAULTS])dnl
+  ],[
+    HAVE_LSTAT=1;    AC_SUBST([HAVE_LSTAT])
+    REPLACE_LSTAT=0; AC_SUBST([REPLACE_LSTAT])
+  ])dnl
   dnl# If lstat does not exist, the replacement <sys/stat.h> does
   dnl# "#define lstat stat", and lstat.c is a no-op.
   AC_CHECK_FUNCS_ONCE([lstat])dnl

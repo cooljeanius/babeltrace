@@ -667,10 +667,18 @@ BABELTRACE_BUILD_WITH_LIBUUID_FALSE
 BABELTRACE_BUILD_WITH_LIBUUID_TRUE
 BABELTRACE_BUILD_WITH_MINGW_FALSE
 BABELTRACE_BUILD_WITH_MINGW_TRUE
+REPLACE_UNLINK
+REPLACE_UNLINKAT
+HAVE_UNLINKAT
 REPLACE_PWRITE
 HAVE_PWRITE
 REPLACE_PREAD
 HAVE_PREAD
+REPLACE_MALLOC
+REPLACE_GETLINE
+HAVE_DECL_GETLINE
+REPLACE_GETDELIM
+HAVE_DECL_GETDELIM
 REPLACE_FTRUNCATE
 HAVE_FTRUNCATE
 HAVE_FACCESSAT
@@ -2910,6 +2918,7 @@ as_fn_append ac_func_list " access"
 as_fn_append ac_header_list " stdio_ext.h"
 as_fn_append ac_func_list " __fpending"
 as_fn_append ac_func_list " ftruncate"
+as_fn_append ac_func_list " getdelim"
 as_fn_append ac_func_list " openat"
 as_fn_append ac_header_list " sys/falloc.h"
 as_fn_append ac_header_list " linux/falloc.h"
@@ -23482,7 +23491,7 @@ done
 
 
 for ac_func in __argz_count __argz_next __argz_stringify atexit \
-                be32toh be64toh bzero dup2 faccessat fchdir \
+                be32toh be64toh bzero dup2 fchdir \
                 ftruncate64 fstatfs fstatfs64 fstat64 fxstat64 \
                 getcwd gethostbyname gethostname gettimeofday \
                 htobe32 htobe64 iswprint localeconv localtime_r \
@@ -23728,6 +23737,145 @@ fi
 done
 
 fi
+ac_fn_c_check_decl "$LINENO" "getdelim" "ac_cv_have_decl_getdelim" "$ac_includes_default"
+if test "x$ac_cv_have_decl_getdelim" = xyes; then :
+  ac_have_decl=1
+else
+  ac_have_decl=0
+fi
+
+cat >>confdefs.h <<_ACEOF
+#define HAVE_DECL_GETDELIM $ac_have_decl
+_ACEOF
+
+
+
+
+
+    HAVE_DECL_GETDELIM=1;
+    REPLACE_GETDELIM=0;
+
+
+
+  if test "x${ac_cv_func_getdelim}" = "xyes"; then
+    HAVE_GETDELIM=1
+        { $as_echo "$as_me:${as_lineno-$LINENO}: checking for working getdelim function" >&5
+$as_echo_n "checking for working getdelim function... " >&6; }
+if ${gl_cv_func_working_getdelim+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  echo fooNbarN | tr -d '\012' | tr N '\012' > conftest.data
+    if test "$cross_compiling" = yes; then :
+        cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+#include <features.h>
+#ifdef __GNU_LIBRARY__
+ #if (__GLIBC__ >= 2) && !defined __UCLIBC__
+  Lucky_GNU_user
+ #endif /* glibc 2+ */
+#endif /* __GNU_LIBRARY__ */
+
+_ACEOF
+if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
+  $EGREP "Lucky_GNU_user" >/dev/null 2>&1; then :
+  gl_cv_func_working_getdelim="guessing yes"
+else
+  gl_cv_func_working_getdelim="guessing no"
+fi
+rm -f conftest*
+
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+#    include <stdio.h>
+#    include <stdlib.h>
+#    include <string.h>
+    int main(void)
+    {
+      FILE *in = fopen("./conftest.data", "r");
+      if (!in) {
+        return 1;
+      }
+      {
+        /* Test result for a NULL buffer and a zero size.
+         * Based on a test program from Karl Heuer.  */
+        char *line = NULL;
+        size_t siz = 0;
+        int len = getdelim(&line, &siz, '\n', in);
+        if (!((len == 4) && line && (strcmp(line, "foo\n") == 0))) {
+          return 2;
+        }
+      }
+      {
+        /* Test result for a NULL buffer and a non-zero size.
+         * This crashes on FreeBSD 8.0.  */
+        char *line = NULL;
+        size_t siz = ((size_t)(~0) / 4);
+        if (getdelim(&line, &siz, '\n', in) == -1) {
+          return 3;
+        }
+      }
+      return 0;
+    }
+
+_ACEOF
+if ac_fn_c_try_run "$LINENO"; then :
+  gl_cv_func_working_getdelim=yes
+else
+  gl_cv_func_working_getdelim=no
+fi
+rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
+  conftest.$ac_objext conftest.beam conftest.$ac_ext
+fi
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $gl_cv_func_working_getdelim" >&5
+$as_echo "$gl_cv_func_working_getdelim" >&6; }
+    case "${gl_cv_func_working_getdelim}" in
+      *no)
+        REPLACE_GETDELIM=1
+        ;;
+    esac
+  else
+    HAVE_GETDELIM=0
+  fi
+
+  if test "x${ac_cv_have_decl_getdelim}" = "xno"; then
+    HAVE_DECL_GETDELIM=0
+  fi
+
+if test ${HAVE_GETDELIM} = 0 || test ${REPLACE_GETDELIM} = 1; then
+  case " $LIBOBJS " in
+  *" getdelim.$ac_objext "* ) ;;
+  *) LIBOBJS="$LIBOBJS getdelim.$ac_objext"
+ ;;
+esac
+
+  for ac_func in flockfile funlockfile
+do :
+  as_ac_var=`$as_echo "ac_cv_func_$ac_func" | $as_tr_sh`
+ac_fn_c_check_func "$LINENO" "$ac_func" "$as_ac_var"
+if eval test \"x\$"$as_ac_var"\" = x"yes"; then :
+  cat >>confdefs.h <<_ACEOF
+#define `$as_echo "HAVE_$ac_func" | $as_tr_cpp` 1
+_ACEOF
+
+fi
+done
+  ac_fn_c_check_decl "$LINENO" "getc_unlocked" "ac_cv_have_decl_getc_unlocked" "$ac_includes_default"
+if test "x$ac_cv_have_decl_getc_unlocked" = xyes; then :
+  ac_have_decl=1
+else
+  ac_have_decl=0
+fi
+
+cat >>confdefs.h <<_ACEOF
+#define HAVE_DECL_GETC_UNLOCKED $ac_have_decl
+_ACEOF
+
+fi
 ac_fn_c_check_decl "$LINENO" "getline" "ac_cv_have_decl_getline" "$ac_includes_default"
 if test "x$ac_cv_have_decl_getline" = xyes; then :
   ac_have_decl=1
@@ -23740,6 +23888,9 @@ cat >>confdefs.h <<_ACEOF
 _ACEOF
 
 
+
+    HAVE_DECL_GETLINE=1;
+    REPLACE_GETLINE=0;
 
 
 
@@ -23785,7 +23936,7 @@ else
 #    include <stdio.h>
 #    include <stdlib.h>
 #    include <string.h>
-    int main()
+    int main(void)
     {
       FILE *in = fopen("./conftest.data", "r");
       if (!in) {
@@ -23847,7 +23998,11 @@ esac
   :
 fi
 
-  :
+
+    if test "x${REPLACE_MALLOC}" = "x"; then
+      test -z "${REPLACE_MALLOC}" && export REPLACE_MALLOC=0;
+    fi
+
 
       for ac_header in stdlib.h
 do :
@@ -23949,7 +24104,11 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $gl_cv_func_malloc_posix" >&5
 $as_echo "$gl_cv_func_malloc_posix" >&6; }
 
-  :
+
+    if test "x${REPLACE_MALLOC}" = "x"; then
+      test -z "${REPLACE_MALLOC}" && export REPLACE_MALLOC=0;
+    fi
+
 
   if test "x${gl_cv_func_malloc_posix}" = "xyes"; then
 
@@ -24476,7 +24635,12 @@ fi
 
 
 
-  :      :
+
+    HAVE_UNLINKAT=1;
+    REPLACE_UNLINKAT=0;
+
+    REPLACE_UNLINK=0;
+
   if test "x${ac_cv_func_unlinkat}" = "xno"; then
     HAVE_UNLINKAT=0
   else
@@ -24506,19 +24670,6 @@ fi
 
 # Functions for which we have replacement sources, and for which we would
 # rather avoid the official gnulib macros:
-ac_fn_c_check_func "$LINENO" "getdelim" "ac_cv_func_getdelim"
-if test "x$ac_cv_func_getdelim" = xyes; then :
-  $as_echo "#define HAVE_GETDELIM 1" >>confdefs.h
-
-else
-  case " $LIBOBJS " in
-  *" getdelim.$ac_objext "* ) ;;
-  *) LIBOBJS="$LIBOBJS getdelim.$ac_objext"
- ;;
-esac
-
-fi
-
 ac_fn_c_check_func "$LINENO" "strndup" "ac_cv_func_strndup"
 if test "x$ac_cv_func_strndup" = xyes; then :
   $as_echo "#define HAVE_STRNDUP 1" >>confdefs.h

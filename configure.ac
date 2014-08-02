@@ -225,7 +225,7 @@ AC_FUNC_STRFTIME
 AC_FUNC_STRNLEN
 AC_FUNC_VPRINTF
 AC_CHECK_FUNCS([__argz_count __argz_next __argz_stringify atexit \
-                be32toh be64toh bzero dup2 faccessat fchdir \
+                be32toh be64toh bzero dup2 fchdir \
                 ftruncate64 fstatfs fstatfs64 fstat64 fxstat64 \
                 getcwd gethostbyname gethostname gettimeofday \
                 htobe32 htobe64 iswprint localeconv localtime_r \
@@ -263,6 +263,15 @@ if test ${HAVE_FTRUNCATE} = 0 || test ${REPLACE_FTRUNCATE} = 1; then
 fi
 m4_ifdef([gl_UNISTD_MODULE_INDICATOR],[
   gl_UNISTD_MODULE_INDICATOR([ftruncate])dnl
+])dnl
+dnl# getdelim module:
+gl_FUNC_GETDELIM
+if test ${HAVE_GETDELIM} = 0 || test ${REPLACE_GETDELIM} = 1; then
+  AC_LIBOBJ([getdelim])dnl
+  gl_PREREQ_GETDELIM
+fi
+m4_ifdef([gl_STDIO_MODULE_INDICATOR],[
+  gl_STDIO_MODULE_INDICATOR([getdelim])dnl
 ])dnl
 dnl# getline module:
 gl_FUNC_GETLINE
@@ -323,7 +332,7 @@ m4_ifdef([gl_UNISTD_MODULE_INDICATOR],[
 
 # Functions for which we have replacement sources, and for which we would
 # rather avoid the official gnulib macros:
-AC_REPLACE_FUNCS([getdelim strndup])dnl
+AC_REPLACE_FUNCS([strndup])dnl
 AC_LIBOBJ([memrchr])dnl
 
 # Keep autoscan from complaining about functions we replace.

@@ -15,6 +15,9 @@ dnl# to do with the function we need.
 AC_DEFUN([gl_FUNC_GETLINE],[
   m4_ifdef([gl_STDIO_H_DEFAULTS],[
     AC_REQUIRE([gl_STDIO_H_DEFAULTS])dnl
+  ],[
+    HAVE_DECL_GETLINE=1; AC_SUBST([HAVE_DECL_GETLINE])
+    REPLACE_GETLINE=0;   AC_SUBST([REPLACE_GETLINE])
   ])dnl
 
   dnl# Persuade glibc <stdio.h> to declare getline():
@@ -35,7 +38,7 @@ AC_DEFUN([gl_FUNC_GETLINE],[
 #    include <stdio.h>
 #    include <stdlib.h>
 #    include <string.h>
-    int main()
+    int main(void)
     {
       FILE *in = fopen("./conftest.data", "r");
       if (!in) {

@@ -319,7 +319,10 @@ void trace_text(FILE *input, int output)
 	struct ctf_stream_pos pos;
 	ssize_t len;
 	char *line = NULL, *nl;
+#ifdef HAVE_GETLINE
+    /* only used with the call to getline() so far: */
 	size_t linesize = 0L;
+#endif /* HAVE_GETLINE */
 	int ret;
 
 	memset(&pos, 0, sizeof(pos));

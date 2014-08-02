@@ -9,12 +9,17 @@ dnl# with or without modifications, as long as this notice is preserved.
 AC_DEFUN([gl_FUNC_UNLINKAT],[
   m4_ifdef([gl_UNISTD_H_DEFAULTS],[
     AC_REQUIRE([gl_UNISTD_H_DEFAULTS])dnl
-  ],[:])dnl
+  ],[
+    HAVE_UNLINKAT=1;    AC_SUBST([HAVE_UNLINKAT])
+    REPLACE_UNLINKAT=0; AC_SUBST([REPLACE_UNLINKAT])
+  ])dnl
   AC_REQUIRE([gl_USE_SYSTEM_EXTENSIONS])dnl
   AC_CHECK_FUNCS_ONCE([unlinkat])dnl
   m4_ifdef([gl_FUNC_UNLINK],[
     AC_REQUIRE([gl_FUNC_UNLINK])dnl
-  ],[:])dnl
+  ],[
+    REPLACE_UNLINK=0; AC_SUBST([REPLACE_UNLINK])
+  ])dnl
   AC_REQUIRE([gl_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK])dnl
 
   if test "x${ac_cv_func_unlinkat}" = "xno"; then
