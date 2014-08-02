@@ -91,7 +91,8 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/alloca.m4 \
 	$(top_srcdir)/m4/ftruncate.m4 $(top_srcdir)/m4/getdelim.m4 \
 	$(top_srcdir)/m4/getline.m4 $(top_srcdir)/m4/gettext.m4 \
 	$(top_srcdir)/m4/glib-2.0.m4 $(top_srcdir)/m4/gnulib-common.m4 \
-	$(top_srcdir)/m4/iconv.m4 $(top_srcdir)/m4/include_next.m4 \
+	$(top_srcdir)/m4/group-member.m4 $(top_srcdir)/m4/iconv.m4 \
+	$(top_srcdir)/m4/include_next.m4 \
 	$(top_srcdir)/m4/intlmacosx.m4 $(top_srcdir)/m4/lib-ld.m4 \
 	$(top_srcdir)/m4/lib-link.m4 $(top_srcdir)/m4/lib-prefix.m4 \
 	$(top_srcdir)/m4/libtool.m4 $(top_srcdir)/m4/longlong.m4 \
@@ -237,6 +238,7 @@ HAVE_EUIDACCESS = @HAVE_EUIDACCESS@
 HAVE_FACCESSAT = @HAVE_FACCESSAT@
 HAVE_FCNTL = @HAVE_FCNTL@
 HAVE_FTRUNCATE = @HAVE_FTRUNCATE@
+HAVE_GROUP_MEMBER = @HAVE_GROUP_MEMBER@
 HAVE_LSTAT = @HAVE_LSTAT@
 HAVE_OPENAT = @HAVE_OPENAT@
 HAVE_PREAD = @HAVE_PREAD@

@@ -86,9 +86,9 @@ subdir = compat
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	posix_fallocate.c ftruncate.c mktime.c getdelim.c error.c \
 	pwrite.c realloc.c fpending.c error.h posix_fallocate64.c \
-	unlink.c malloc.c strnlen.c faccessat.c unlinkat.c \
-	openat-proc.c fallocate.c memrchr.c euidaccess.c pread.c \
-	getline.c openat.c strndup.c alloca.c \
+	unlink.c strnlen.c malloc.c faccessat.c unlinkat.c lstat.c \
+	fallocate.c openat-proc.c memrchr.c euidaccess.c pread.c \
+	openat.c getline.c strndup.c stat.c group-member.c alloca.c \
 	$(top_srcdir)/config/depcomp $(noinst_HEADERS) TODO
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/alloca.m4 \
@@ -100,7 +100,8 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/alloca.m4 \
 	$(top_srcdir)/m4/ftruncate.m4 $(top_srcdir)/m4/getdelim.m4 \
 	$(top_srcdir)/m4/getline.m4 $(top_srcdir)/m4/gettext.m4 \
 	$(top_srcdir)/m4/glib-2.0.m4 $(top_srcdir)/m4/gnulib-common.m4 \
-	$(top_srcdir)/m4/iconv.m4 $(top_srcdir)/m4/include_next.m4 \
+	$(top_srcdir)/m4/group-member.m4 $(top_srcdir)/m4/iconv.m4 \
+	$(top_srcdir)/m4/include_next.m4 \
 	$(top_srcdir)/m4/intlmacosx.m4 $(top_srcdir)/m4/lib-ld.m4 \
 	$(top_srcdir)/m4/lib-link.m4 $(top_srcdir)/m4/lib-prefix.m4 \
 	$(top_srcdir)/m4/libtool.m4 $(top_srcdir)/m4/longlong.m4 \
@@ -275,6 +276,7 @@ HAVE_EUIDACCESS = @HAVE_EUIDACCESS@
 HAVE_FACCESSAT = @HAVE_FACCESSAT@
 HAVE_FCNTL = @HAVE_FCNTL@
 HAVE_FTRUNCATE = @HAVE_FTRUNCATE@
+HAVE_GROUP_MEMBER = @HAVE_GROUP_MEMBER@
 HAVE_LSTAT = @HAVE_LSTAT@
 HAVE_OPENAT = @HAVE_OPENAT@
 HAVE_PREAD = @HAVE_PREAD@
@@ -562,6 +564,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/ftruncate.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/getdelim.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/getline.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/group-member.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/lstat.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/malloc.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/memrchr.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/mktime.Plo@am__quote@
@@ -572,6 +576,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/pread.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/pwrite.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/realloc.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/stat.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strndup.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strnlen.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/unlink.Plo@am__quote@

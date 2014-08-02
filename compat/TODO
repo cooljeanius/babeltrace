@@ -1,6 +1,5 @@
 gnulib modules to add:
 * from '-Wimplicit-function-declaration' (in order of warnings printed):
-  - group-member
   - (see incompletely added modules below)
 * based on things I had to 'm4_ifdef' out (alphabetical order):
   - stdio_h
@@ -13,6 +12,7 @@ gnulib modules that might be incompletely added (alphabetical order):
 - faccessat
 - getdelim
 - getline
+- group-member
 - memrchr
 - openat
 - posix_fallocate (found, based on an unmerged patch by Padraig Brady)
