@@ -13,6 +13,9 @@ AC_DEFUN([gl_FUNC_POSIX_FALLOCATE64],[
     AC_LINK_IFELSE([AC_LANG_PROGRAM([[
 #include <fcntl.h>        /* posix_fallocate64() declaration */
 #include <limits.h>       /* CHAR_BITS declaration */
+#ifndef CHAR_BITS
+# define CHAR_BITS 8
+#endif /* !CHAR_BITS */
     ]],[[posix_fallocate64(-1, 0, ((400000 / CHAR_BITS) * 2));]])],
                    [gl_cv_func_posix_fallocate64=yes],
                    [gl_cv_func_posix_fallocate64=no])dnl# end link test

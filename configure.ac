@@ -330,6 +330,14 @@ fi
 m4_ifdef([gl_UNISTD_MODULE_INDICATOR],[
   gl_UNISTD_MODULE_INDICATOR([pwrite])dnl
 ])dnl
+dnl# unlink module:
+gl_FUNC_UNLINK
+if test ${REPLACE_UNLINK} = 1; then
+  AC_LIBOBJ([unlink])
+fi
+m4_ifdef([gl_UNISTD_MODULE_INDICATOR],[
+  gl_UNISTD_MODULE_INDICATOR([unlink])dnl
+])dnl
 dnl# unlinkat module:
 gl_FUNC_UNLINKAT
 if test ${HAVE_UNLINKAT} = 0 || test ${REPLACE_UNLINKAT} = 1; then

@@ -103,8 +103,9 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/alloca.m4 \
 	$(top_srcdir)/m4/po.m4 $(top_srcdir)/m4/posix_fallocate.m4 \
 	$(top_srcdir)/m4/posix_fallocate64.m4 \
 	$(top_srcdir)/m4/pread.m4 $(top_srcdir)/m4/progtest.m4 \
-	$(top_srcdir)/m4/pwrite.m4 $(top_srcdir)/m4/unlinkat.m4 \
-	$(top_srcdir)/m4/warn-on-use.m4 $(top_srcdir)/configure.ac
+	$(top_srcdir)/m4/pwrite.m4 $(top_srcdir)/m4/unlink.m4 \
+	$(top_srcdir)/m4/unlinkat.m4 $(top_srcdir)/m4/warn-on-use.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -314,6 +315,7 @@ HAVE_EUIDACCESS = @HAVE_EUIDACCESS@
 HAVE_FACCESSAT = @HAVE_FACCESSAT@
 HAVE_FCNTL = @HAVE_FCNTL@
 HAVE_FTRUNCATE = @HAVE_FTRUNCATE@
+HAVE_LSTAT = @HAVE_LSTAT@
 HAVE_OPENAT = @HAVE_OPENAT@
 HAVE_PREAD = @HAVE_PREAD@
 HAVE_PWRITE = @HAVE_PWRITE@
@@ -389,6 +391,7 @@ REPLACE_FCNTL = @REPLACE_FCNTL@
 REPLACE_FTRUNCATE = @REPLACE_FTRUNCATE@
 REPLACE_GETDELIM = @REPLACE_GETDELIM@
 REPLACE_GETLINE = @REPLACE_GETLINE@
+REPLACE_LSTAT = @REPLACE_LSTAT@
 REPLACE_MALLOC = @REPLACE_MALLOC@
 REPLACE_OPEN = @REPLACE_OPEN@
 REPLACE_OPENAT = @REPLACE_OPENAT@

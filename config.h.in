@@ -165,6 +165,9 @@
    you don't. */
 #undef HAVE_DECL___LITTLE_ENDIAN
 
+/* Define to 1 if you have the <direct.h> header file. */
+#undef HAVE_DIRECT_H
+
 /* Define to 1 if you have the <dirent.h> header file, and it defines `DIR'.
    */
 #undef HAVE_DIRENT_H
@@ -274,6 +277,9 @@
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
+/* Define to 1 if you have the <io.h> header file. */
+#undef HAVE_IO_H
+
 /* Define to 1 if you have the `iswprint' function. */
 #undef HAVE_ISWPRINT
 
@@ -324,6 +330,9 @@
 
 /* Define to 1 if the system has the type 'long long int'. */
 #undef HAVE_LONG_LONG_INT
+
+/* Define to 1 if you have the `lstat' function. */
+#undef HAVE_LSTAT
 
 /* Define to 1 if you have the <machine/endian.h> header file. */
 #undef HAVE_MACHINE_ENDIAN_H
@@ -711,6 +720,9 @@
 
 /* Define to 1 if your <sys/time.h> declares `struct tm'. */
 #undef TM_IN_SYS_TIME
+
+/* Define to 1 if unlink() on a parent directory may succeed */
+#undef UNLINK_PARENT_BUG
 
 
 /* Enable extensions on AIX 3, Interix: */

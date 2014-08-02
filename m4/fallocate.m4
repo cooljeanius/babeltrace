@@ -16,7 +16,16 @@ AC_DEFUN([gl_FUNC_FALLOCATE],[
   AC_CACHE_CHECK([for fallocate],[gl_cv_func_fallocate],[
     AC_LINK_IFELSE([AC_LANG_PROGRAM([[
 #include <fcntl.h>        /* fallocate() declaration */
-#include <linux/falloc.h> /* FALLOC_FL_KEEP_SIZE define */
+#ifdef HAVE_LINUX_FALLOC_H
+# include <linux/falloc.h> /* FALLOC_FL_KEEP_SIZE define */
+#else
+# ifndef FALLOC_FL_KEEP_SIZE
+#  define FALLOC_FL_KEEP_SIZE 0x01
+# endif /* !FALLOC_FL_KEEP_SIZE */
+# if defined(__GNUC__) && !defined(__STRICT_ANSI__)
+#  warning "this conftest for fallocate wants to include <linux/falloc.h>"
+# endif /* __GNUC__ && !__STRICT_ANSI__ */
+#endif /* HAVE_LINUX_FALLOC_H */
     ]],[[fallocate(-1, FALLOC_FL_KEEP_SIZE, 0, 0);]])],
                    [gl_cv_func_fallocate=yes],
                    [gl_cv_func_fallocate=no])dnl# end link test

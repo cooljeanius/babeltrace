@@ -667,9 +667,11 @@ BABELTRACE_BUILD_WITH_LIBUUID_FALSE
 BABELTRACE_BUILD_WITH_LIBUUID_TRUE
 BABELTRACE_BUILD_WITH_MINGW_FALSE
 BABELTRACE_BUILD_WITH_MINGW_TRUE
-REPLACE_UNLINK
 REPLACE_UNLINKAT
 HAVE_UNLINKAT
+REPLACE_LSTAT
+HAVE_LSTAT
+REPLACE_UNLINK
 REPLACE_PWRITE
 HAVE_PWRITE
 REPLACE_PREAD
@@ -2927,6 +2929,9 @@ as_fn_append ac_header_list " sys/falloc.h"
 as_fn_append ac_header_list " linux/falloc.h"
 as_fn_append ac_func_list " pread"
 as_fn_append ac_func_list " pwrite"
+as_fn_append ac_func_list " lstat"
+as_fn_append ac_header_list " direct.h"
+as_fn_append ac_header_list " io.h"
 as_fn_append ac_func_list " unlinkat"
 # Check that the precious variables saved in the cache have kept the same
 # value.
@@ -24569,7 +24574,16 @@ else
 /* end confdefs.h.  */
 
 #include <fcntl.h>        /* fallocate() declaration */
-#include <linux/falloc.h> /* FALLOC_FL_KEEP_SIZE define */
+#ifdef HAVE_LINUX_FALLOC_H
+# include <linux/falloc.h> /* FALLOC_FL_KEEP_SIZE define */
+#else
+# ifndef FALLOC_FL_KEEP_SIZE
+#  define FALLOC_FL_KEEP_SIZE 0x01
+# endif /* !FALLOC_FL_KEEP_SIZE */
+# if defined(__GNUC__) && !defined(__STRICT_ANSI__)
+#  warning "this conftest for fallocate wants to include <linux/falloc.h>"
+# endif /* __GNUC__ && !__STRICT_ANSI__ */
+#endif /* HAVE_LINUX_FALLOC_H */
 
 int
 main ()
@@ -24617,6 +24631,9 @@ else
 
 #include <fcntl.h>        /* posix_fallocate() declaration */
 #include <limits.h>       /* CHAR_BITS declaration */
+#ifndef CHAR_BITS
+# define CHAR_BITS 8
+#endif /* !CHAR_BITS */
 
 int
 main ()
@@ -24663,6 +24680,9 @@ else
 
 #include <fcntl.h>        /* posix_fallocate64() declaration */
 #include <limits.h>       /* CHAR_BITS declaration */
+#ifndef CHAR_BITS
+# define CHAR_BITS 8
+#endif /* !CHAR_BITS */
 
 int
 main ()
@@ -24922,10 +24942,198 @@ fi
 
 
 
+    HAVE_LSTAT=1;
+    REPLACE_LSTAT=0;
+
+  if test "x${ac_cv_func_lstat}" = "xyes"; then
+
+    case "${gl_cv_func_lstat_dereferences_slashed_symlink}" in
+      *no)
+        REPLACE_LSTAT=1
+        ;;
+    esac
+  else
+    HAVE_LSTAT=0
+  fi
+
+
+
+
+
+
+
+    REPLACE_UNLINK=0;
+
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether unlink honors trailing slashes" >&5
+$as_echo_n "checking whether unlink honors trailing slashes... " >&6; }
+if ${gl_cv_func_unlink_honors_slashes+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  touch conftest.file
+     # Assume that if we have lstat, we can also check symlinks.
+     if test "x${ac_cv_func_lstat}" = "xyes"; then
+       ln -s conftest.file conftest.lnk
+     fi
+     if test "$cross_compiling" = yes; then :
+  case "${host_os}" in
+                 # Guess yes on glibc systems.
+         *-gnu*) gl_cv_func_unlink_honors_slashes="guessing yes" ;;
+                 # If we do NOT know, then assume the worst.
+         *)      gl_cv_func_unlink_honors_slashes="guessing no" ;;
+       esac
+
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#if HAVE_UNISTD_H
+           # include <unistd.h>
+           #else /* on Windows with MSVC */
+           # include <io.h>
+           #endif /* HAVE_UNISTD_H */
+           #include <errno.h>
+
+int
+main ()
+{
+int result = 0;
+           if (!unlink("conftest.file/")) {
+             result |= 1;
+           } else if (errno != ENOTDIR) {
+             result |= 2;
+           }
+#if HAVE_LSTAT
+           if (!unlink("conftest.lnk/")) {
+             result |= 4;
+           } else if (errno != ENOTDIR) {
+             result |= 8;
+           }
+#endif /* HAVE_LSTAT */
+           return result;
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_run "$LINENO"; then :
+  gl_cv_func_unlink_honors_slashes=yes
+else
+  gl_cv_func_unlink_honors_slashes=no
+fi
+rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
+  conftest.$ac_objext conftest.beam conftest.$ac_ext
+fi
+
+     rm -f conftest.file conftest.lnk
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $gl_cv_func_unlink_honors_slashes" >&5
+$as_echo "$gl_cv_func_unlink_honors_slashes" >&6; }
+  case "${gl_cv_func_unlink_honors_slashes}" in
+    *no)
+      REPLACE_UNLINK=1
+      ;;
+  esac
+
+      { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether unlink of a parent directory fails as it should" >&5
+$as_echo_n "checking whether unlink of a parent directory fails as it should... " >&6; }
+if ${gl_cv_func_unlink_parent_fails+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  case "${host_os}" in
+       darwin*)
+                                                      if {
+              # Use the mktemp program if available. If not available,
+              # hide the error message.
+              tmp=`(umask 077 && mktemp -d /tmp/gtXXXXXX) 2>/dev/null` &&
+              test -n "${tmp}" && test -d "${tmp}"
+            } ||
+            {
+              # Use a simple mkdir command. It is guaranteed to fail
+              # if the directory already exists. ${RANDOM} is bash-specific
+              # and expands to empty in shells other than bash, ksh, & zsh.
+              # Its use does not increase security; rather, it minimizes
+              # the probability of failure in a very cluttered /tmp
+              # directory.
+              tmp=/tmp/gt$$-${RANDOM}
+              (umask 077 && mkdir "${tmp}")
+            }; then
+           mkdir "${tmp}/subdir"
+           GL_SUBDIR_FOR_UNLINK="${tmp}/subdir"
+           export GL_SUBDIR_FOR_UNLINK
+           if test "$cross_compiling" = yes; then :
+  # If we do NOT know, then assume the worst.
+              gl_cv_func_unlink_parent_fails="guessing no"
+
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+                #include <stdlib.h>
+                #if HAVE_UNISTD_H
+                # include <unistd.h>
+                #else /* on Windows with MSVC */
+                # include <direct.h>
+                # include <io.h>
+                #endif /* HAVE_UNISTD_H */
+                int main(void)
+                {
+                  int result = 0;
+                  if (chdir(getenv("GL_SUBDIR_FOR_UNLINK")) != 0) {
+                    result |= 1;
+                  } else if (unlink("..") == 0) {
+                    result |= 2;
+                  }
+                  return result;
+                }
+
+_ACEOF
+if ac_fn_c_try_run "$LINENO"; then :
+  gl_cv_func_unlink_parent_fails=yes
+else
+  gl_cv_func_unlink_parent_fails=no
+fi
+rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
+  conftest.$ac_objext conftest.beam conftest.$ac_ext
+fi
+
+           unset GL_SUBDIR_FOR_UNLINK
+           rm -rf "${tmp}"
+         else
+           gl_cv_func_unlink_parent_fails="guessing no"
+         fi
+         ;;
+       *)
+         gl_cv_func_unlink_parent_fails="guessing yes"
+         ;;
+     esac
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $gl_cv_func_unlink_parent_fails" >&5
+$as_echo "$gl_cv_func_unlink_parent_fails" >&6; }
+  case "${gl_cv_func_unlink_parent_fails}" in
+    *no)
+      REPLACE_UNLINK=1
+
+$as_echo "#define UNLINK_PARENT_BUG 1" >>confdefs.h
+
+      ;;
+  esac
+
+if test ${REPLACE_UNLINK} = 1; then
+  case " $LIBOBJS " in
+  *" unlink.$ac_objext "* ) ;;
+  *) LIBOBJS="$LIBOBJS unlink.$ac_objext"
+ ;;
+esac
+
+fi
+
+
+
+
     HAVE_UNLINKAT=1;
     REPLACE_UNLINKAT=0;
 
-    REPLACE_UNLINK=0;
 
   if test "x${ac_cv_func_unlinkat}" = "xno"; then
     HAVE_UNLINKAT=0
