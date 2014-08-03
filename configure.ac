@@ -702,6 +702,7 @@ warnings_to_skip="${warnings_to_skip} -Wpointer-arith" # no idea how to fix
 warnings_to_skip="${warnings_to_skip} -Wc++-compat"      # too many for now
 warnings_to_skip="${warnings_to_skip} -Wswitch-enum"                  # meh
 warnings_to_skip="${warnings_to_skip} -Waggregate-return"             # ???
+warnings_to_skip="${warnings_to_skip} -Wwrite-strings" # too many for tests
 
 case ${host_cpu} in
   aarch64 | powerpc64 | x86_64)

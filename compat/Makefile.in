@@ -753,7 +753,7 @@ noinst_HEADERS = fcntl-safer.h cloexec.h close-stream.h closeout.h \
 	pathmax.h progname.h quote.h quotearg.h save-cwd.h \
 	xalloc-oversized.h xalloc.h intprops.h unistd--.h \
 	unistd-safer.h gettext.h fpending.h root-uid.h \
-	mktime-internal.h
+	portable_endian.h mktime-internal.h
 BUILT_SOURCES = $(ALLOCA_H) c++defs.h arg-nonnull.h warn-on-use.h \
 	fcntl.h stdio.h string.h unistd.h configmake.h
 MOSTLYCLEANFILES = .DS_Store alloca.h alloca.h-t c++defs.h c++defs.h-t \
@@ -769,7 +769,7 @@ EXTRA_DIST = alloca.in.h $(top_srcdir)/config/snippet/c++defs.h \
 	openat-priv.h openat-proc.c openat.h pathmax.h quote.h \
 	quotearg.h dup-safer-flag.c save-cwd.h xalloc-oversized.h \
 	xalloc.h at-func.c intprops.h unistd--.h unistd-safer.h \
-	fpending.h root-uid.h
+	fpending.h root-uid.h portable_endian.h
 noinst_LTLIBRARIES = libcompat.la
 libcompat_la_SOURCES = $(am__append_1) $(am__append_2) cloexec.c \
 	close-stream.c closeout.c c-ctype.h c-ctype.c c-strcase.h \

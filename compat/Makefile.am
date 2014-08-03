@@ -612,8 +612,8 @@ EXTRA_DIST += at-func.c intprops.h unistd--.h unistd-safer.h
 noinst_HEADERS += intprops.h unistd--.h unistd-safer.h gettext.h
 
 ## more misc. headers that need to be distributed:
-EXTRA_DIST += fpending.h root-uid.h
-noinst_HEADERS += fpending.h root-uid.h
+EXTRA_DIST += fpending.h root-uid.h portable_endian.h
+noinst_HEADERS += fpending.h root-uid.h portable_endian.h
 
 ## the program to test chdirlong:
 check_PROGRAMS += chdirlongtest
