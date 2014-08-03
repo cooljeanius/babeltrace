@@ -1,6 +1,6 @@
 ## automake Makefile for the lttng-live trace format
 
-AM_CFLAGS = $(PACKAGE_CFLAGS) -I$(top_srcdir)/include -I$(top_builddir)/include -I$(top_srcdir)
+AM_CFLAGS = $(PACKAGE_CFLAGS) -I$(top_srcdir)/include -I$(top_builddir)/include -I$(top_srcdir)/compat -I$(top_builddir)/compat -I$(top_srcdir) -I$(top_builddir)
 
 lib_LTLIBRARIES = libbabeltrace-lttng-live.la
 

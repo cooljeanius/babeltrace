@@ -168,6 +168,12 @@ _GL_WARN_ON_USE(openat, "openat is not portable - "
 int fallocate(int fd, int mode, off_t offset, off_t len);
 #endif /* @REPLACE_FALLOCATE@ */
 
+#if @REPLACE_POSIX_FALLOCATE@
+int posix_fallocate(int fd, off_t offset, off_t len);
+#endif /* @REPLACE_POSIX_FALLOCATE@ */
+
+/* 64-bit version? @REPLACE_POSIX_FALLOCATE64@ */
+
 /* Fix up the FD_* macros, only known to be missing on mingw.  */
 
 #ifndef FD_CLOEXEC

@@ -5,7 +5,6 @@ gnulib modules to add:
   - stdio_h
   - stdlib_h
   - sys_stat_h
-  - unistd_h
 
 gnulib modules that might be incompletely added (alphabetical order):
 - euidaccess
@@ -18,5 +17,6 @@ gnulib modules that might be incompletely added (alphabetical order):
 - posix_fallocate (found, based on an unmerged patch by Padraig Brady)
 - strndup
 - strnlen
+- unistd_h
 - unlink
 - unlinkat

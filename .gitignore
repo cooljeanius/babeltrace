@@ -38,3 +38,4 @@ babeltrace-ctf.pc
 *.tar.bz2
 babeltrace-*.*.*/*
 tmpwrk*/*
+*.out

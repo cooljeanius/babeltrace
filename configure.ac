@@ -128,8 +128,8 @@ AC_HEADER_DIRENT
 AC_HEADER_STAT
 AC_HEADER_STDBOOL dnl# also "_CHECK"s it
 AC_HEADER_SYS_WAIT
-AC_CHECK_HEADERS([argz.h bits/wordsize.h endian.h errno.h fcntl.h float.h \
-                  langinfo.h libintl.h limits.h \
+AC_CHECK_HEADERS([OS.h argz.h bits/wordsize.h endian.h errno.h \
+                  fcntl.h float.h langinfo.h libintl.h limits.h \
                   machine/endian.h malloc.h malloc/malloc.h \
                   netdb.h netinet/in.h osreldate.h shlib-compat.h \
                   stddef.h stdio.h sys/mount.h sys/mman.h \
@@ -155,6 +155,7 @@ fi
 
 # Checks for headers that gnulib can replace (libcompat here).
 gl_FCNTL_H
+gl_UNISTD_H
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_BIGENDIAN([
@@ -166,10 +167,10 @@ AC_C_BIGENDIAN([
   AC_CHECK_DECLS([__LITTLE_ENDIAN])dnl
 ])dnl
 AC_C_CONST
-AC_C_INLINE
 AC_C_PROTOTYPES
 AC_C_VOLATILE
 AC_DEFUN([AC_REQUIRE_SOME_C_TYPES],[
+  AC_REQUIRE([AC_C_INLINE])dnl
   AC_REQUIRE([AC_TYPE_MODE_T])dnl
   AC_REQUIRE([AC_TYPE_PID_T])dnl
 ])dnl
@@ -235,7 +236,8 @@ AC_CHECK_FUNCS([__argz_count __argz_next __argz_stringify atexit \
                 nl_langinfo open posix_fallocate pread64 pwrite64 rmdir \
                 send setenv setlocale socket statfs statfs64 stpcpy \
                 strcasecmp strcspn strchr strdup strerror strrchr \
-                strspn strstr strtoul strtoull sysconf tzset uname])dnl
+                strspn strstr strtoul strtoull sysconf tzset \
+                uname uuid_compare])dnl
 
 # Checks for functions from gnulib (libcompat here).
 gl_FUNC_ALLOCA
