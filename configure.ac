@@ -135,11 +135,13 @@ AC_HEADER_STAT
 AC_HEADER_STDBOOL dnl# also "_CHECK"s it
 AC_HEADER_SYS_WAIT
 AC_CHECK_HEADERS([OS.h argz.h bits/wordsize.h endian.h errno.h \
-                  fcntl.h float.h langinfo.h libintl.h limits.h \
+                  fcntl.h float.h langinfo.h libintl.h \
+                  libkern/OSByteOrder.h limits.h \
                   machine/endian.h malloc.h malloc/malloc.h \
-                  netdb.h netinet/in.h osreldate.h shlib-compat.h \
-                  stddef.h stdio.h sys/mount.h sys/mman.h \
-                  sys/socket.h sys/statfs.h sys/statvfs.h wctype.h])dnl
+                  netdb.h netinet/in.h osreldate.h portable_endian.h \
+                  shlib-compat.h stddef.h stdio.h sys/endian.h \
+                  sys/mount.h sys/mman.h sys/socket.h \
+                  sys/statfs.h sys/statvfs.h winsock2.h wctype.h])dnl
 
 # Keep autoscan from complaining about headers we check in other ways.
 if test "x${ac_cv_header_locale_h}" = "x"; then

@@ -20925,11 +20925,13 @@ $as_echo "#define HAVE_SYS_WAIT_H 1" >>confdefs.h
 fi
 
 for ac_header in OS.h argz.h bits/wordsize.h endian.h errno.h \
-                  fcntl.h float.h langinfo.h libintl.h limits.h \
+                  fcntl.h float.h langinfo.h libintl.h \
+                  libkern/OSByteOrder.h limits.h \
                   machine/endian.h malloc.h malloc/malloc.h \
-                  netdb.h netinet/in.h osreldate.h shlib-compat.h \
-                  stddef.h stdio.h sys/mount.h sys/mman.h \
-                  sys/socket.h sys/statfs.h sys/statvfs.h wctype.h
+                  netdb.h netinet/in.h osreldate.h portable_endian.h \
+                  shlib-compat.h stddef.h stdio.h sys/endian.h \
+                  sys/mount.h sys/mman.h sys/socket.h \
+                  sys/statfs.h sys/statvfs.h winsock2.h wctype.h
 do :
   as_ac_Header=`$as_echo "ac_cv_header_$ac_header" | $as_tr_sh`
 ac_fn_c_check_header_mongrel "$LINENO" "$ac_header" "$as_ac_Header" "$ac_includes_default"

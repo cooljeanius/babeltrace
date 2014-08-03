@@ -362,6 +362,9 @@
 /* Define to 1 if you have the <libintl.h> header file. */
 #undef HAVE_LIBINTL_H
 
+/* Define to 1 if you have the <libkern/OSByteOrder.h> header file. */
+#undef HAVE_LIBKERN_OSBYTEORDER_H
+
 /* Define to 1 if you have the `ole32' library (-lole32). */
 #undef HAVE_LIBOLE32
 
@@ -487,6 +490,9 @@
 
 /* Define to 1 if you have the <OS.h> header file. */
 #undef HAVE_OS_H
+
+/* Define to 1 if you have the <portable_endian.h> header file. */
+#undef HAVE_PORTABLE_ENDIAN_H
 
 /* Define to 1 if posix_fallocate() exists */
 #undef HAVE_POSIX_FALLOCATE
@@ -863,6 +869,9 @@
    */
 #undef HAVE_SYS_DIR_H
 
+/* Define to 1 if you have the <sys/endian.h> header file. */
+#undef HAVE_SYS_ENDIAN_H
+
 /* Define to 1 if you have the <sys/falloc.h> header file. */
 #undef HAVE_SYS_FALLOC_H
 
@@ -943,6 +952,9 @@
 
 /* Define to 1 if you have the <wctype.h> header file. */
 #undef HAVE_WCTYPE_H
+
+/* Define to 1 if you have the <winsock2.h> header file. */
+#undef HAVE_WINSOCK2_H
 
 /* Define to 1 if `fork' works. */
 #undef HAVE_WORKING_FORK

@@ -53,6 +53,10 @@
 #include <babeltrace/endian.h>
 #include <babeltrace/compat/memstream.h>
 
+/* for endianness functions: */
+#include <portable_endian.h>
+
+/* ones in this directory: */
 #include "lttng-live.h"
 #include "lttng-viewer-abi.h"
 

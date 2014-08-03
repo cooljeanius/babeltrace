@@ -48,6 +48,10 @@
 #include <unistd.h>
 #include <stdlib.h>
 
+/* for endianness functions: */
+#include <portable_endian.h>
+
+/* ones in this directory: */
 #include "metadata/ctf-scanner.h"
 #include "metadata/ctf-parser.h"
 #include "metadata/ctf-ast.h"
@@ -1055,7 +1059,7 @@ int check_version(unsigned int major, unsigned int minor)
 		}
 	default:
 		goto warning;
-		
+
 	}
 
 	/* eventually return an error instead of warning */
@@ -1813,7 +1817,7 @@ int create_trace_definitions(struct ctf_trace *td, struct ctf_stream_definition 
 			ret = -EINVAL;
 			goto error;
 		}
-		stream->trace_packet_header = 
+		stream->trace_packet_header =
 			container_of(definition, struct definition_struct, p);
 		stream->parent_def_scope = stream->trace_packet_header->p.scope;
 	}
