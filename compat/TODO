@@ -15,6 +15,7 @@ gnulib modules that might be incompletely added (alphabetical order):
 - openat
 - posix_fallocate (found, based on an unmerged patch by Padraig Brady)
 - stdio_h
+- string_h
 - strndup
 - strnlen
 - unistd_h

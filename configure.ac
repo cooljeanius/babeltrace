@@ -162,6 +162,7 @@ fi
 # Checks for headers that gnulib can replace (libcompat here).
 gl_FCNTL_H
 gl_STDIO_H
+gl_HEADER_STRING_H
 gl_UNISTD_H
 
 # Checks for typedefs, structures, and compiler characteristics.
