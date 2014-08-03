@@ -109,10 +109,12 @@ AC_CHECK_LIB([pthread],[pthread_getspecific],[],[
     AC_CHECK_LIB([pthread],[main],[],[])dnl
   ])dnl
 ])dnl
+dnl# other threading checks:
+gl_THREAD
+gl_XORG_TLS
 
 dnl# (ole32 and rpcrt4 are mingw-specific and done below in that section)
 dnl# (uuid, c, and popt are done even further below that)
-
 
 # Check for glib.
 AM_PATH_GLIB_2_0([2.22.0],[],
@@ -334,6 +336,9 @@ fi
 m4_ifdef([gl_STRING_MODULE_INDICATOR],[
   gl_STRING_MODULE_INDICATOR([memrchr])dnl
 ])dnl
+dnl# we check mmap stuff elsewhere, but let us try the gnulib checks for
+dnl# mmap stuff as well here:
+gl_FUNC_MMAP_ANON
 dnl# openat module:
 gl_FUNC_OPENAT
 if test ${HAVE_OPENAT} = 0 || test ${REPLACE_OPENAT} = 1; then
@@ -659,7 +664,87 @@ PKG_CHECK_MODULES([GMODULE],[${pkg_modules}])dnl
 AC_SUBST([PACKAGE_LIBS])dnl
 
 LIBS="${LIBS} ${GMODULE_LIBS}"
-PACKAGE_CFLAGS="${GMODULE_CFLAGS} -Wall -Wformat -include config.h"
+
+# Compiler warnings:
+dnl#TODO: add a configure flag to enable the warnings conditionally:
+gl_MANYWARN_ALL_GCC([warnings_to_check])
+warnings_to_skip=""
+warnings_to_skip="${warnings_to_skip} -W"          # redundant with -Wextra
+warnings_to_skip="${warnings_to_skip} -Wsystem-headers"         # unfixable
+warnings_to_skip="${warnings_to_skip} -Wvla"        # warnings in gettext.h
+warnings_to_skip="${warnings_to_skip} -Wsuggest-attribute=const"      # ???
+warnings_to_skip="${warnings_to_skip} -Wsuggest-attribute=format"     # ???
+warnings_to_skip="${warnings_to_skip} -Wsuggest-attribute=noreturn"   # ???
+warnings_to_skip="${warnings_to_skip} -Wsuggest-attribute=pure"       # ???
+warnings_to_skip="${warnings_to_skip} -Wmissing-format-attribute"     # ???
+warnings_to_skip="${warnings_to_skip} -Wtraditional"     # not for new code
+warnings_to_skip="${warnings_to_skip} -Wcast-qual"      # I use casts a lot
+warnings_to_skip="${warnings_to_skip} -Wredundant-decls"  # redundancy=good
+warnings_to_skip="${warnings_to_skip} -Wpedantic"        # too many for now
+warnings_to_skip="${warnings_to_skip} -Wpadded"        # no idea how to fix
+warnings_to_skip="${warnings_to_skip} -Wunused-macros"      # log pollution
+warnings_to_skip="${warnings_to_skip} -Wformat-y2k"             # pointless
+warnings_to_skip="${warnings_to_skip} -Wformat-zero-length"     # redundant
+warnings_to_skip="${warnings_to_skip} -Wformat-security"        # redundant 
+warnings_to_skip="${warnings_to_skip} -Wformat-nonliteral"      # redundant 
+warnings_to_skip="${warnings_to_skip} -Wformat-extra-args"      # redundant 
+warnings_to_skip="${warnings_to_skip} -Wformat-contains-nul"    # redundant
+warnings_to_skip="${warnings_to_skip} -Wformat-signedness"      # redundant
+warnings_to_skip="${warnings_to_skip} -Wtraditional-conversion"  # too many
+warnings_to_skip="${warnings_to_skip} -Wsign-conversion" # too many for now
+warnings_to_skip="${warnings_to_skip} -Wconversion"      # too many for now
+warnings_to_skip="${warnings_to_skip} -Winline"  # not sure if needs fixing
+warnings_to_skip="${warnings_to_skip} -Wunused-parameter" # too lazy to fix
+warnings_to_skip="${warnings_to_skip} -Wunused"           # too lazy to fix
+warnings_to_skip="${warnings_to_skip} -Wsign-compare"    # too many for now
+warnings_to_skip="${warnings_to_skip} -Wpacked"       # not sure if correct
+warnings_to_skip="${warnings_to_skip} -Wpointer-arith" # no idea how to fix
+warnings_to_skip="${warnings_to_skip} -Wc++-compat"      # too many for now
+warnings_to_skip="${warnings_to_skip} -Wswitch-enum"                  # meh
+warnings_to_skip="${warnings_to_skip} -Waggregate-return"             # ???
+
+case ${host_cpu} in
+  aarch64 | powerpc64 | x86_64)
+    warnings_to_skip="${warnings_to_skip} -Wlong-long"  # "long long"=64bit
+    ;;
+esac
+# skip when optimization has not been explicitly requested:
+if test x${CFLAGS+set} = xset; then
+  case "${CFLAGS}" in
+    *"-O0"* ) 
+      warnings_to_skip="${warnings_to_skip} -Wunsafe-loop-optimizations"
+      ;;
+    *"-O"* )
+      ;;
+  esac
+else
+  warnings_to_skip="${warnings_to_skip} -Wunsafe-loop-optimizations"
+fi
+gl_MANYWARN_COMPLEMENT([actual_warnings_to_check],
+                       [${warnings_to_check}],
+                       [${warnings_to_skip}])
+for fsf_gcc_warnflag in ${actual_warnings_to_check}; do
+  gl_WARN_ADD([${fsf_gcc_warnflag}])
+done
+case ${host_vendor} in
+  apple)
+    # manywarnings.m4 is missing these Apple-gcc-specific flags:
+    for apple_gcc_warnflag in \
+      -Wmost \
+      -Wfour-char-constants \
+      -Wnewline-eof \
+      -Wshorten-64-to-32 \
+      -Wextra-tokens \
+      -Waltivec-long-deprecated \
+      \
+      ; do
+      dnl# (was actually just a typo)
+      gl_WARN_ADD([${apple_gcc_warnflag}])
+    done
+    ;;
+esac
+
+PACKAGE_CFLAGS="${GMODULE_CFLAGS} ${WARN_CFLAGS} -include config.h"
 AC_SUBST([PACKAGE_CFLAGS])dnl
 
 babeltraceincludedir="${includedir}/babeltrace"
