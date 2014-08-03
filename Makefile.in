@@ -78,6 +78,7 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
+@PASS_ON_SILENT_RULES_FALSE@am__append_1 = --disable-silent-rules
 subdir = .
 DIST_COMMON = INSTALL NEWS README AUTHORS ChangeLog THANKS \
 	$(srcdir)/Makefile.in $(srcdir)/Makefile.am \
@@ -694,6 +695,7 @@ SWIG_LIB = @SWIG_LIB@
 UNDEFINE_STRTOK_R = @UNDEFINE_STRTOK_R@
 UNISTD_H_HAVE_WINSOCK2_H = @UNISTD_H_HAVE_WINSOCK2_H@
 UNISTD_H_HAVE_WINSOCK2_H_AND_USE_SOCKETS = @UNISTD_H_HAVE_WINSOCK2_H_AND_USE_SOCKETS@
+USE_MAINTAINER_MODE = @USE_MAINTAINER_MODE@
 USE_NLS = @USE_NLS@
 VERSION = @VERSION@
 WINDOWS_64_BIT_OFF_T = @WINDOWS_64_BIT_OFF_T@
@@ -783,6 +785,7 @@ DISTCLEANFILES = .DS_Store *~ autoscan.log m4/.DS_Store m4/*~ \
 	config/*~ po/.DS_Store po/*~
 nodist_noinst_DATA = @MAINT@ configure.scan
 MAINTAINERCLEANFILES = configure.scan
+AM_DISTCHECK_CONFIGURE_FLAGS = @MAINT@ $(am__append_1)
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 

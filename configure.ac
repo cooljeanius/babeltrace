@@ -12,12 +12,16 @@ AC_CONFIG_AUX_DIR([config])dnl
 AC_CANONICAL_TARGET dnl# also checks the "_HOST" version
 gl_USE_SYSTEM_EXTENSIONS
 AM_INIT_AUTOMAKE([1.9 gnits dist-bzip2 no-dist-gzip])
+export USE_MAINTAINER_MODE=no
 if test -d .git; then
   AM_MAINTAINER_MODE([enable])
 else
   AM_MAINTAINER_MODE
 fi
-m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
+AC_SUBST([USE_MAINTAINER_MODE])dnl
+m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])dnl
+AM_CONDITIONAL([PASS_ON_SILENT_RULES],
+               [test ${AM_DEFAULT_VERBOSITY} = 0])
 
 AC_CONFIG_LIBOBJ_DIR([compat])dnl
 
@@ -136,7 +140,7 @@ AC_HEADER_STDBOOL dnl# also "_CHECK"s it
 AC_HEADER_SYS_WAIT
 AC_CHECK_HEADERS([OS.h argz.h bits/wordsize.h endian.h errno.h \
                   fcntl.h float.h langinfo.h libintl.h \
-                  libkern/OSByteOrder.h limits.h \
+                  libkern/OSByteOrder.h limits.h mach/mach.h \
                   machine/endian.h malloc.h malloc/malloc.h \
                   netdb.h netinet/in.h osreldate.h portable_endian.h \
                   shlib-compat.h stddef.h stdio.h sys/endian.h \
@@ -716,4 +720,6 @@ echo "Package compiler flags: '${PACKAGE_CFLAGS}'"
 echo "Preprocessor flags: '${CPPFLAGS}'"
 echo "Linker flags: '${LDFLAGS} ${NO_AS_NEEDED_LDFLAGS}'"
 echo "Ordinary libraries to link against: '${LIBS}'"
+echo "Regenerate files after any little change: '${USE_MAINTAINER_MODE}'"
+echo "Verbosity level: '${AM_DEFAULT_VERBOSITY}'"
 echo ""

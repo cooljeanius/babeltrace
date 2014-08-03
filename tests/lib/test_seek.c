@@ -295,6 +295,8 @@ void run_seek_cycles(char *path,
 	bt_context_put(ctx);
 }
 
+#include "nocrash.h"
+
 int main(int argc, char **argv)
 {
 	char *path;
@@ -307,6 +309,8 @@ int main(int argc, char **argv)
 	 */
 	babeltrace_debug = 0;	/* libbabeltrace.la */
 	opt_clock_offset = 0;	/* libbabeltrace-ctf.la */
+
+    nocrash_init();
 
 	if (argc < 4) {
 		plan_skip_all("Invalid arguments: need a trace path and the start and last timestamp");

@@ -1059,6 +1059,9 @@ CXXFLAGS
 CXX
 pkglibexecdir
 lispdir
+PASS_ON_SILENT_RULES_FALSE
+PASS_ON_SILENT_RULES_TRUE
+USE_MAINTAINER_MODE
 MAINT
 MAINTAINER_MODE_FALSE
 MAINTAINER_MODE_TRUE
@@ -5597,6 +5600,7 @@ END
     as_fn_error $? "Your 'rm' program is bad, sorry." "$LINENO" 5
   fi
 fi
+export USE_MAINTAINER_MODE=no
 if test -d .git; then
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether to enable maintainer-specific portions of Makefiles" >&5
@@ -5684,6 +5688,13 @@ else
   AM_DEFAULT_V=$AM_DEFAULT_VERBOSITY
 fi
 AM_BACKSLASH='\'
+ if test ${AM_DEFAULT_VERBOSITY} = 0; then
+  PASS_ON_SILENT_RULES_TRUE=
+  PASS_ON_SILENT_RULES_FALSE='#'
+else
+  PASS_ON_SILENT_RULES_TRUE='#'
+  PASS_ON_SILENT_RULES_FALSE=
+fi
 
 
 
@@ -20926,7 +20937,7 @@ fi
 
 for ac_header in OS.h argz.h bits/wordsize.h endian.h errno.h \
                   fcntl.h float.h langinfo.h libintl.h \
-                  libkern/OSByteOrder.h limits.h \
+                  libkern/OSByteOrder.h limits.h mach/mach.h \
                   machine/endian.h malloc.h malloc/malloc.h \
                   netdb.h netinet/in.h osreldate.h portable_endian.h \
                   shlib-compat.h stddef.h stdio.h sys/endian.h \
@@ -28123,6 +28134,10 @@ if test -z "${MAINTAINER_MODE_TRUE}" && test -z "${MAINTAINER_MODE_FALSE}"; then
   as_fn_error $? "conditional \"MAINTAINER_MODE\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
+if test -z "${PASS_ON_SILENT_RULES_TRUE}" && test -z "${PASS_ON_SILENT_RULES_FALSE}"; then
+  as_fn_error $? "conditional \"PASS_ON_SILENT_RULES\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
 if test -z "${am__fastdepCXX_TRUE}" && test -z "${am__fastdepCXX_FALSE}"; then
   as_fn_error $? "conditional \"am__fastdepCXX\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
@@ -30809,4 +30824,6 @@ echo "Package compiler flags: '${PACKAGE_CFLAGS}'"
 echo "Preprocessor flags: '${CPPFLAGS}'"
 echo "Linker flags: '${LDFLAGS} ${NO_AS_NEEDED_LDFLAGS}'"
 echo "Ordinary libraries to link against: '${LIBS}'"
+echo "Regenerate files after any little change: '${USE_MAINTAINER_MODE}'"
+echo "Verbosity level: '${AM_DEFAULT_VERBOSITY}'"
 echo ""

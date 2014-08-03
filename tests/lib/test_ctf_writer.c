@@ -1393,6 +1393,8 @@ end:
 	bt_ctf_event_class_put(event_class);
 }
 
+#include "nocrash.h"
+
 int main(int argc, char **argv)
 {
 	char trace_path[] = "/tmp/ctfwriter_XXXXXX";
@@ -1416,6 +1418,8 @@ int main(int argc, char **argv)
 	const char *ret_string;
 	struct bt_ctf_field_type *packet_context_type, *packet_context_field_type;
 	int ret;
+
+    nocrash_init();
 
 	if (argc < 3) {
 		printf("Usage: tests-ctf-writer path_to_ctf_parser_test path_to_babeltrace\n");

@@ -124,7 +124,7 @@ am__v_AR_0 = @echo "  AR      " $@;
 am__v_AR_1 = 
 libtestcommon_a_AR = $(AR) $(ARFLAGS)
 libtestcommon_a_LIBADD =
-am_libtestcommon_a_OBJECTS = common.$(OBJEXT)
+am_libtestcommon_a_OBJECTS = common.$(OBJEXT) nocrash.$(OBJEXT)
 libtestcommon_a_OBJECTS = $(am_libtestcommon_a_OBJECTS)
 am_test_bitfield_OBJECTS = test_bitfield.$(OBJEXT)
 test_bitfield_OBJECTS = $(am_test_bitfield_OBJECTS)
@@ -135,7 +135,7 @@ am__v_lt_0 = --silent
 am__v_lt_1 = 
 am_test_ctf_writer_OBJECTS = test_ctf_writer.$(OBJEXT)
 test_ctf_writer_OBJECTS = $(am_test_ctf_writer_OBJECTS)
-test_ctf_writer_DEPENDENCIES = $(LIBTAP) \
+test_ctf_writer_DEPENDENCIES = $(LIBTAP) libtestcommon.a \
 	$(top_builddir)/lib/libbabeltrace.la \
 	$(top_builddir)/formats/ctf/libbabeltrace-ctf.la
 am_test_seek_OBJECTS = test_seek.$(OBJEXT)
@@ -644,6 +644,7 @@ SWIG_LIB = @SWIG_LIB@
 UNDEFINE_STRTOK_R = @UNDEFINE_STRTOK_R@
 UNISTD_H_HAVE_WINSOCK2_H = @UNISTD_H_HAVE_WINSOCK2_H@
 UNISTD_H_HAVE_WINSOCK2_H_AND_USE_SOCKETS = @UNISTD_H_HAVE_WINSOCK2_H_AND_USE_SOCKETS@
+USE_MAINTAINER_MODE = @USE_MAINTAINER_MODE@
 USE_NLS = @USE_NLS@
 VERSION = @VERSION@
 WINDOWS_64_BIT_OFF_T = @WINDOWS_64_BIT_OFF_T@
@@ -721,7 +722,7 @@ top_srcdir = @top_srcdir@
 AM_CFLAGS = $(PACKAGE_CFLAGS) -I$(top_srcdir)/include -I$(top_srcdir)/tests/utils -I$(top_builddir)/include -I$(top_srcdir)/compat -I$(top_builddir)/compat -I$(top_srcdir) -I$(top_builddir)
 check_LIBRARIES = libtestcommon.a
 LIBTAP = $(top_builddir)/tests/utils/tap/libtap.la
-libtestcommon_a_SOURCES = common.c common.h
+libtestcommon_a_SOURCES = common.c common.h nocrash.c nocrash.h
 
 # -Wl,--no-as-needed is needed for recent gold linker who seems to think
 # it knows better and considers libraries with constructors having
@@ -732,7 +733,7 @@ test_seek_LDADD = $(LIBTAP) libtestcommon.a \
 	$(top_builddir)/formats/ctf/libbabeltrace-ctf.la
 
 test_bitfield_LDADD = $(LIBTAP) libtestcommon.a
-test_ctf_writer_LDADD = $(LIBTAP) \
+test_ctf_writer_LDADD = $(LIBTAP) libtestcommon.a \
 	$(top_builddir)/lib/libbabeltrace.la \
 	$(top_builddir)/formats/ctf/libbabeltrace-ctf.la
 
@@ -815,6 +816,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/common.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nocrash.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_bitfield.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_ctf_writer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_seek.Po@am__quote@

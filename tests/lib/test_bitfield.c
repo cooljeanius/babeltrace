@@ -341,8 +341,11 @@ int print_encodings(unsigned long src, unsigned int shift, unsigned int len)
 	return 0;
 }
 
+#include "nocrash.h"
+
 int main(int argc, char **argv)
 {
+    nocrash_init();
 	if (argc > 1) {
 		/* Print encodings */
 		unsigned long src;

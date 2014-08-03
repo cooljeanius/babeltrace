@@ -35,3 +35,12 @@ configure.scan:
 
 ## initialize this variable:
 MAINTAINERCLEANFILES = configure.scan
+
+## this too:
+AM_DISTCHECK_CONFIGURE_FLAGS = @MAINT@
+## (maintainer mode flags should be unnecessary to tweak, because they are
+## dependent on being in a git repository, and distcheck ignores the git
+## repository)
+if !PASS_ON_SILENT_RULES
+AM_DISTCHECK_CONFIGURE_FLAGS += --disable-silent-rules
+endif
