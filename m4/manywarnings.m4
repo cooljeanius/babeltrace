@@ -81,7 +81,6 @@ AC_DEFUN([gl_MANYWARN_ALL_GCC],
   gl_manywarn_set=""
   for gl_manywarn_item in \
     -W \
-    -Wabi \
     -Waddress \
     -Waggregate-return \
     -Waggressive-loop-optimizations \
@@ -104,7 +103,6 @@ AC_DEFUN([gl_MANYWARN_ALL_GCC],
     -Wdate-time \
     -Wdeclaration-after-statement \
     -Wdelete-incomplete \
-    -Wdeprecated \
     -Wdeprecated-declarations \
     -Wdisabled-optimization \
     -Wdiscarded-qualifiers \
@@ -228,8 +226,10 @@ AC_DEFUN([gl_MANYWARN_ALL_GCC],
 
   AC_LANG_CASE([C++],[
     for gl_manywarn_cplusplus_item in \
+      -Wabi \
       -Wconversion-null \
       -Wc++11-compat \
+      -Wdeprecated \
       -Winherited-variadic-ctor \
       -Winvalid-offsetof \
       -Wuseless-cast \

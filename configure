@@ -29471,7 +29471,6 @@ $as_echo "${gl_cv_cc_nomfi_needed}" >&6; }
   gl_manywarn_set=""
   for gl_manywarn_item in \
     -W \
-    -Wabi \
     -Waddress \
     -Waggregate-return \
     -Waggressive-loop-optimizations \
@@ -29494,7 +29493,6 @@ $as_echo "${gl_cv_cc_nomfi_needed}" >&6; }
     -Wdate-time \
     -Wdeclaration-after-statement \
     -Wdelete-incomplete \
-    -Wdeprecated \
     -Wdeprecated-declarations \
     -Wdisabled-optimization \
     -Wdiscarded-qualifiers \
@@ -29659,6 +29657,8 @@ warnings_to_skip="${warnings_to_skip} -Wc++-compat"      # too many for now
 warnings_to_skip="${warnings_to_skip} -Wswitch-enum"                  # meh
 warnings_to_skip="${warnings_to_skip} -Waggregate-return"             # ???
 warnings_to_skip="${warnings_to_skip} -Wwrite-strings" # too many for tests
+warnings_to_skip="${warnings_to_skip} -Wshadow"     # too many with old gcc
+warnings_to_skip="${warnings_to_skip} -Wunreachable-code"     # often wrong
 if test "x${CLANGCC}" = "xyes"; then
   warnings_to_skip="${warnings_to_skip} -Wcast-align"   # I use casts a lot
   warnings_to_skip="${warnings_to_skip} -Wvariadic-macros"   # too pedantic
