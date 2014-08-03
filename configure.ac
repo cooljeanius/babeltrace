@@ -319,6 +319,15 @@ AC_DEFUN([gl_MALLOC_MODULES],[
   AC_REQUIRE([gl_FUNC_MALLOC_POSIX])dnl
 ])dnl
 gl_MALLOC_MODULES
+dnl# memrchr module:
+gl_FUNC_MEMRCHR
+if test "x${ac_cv_func_memrchr}" = "xno"; then
+  AC_LIBOBJ([memrchr])dnl
+  gl_PREREQ_MEMRCHR
+fi
+m4_ifdef([gl_STRING_MODULE_INDICATOR],[
+  gl_STRING_MODULE_INDICATOR([memrchr])dnl
+])dnl
 dnl# openat module:
 gl_FUNC_OPENAT
 if test ${HAVE_OPENAT} = 0 || test ${REPLACE_OPENAT} = 1; then
@@ -352,6 +361,23 @@ fi
 m4_ifdef([gl_UNISTD_MODULE_INDICATOR],[
   gl_UNISTD_MODULE_INDICATOR([pwrite])dnl
 ])dnl
+dnl# strndup module:
+gl_FUNC_STRNDUP
+if test ${HAVE_STRNDUP} = 0 || test ${REPLACE_STRNDUP} = 1; then
+  AC_LIBOBJ([strndup])
+fi
+m4_ifdef([gl_STRING_MODULE_INDICATOR],[
+  gl_STRING_MODULE_INDICATOR([strndup])dnl
+])dnl
+dnl# strnlen module:
+gl_FUNC_STRNLEN
+if test ${HAVE_DECL_STRNLEN} = 0 || test ${REPLACE_STRNLEN} = 1; then
+  AC_LIBOBJ([strnlen])dnl
+  gl_PREREQ_STRNLEN
+fi
+m4_ifdef([gl_STRING_MODULE_INDICATOR],[
+  gl_STRING_MODULE_INDICATOR([strnlen])dnl
+])dnl
 dnl# unlink module:
 gl_FUNC_UNLINK
 if test ${REPLACE_UNLINK} = 1; then
@@ -368,11 +394,6 @@ fi
 m4_ifdef([gl_UNISTD_MODULE_INDICATOR],[
   gl_UNISTD_MODULE_INDICATOR([unlinkat])dnl
 ])dnl
-
-# Functions for which we have replacement sources, and for which we would
-# rather avoid the official gnulib macros:
-AC_REPLACE_FUNCS([strndup])dnl
-AC_LIBOBJ([memrchr])dnl
 
 # Keep autoscan from complaining about functions we replace.
 if test "x${ac_cv_func_euidaccess}" = "x"; then

@@ -596,6 +596,9 @@ libcompat_la_SOURCES += save-cwd.c
 EXTRA_DIST += save-cwd.h
 noinst_HEADERS += save-cwd.h
 
+## strnlen1 sources:
+libcompat_la_SOURCES += strnlen1.h strnlen1.c
+
 ## xalloc sources:
 libcompat_la_SOURCES += xalloc-die.c
 EXTRA_DIST += xalloc-oversized.h xalloc.h

@@ -99,14 +99,15 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/alloca.m4 \
 	$(top_srcdir)/m4/lstat.m4 $(top_srcdir)/m4/ltoptions.m4 \
 	$(top_srcdir)/m4/ltsugar.m4 $(top_srcdir)/m4/ltversion.m4 \
 	$(top_srcdir)/m4/lt~obsolete.m4 $(top_srcdir)/m4/malloc.m4 \
-	$(top_srcdir)/m4/mode_t.m4 $(top_srcdir)/m4/nls.m4 \
-	$(top_srcdir)/m4/off_t.m4 $(top_srcdir)/m4/openat.m4 \
-	$(top_srcdir)/m4/pkg.m4 $(top_srcdir)/m4/po.m4 \
-	$(top_srcdir)/m4/posix_fallocate.m4 \
+	$(top_srcdir)/m4/memrchr.m4 $(top_srcdir)/m4/mode_t.m4 \
+	$(top_srcdir)/m4/nls.m4 $(top_srcdir)/m4/off_t.m4 \
+	$(top_srcdir)/m4/openat.m4 $(top_srcdir)/m4/pkg.m4 \
+	$(top_srcdir)/m4/po.m4 $(top_srcdir)/m4/posix_fallocate.m4 \
 	$(top_srcdir)/m4/posix_fallocate64.m4 \
 	$(top_srcdir)/m4/pread.m4 $(top_srcdir)/m4/progtest.m4 \
 	$(top_srcdir)/m4/pwrite.m4 $(top_srcdir)/m4/stdio_h.m4 \
-	$(top_srcdir)/m4/string_h.m4 $(top_srcdir)/m4/unistd_h.m4 \
+	$(top_srcdir)/m4/string_h.m4 $(top_srcdir)/m4/strndup.m4 \
+	$(top_srcdir)/m4/strnlen.m4 $(top_srcdir)/m4/unistd_h.m4 \
 	$(top_srcdir)/m4/unlink.m4 $(top_srcdir)/m4/unlinkat.m4 \
 	$(top_srcdir)/m4/warn-on-use.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \

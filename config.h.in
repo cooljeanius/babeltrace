@@ -75,6 +75,9 @@
 /* Define to 1 when the gnulib module group-member should be tested. */
 #undef GNULIB_TEST_GROUP_MEMBER
 
+/* Define to 1 when the gnulib module memrchr should be tested. */
+#undef GNULIB_TEST_MEMRCHR
+
 /* Define to 1 when the gnulib module openat should be tested. */
 #undef GNULIB_TEST_OPENAT
 
@@ -83,6 +86,12 @@
 
 /* Define to 1 when the gnulib module pwrite should be tested. */
 #undef GNULIB_TEST_PWRITE
+
+/* Define to 1 when the gnulib module strndup should be tested. */
+#undef GNULIB_TEST_STRNDUP
+
+/* Define to 1 when the gnulib module strnlen should be tested. */
+#undef GNULIB_TEST_STRNLEN
 
 /* Define to 1 when the gnulib module unlink should be tested. */
 #undef GNULIB_TEST_UNLINK
@@ -161,6 +170,10 @@
    don't. */
 #undef HAVE_DECL_MAP_ANONYMOUS
 
+/* Define to 1 if you have the declaration of `memrchr', and to 0 if you
+   don't. */
+#undef HAVE_DECL_MEMRCHR
+
 /* Define to 1 if you have the declaration of `MSG_NOSIGNAL', and to 0 if you
    don't. */
 #undef HAVE_DECL_MSG_NOSIGNAL
@@ -176,6 +189,14 @@
 /* Define to 1 if you have the declaration of `strerror_r', and to 0 if you
    don't. */
 #undef HAVE_DECL_STRERROR_R
+
+/* Define to 1 if you have the declaration of `strndup', and to 0 if you
+   don't. */
+#undef HAVE_DECL_STRNDUP
+
+/* Define to 1 if you have the declaration of `strnlen', and to 0 if you
+   don't. */
+#undef HAVE_DECL_STRNLEN
 
 /* Define to 1 if you have the declaration of `tzname', and to 0 if you don't.
    */
@@ -418,6 +439,9 @@
 
 /* Define to 1 if you have the `mempcpy' function. */
 #undef HAVE_MEMPCPY
+
+/* Define to 1 if you have the `memrchr' function. */
+#undef HAVE_MEMRCHR
 
 /* Define to 1 if you have the `memset' function. */
 #undef HAVE_MEMSET

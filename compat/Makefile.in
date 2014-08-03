@@ -109,14 +109,15 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/alloca.m4 \
 	$(top_srcdir)/m4/lstat.m4 $(top_srcdir)/m4/ltoptions.m4 \
 	$(top_srcdir)/m4/ltsugar.m4 $(top_srcdir)/m4/ltversion.m4 \
 	$(top_srcdir)/m4/lt~obsolete.m4 $(top_srcdir)/m4/malloc.m4 \
-	$(top_srcdir)/m4/mode_t.m4 $(top_srcdir)/m4/nls.m4 \
-	$(top_srcdir)/m4/off_t.m4 $(top_srcdir)/m4/openat.m4 \
-	$(top_srcdir)/m4/pkg.m4 $(top_srcdir)/m4/po.m4 \
-	$(top_srcdir)/m4/posix_fallocate.m4 \
+	$(top_srcdir)/m4/memrchr.m4 $(top_srcdir)/m4/mode_t.m4 \
+	$(top_srcdir)/m4/nls.m4 $(top_srcdir)/m4/off_t.m4 \
+	$(top_srcdir)/m4/openat.m4 $(top_srcdir)/m4/pkg.m4 \
+	$(top_srcdir)/m4/po.m4 $(top_srcdir)/m4/posix_fallocate.m4 \
 	$(top_srcdir)/m4/posix_fallocate64.m4 \
 	$(top_srcdir)/m4/pread.m4 $(top_srcdir)/m4/progtest.m4 \
 	$(top_srcdir)/m4/pwrite.m4 $(top_srcdir)/m4/stdio_h.m4 \
-	$(top_srcdir)/m4/string_h.m4 $(top_srcdir)/m4/unistd_h.m4 \
+	$(top_srcdir)/m4/string_h.m4 $(top_srcdir)/m4/strndup.m4 \
+	$(top_srcdir)/m4/strnlen.m4 $(top_srcdir)/m4/unistd_h.m4 \
 	$(top_srcdir)/m4/unlink.m4 $(top_srcdir)/m4/unlinkat.m4 \
 	$(top_srcdir)/m4/warn-on-use.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
@@ -131,14 +132,15 @@ am__libcompat_la_SOURCES_DIST = compat_uuid.c dummy.c cloexec.c \
 	close-stream.c closeout.c c-ctype.h c-ctype.c c-strcase.h \
 	c-strcasecmp.c exitfail.c localcharset.h localcharset.c \
 	openat-safer.c openat-die.c progname.h progname.c quotearg.c \
-	dup-safer.c fd-safer.c save-cwd.c xalloc-die.c xmalloc.c
+	dup-safer.c fd-safer.c save-cwd.c strnlen1.h strnlen1.c \
+	xalloc-die.c xmalloc.c
 @BABELTRACE_BUILD_WITH_MINGW_TRUE@am__objects_1 = compat_uuid.lo
 @BABELTRACE_BUILD_WITH_MINGW_FALSE@am__objects_2 = dummy.lo
 am_libcompat_la_OBJECTS = $(am__objects_1) $(am__objects_2) cloexec.lo \
 	close-stream.lo closeout.lo c-ctype.lo c-strcasecmp.lo \
 	exitfail.lo localcharset.lo openat-safer.lo openat-die.lo \
 	progname.lo quotearg.lo dup-safer.lo fd-safer.lo save-cwd.lo \
-	xalloc-die.lo xmalloc.lo
+	strnlen1.lo xalloc-die.lo xmalloc.lo
 libcompat_la_OBJECTS = $(am_libcompat_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -760,7 +762,8 @@ libcompat_la_SOURCES = $(am__append_1) $(am__append_2) cloexec.c \
 	close-stream.c closeout.c c-ctype.h c-ctype.c c-strcase.h \
 	c-strcasecmp.c exitfail.c localcharset.h localcharset.c \
 	openat-safer.c openat-die.c progname.h progname.c quotearg.c \
-	dup-safer.c fd-safer.c save-cwd.c xalloc-die.c xmalloc.c
+	dup-safer.c fd-safer.c save-cwd.c strnlen1.h strnlen1.c \
+	xalloc-die.c xmalloc.c
 libcompat_la_LDFLAGS = @NO_AS_NEEDED_LDFLAGS@
 libcompat_la_LIBADD = $(LTLIBOBJS) $(ALLOCA)
 CXXDEFS_H = c++defs.h
@@ -892,6 +895,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/progname.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/quotearg.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/save-cwd.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/strnlen1.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xalloc-die.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xmalloc.Plo@am__quote@
 
