@@ -15,7 +15,7 @@ noinst_LTLIBRARIES = libcompat.la
 
 libcompat_la_SOURCES =
 
-libcompat_la_LDFLAGS =
+libcompat_la_LDFLAGS = @NO_AS_NEEDED_LDFLAGS@
 
 libcompat_la_LIBADD = $(LTLIBOBJS) $(ALLOCA)
 

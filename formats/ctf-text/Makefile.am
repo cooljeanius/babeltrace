@@ -9,8 +9,10 @@ lib_LTLIBRARIES = libbabeltrace-ctf-text.la
 libbabeltrace_ctf_text_la_SOURCES = \
 	ctf-text.c
 
+# We should request that the linker keeps all static libraries objects,
+# but unfortunately not all linkers support the necessary flag.
 libbabeltrace_ctf_text_la_LDFLAGS = \
-	-version-info $(BABELTRACE_LIBRARY_VERSION) \
+	@NO_AS_NEEDED_LDFLAGS@ -version-info $(BABELTRACE_LIBRARY_VERSION) \
 	types/libctf-text-types.la
 
 libbabeltrace_ctf_text_la_LIBADD = \

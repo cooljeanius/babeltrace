@@ -477,6 +477,7 @@ NEXT_STDIO_H = @NEXT_STDIO_H@
 NEXT_UNISTD_H = @NEXT_UNISTD_H@
 NM = @NM@
 NMEDIT = @NMEDIT@
+NO_AS_NEEDED_LDFLAGS = @NO_AS_NEEDED_LDFLAGS@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
 OTOOL = @OTOOL@
@@ -684,7 +685,7 @@ libcompat_la_SOURCES = $(am__append_1) $(am__append_2) cloexec.c \
 	c-strcasecmp.c exitfail.c localcharset.h localcharset.c \
 	openat-safer.c openat-die.c progname.h progname.c quotearg.c \
 	dup-safer.c fd-safer.c save-cwd.c xalloc-die.c xmalloc.c
-libcompat_la_LDFLAGS = 
+libcompat_la_LDFLAGS = @NO_AS_NEEDED_LDFLAGS@
 libcompat_la_LIBADD = $(LTLIBOBJS) $(ALLOCA)
 CXXDEFS_H = c++defs.h
 ARG_NONNULL_H = arg-nonnull.h

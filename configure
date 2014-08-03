@@ -646,6 +646,7 @@ PACKAGE_CFLAGS
 PACKAGE_LIBS
 GMODULE_LIBS
 GMODULE_CFLAGS
+NO_AS_NEEDED_LDFLAGS
 PYTHON_CONFIG
 PYTHON_INCLUDE
 pkgpyexecdir
@@ -5867,7 +5868,27 @@ case ${host_os} in
     if test "x${CPPFLAGS}" = "x"; then
       test -z "${CPPFLAGS}" && export CPPFLAGS='-D__FreeBSD__=5'
     fi
-    ;;
+    # try to silence warnings about functions ending in "64" being
+    # deprecated by forcing deployment target to Leopard:
+    saved_CFLAGS="${CFLAGS}"
+    CFLAGS="${CFLAGS} -mmacosx-version-min=10.5"
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+
+else
+  CFLAGS="${saved_CFLAGS}"
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext    ;;
 esac
 
 # Checks for programs.
@@ -27293,6 +27314,39 @@ else
 $as_echo "$as_me: You may configure with --enable-python-bindings if you want Python bindings." >&6;}
 fi
 
+# Add some compiler flag checks near the end.
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking support for -Wl,--no-as-needed linker flag" >&5
+$as_echo_n "checking support for -Wl,--no-as-needed linker flag... " >&6; }
+NO_AS_NEEDED_LDFLAGS=""
+saved_LDFLAGS="${LDFLAGS}"
+LDFLAGS="${LDFLAGS} -Wl,--no-as-needed"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  NO_AS_NEEDED_LDFLAGS="-Wl,--no-as-needed"
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LDFLAGS="${saved_LDFLAGS}"
+if test "x${NO_AS_NEEDED_LDFLAGS}" = "x"; then
+  test -z "${NO_AS_NEEDED_LDFLAGS}"
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+else
+  test -n "${NO_AS_NEEDED_LDFLAGS}"
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+fi
+
 pkg_modules="gmodule-2.0 >= 2.0.0"
 
 pkg_failed=no
@@ -30223,6 +30277,6 @@ echo "Compiler: '${CC}'"
 echo "Ordinary compiler flags: '${CFLAGS}'"
 echo "Package compiler flags: '${PACKAGE_CFLAGS}'"
 echo "Preprocessor flags: '${CPPFLAGS}'"
-echo "Linker flags: '${LDFLAGS}'"
+echo "Linker flags: '${LDFLAGS} ${NO_AS_NEEDED_LDFLAGS}'"
 echo "Ordinary libraries to link against: '${LIBS}'"
 echo ""

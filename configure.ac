@@ -39,6 +39,12 @@ case ${host_os} in
     if test "x${CPPFLAGS}" = "x"; then
       test -z "${CPPFLAGS}" && export CPPFLAGS='-D__FreeBSD__=5'
     fi
+    # try to silence warnings about functions ending in "64" being
+    # deprecated by forcing deployment target to Leopard:
+    saved_CFLAGS="${CFLAGS}"
+    CFLAGS="${CFLAGS} -mmacosx-version-min=10.5"
+    AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]],[[]])],
+                      [],[CFLAGS="${saved_CFLAGS}"])dnl
     ;;
 esac
 
@@ -603,6 +609,23 @@ else
 
 fi
 
+# Add some compiler flag checks near the end.
+AC_MSG_CHECKING([support for -Wl,--no-as-needed linker flag])
+NO_AS_NEEDED_LDFLAGS=""
+saved_LDFLAGS="${LDFLAGS}"
+LDFLAGS="${LDFLAGS} -Wl,--no-as-needed"
+AC_LINK_IFELSE([AC_LANG_PROGRAM([[]],[[]])],
+               [NO_AS_NEEDED_LDFLAGS="-Wl,--no-as-needed"],[])dnl
+AC_SUBST([NO_AS_NEEDED_LDFLAGS])
+LDFLAGS="${saved_LDFLAGS}"
+if test "x${NO_AS_NEEDED_LDFLAGS}" = "x"; then
+  test -z "${NO_AS_NEEDED_LDFLAGS}"
+  AC_MSG_RESULT([no])
+else
+  test -n "${NO_AS_NEEDED_LDFLAGS}"
+  AC_MSG_RESULT([yes])
+fi
+
 pkg_modules="gmodule-2.0 >= 2.0.0"
 PKG_CHECK_MODULES([GMODULE],[${pkg_modules}])dnl
 AC_SUBST([PACKAGE_LIBS])dnl
@@ -667,6 +690,6 @@ echo "Compiler: '${CC}'"
 echo "Ordinary compiler flags: '${CFLAGS}'"
 echo "Package compiler flags: '${PACKAGE_CFLAGS}'"
 echo "Preprocessor flags: '${CPPFLAGS}'"
-echo "Linker flags: '${LDFLAGS}'"
+echo "Linker flags: '${LDFLAGS} ${NO_AS_NEEDED_LDFLAGS}'"
 echo "Ordinary libraries to link against: '${LIBS}'"
 echo ""
