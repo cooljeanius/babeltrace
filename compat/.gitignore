@@ -7,3 +7,4 @@ fcntl.h
 mktimetest
 warn-on-use.h
 unistd.h
+stdio.h

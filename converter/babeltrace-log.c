@@ -319,10 +319,10 @@ void trace_text(FILE *input, int output)
 	struct ctf_stream_pos pos;
 	ssize_t len;
 	char *line = NULL, *nl;
-#ifdef HAVE_GETLINE
+#if defined(HAVE_GETLINE) || (defined(HAVE_DECL_GETLINE) && HAVE_DECL_GETLINE)
     /* only used with the call to getline() so far: */
 	size_t linesize = 0L;
-#endif /* HAVE_GETLINE */
+#endif /* HAVE_GETLINE || HAVE_DECL_GETLINE */
 	int ret;
 
 	memset(&pos, 0, sizeof(pos));
@@ -334,12 +334,12 @@ void trace_text(FILE *input, int output)
 	write_packet_header(&pos, s_uuid);
 	write_packet_context(&pos);
 	for (;;) {
-#ifdef HAVE_GETLINE
+#if defined(HAVE_GETLINE) || (defined(HAVE_DECL_GETLINE) && HAVE_DECL_GETLINE)
 		len = getline(&line, &linesize, input);
 #else
 		/* fail: */
 		len = -1;
-#endif /* HAVE_GETLINE */
+#endif /* HAVE_GETLINE || HAVE_DECL_GETLINE */
 		if (len < 0) {
 			break;
         }

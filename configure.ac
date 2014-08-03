@@ -155,6 +155,7 @@ fi
 
 # Checks for headers that gnulib can replace (libcompat here).
 gl_FCNTL_H
+gl_STDIO_H
 gl_UNISTD_H
 
 # Checks for typedefs, structures, and compiler characteristics.
@@ -221,6 +222,7 @@ AC_FUNC_MALLOC
 AC_FUNC_MBRTOWC
 AC_FUNC_MKTIME
 AC_FUNC_MMAP
+AC_FUNC_OBSTACK
 AC_FUNC_REALLOC
 AC_FUNC_STAT
 AC_FUNC_STRERROR_R
