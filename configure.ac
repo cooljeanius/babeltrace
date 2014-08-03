@@ -186,7 +186,7 @@ AC_C_CONST
 AC_C_PROTOTYPES
 AC_C_VOLATILE
 AC_DEFUN([AC_REQUIRE_SOME_C_TYPES],[
-  AC_REQUIRE([AC_C_INLINE])dnl
+  AC_REQUIRE([gl_INLINE])dnl
   AC_REQUIRE([AC_TYPE_MODE_T])dnl
   AC_REQUIRE([AC_TYPE_PID_T])dnl
 ])dnl
@@ -437,6 +437,8 @@ if test "x${ac_cv_func_unlinkat}" = "x"; then
 fi
 
 # Checks for declarations.
+AC_CHECK_DECLS([program_invocation_name],[],[],[#include <errno.h>])dnl
+AC_CHECK_DECLS([program_invocation_short_name],[],[],[#include <errno.h>])
 AC_CHECK_DECLS([_STAT_VER])dnl
 AC_CHECK_DECLS([MSG_NOSIGNAL],[],[
   AC_CHECK_DECLS([SO_NOSIGPIPE],[],[],[
@@ -665,7 +667,12 @@ AC_SUBST([PACKAGE_LIBS])dnl
 
 LIBS="${LIBS} ${GMODULE_LIBS}"
 
-# Compiler warnings:
+# Compiler warnings section:
+XORG_COMPILER_BRAND
+if test "x${CLANGCC}" = "xyes"; then
+  PRE_CLANG_CFLAGS="${CFLAGS}"
+  CFLAGS="${CFLAGS} -Werror=unknown-warning-option"
+fi
 dnl#TODO: add a configure flag to enable the warnings conditionally:
 gl_MANYWARN_ALL_GCC([warnings_to_check])
 warnings_to_skip=""
@@ -703,7 +710,10 @@ warnings_to_skip="${warnings_to_skip} -Wc++-compat"      # too many for now
 warnings_to_skip="${warnings_to_skip} -Wswitch-enum"                  # meh
 warnings_to_skip="${warnings_to_skip} -Waggregate-return"             # ???
 warnings_to_skip="${warnings_to_skip} -Wwrite-strings" # too many for tests
-
+if test "x${CLANGCC}" = "xyes"; then
+  warnings_to_skip="${warnings_to_skip} -Wcast-align"   # I use casts a lot
+  warnings_to_skip="${warnings_to_skip} -Wvariadic-macros"   # too pedantic
+fi
 case ${host_cpu} in
   aarch64 | powerpc64 | x86_64)
     warnings_to_skip="${warnings_to_skip} -Wlong-long"  # "long long"=64bit
@@ -744,6 +754,10 @@ case ${host_vendor} in
     done
     ;;
 esac
+
+if test "x${CLANGCC}" = "xyes"; then
+  test -n "${PRE_CLANG_CFLAGS}" && CFLAGS="${PRE_CLANG_CFLAGS}"
+fi
 
 PACKAGE_CFLAGS="${GMODULE_CFLAGS} ${WARN_CFLAGS} -include config.h"
 AC_SUBST([PACKAGE_CFLAGS])dnl

@@ -113,10 +113,8 @@ AC_DEFUN([gl_MODULE_INDICATOR_SET_VARIABLE],[
 # to 0 or 1.
 AC_DEFUN([gl_MODULE_INDICATOR_SET_VARIABLE_AUX],[
   m4_if(m4_defn([gl_MODULE_INDICATOR_CONDITION]),[1],
-    [
-     dnl# Simplify the expression VALUE || 1 to 1.
-     $1=1
-    ],
+    [dnl# Simplify the expression VALUE || 1 to 1.
+     $1=1],
     [gl_MODULE_INDICATOR_SET_VARIABLE_AUX_OR([$1],
                                              [gl_MODULE_INDICATOR_CONDITION])])dnl
 ])dnl

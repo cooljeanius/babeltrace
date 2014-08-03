@@ -28,20 +28,35 @@ AC_DEFUN([XORG_TLS],[
       test -z "${STRICT_CFLAGS}"
       AC_MSG_NOTICE([need to set STRICT_CFLAGS for xorg-style checks])
       if test "x${WARN_CFLAGS}" != "x"; then
+        export XORG_SAVED_CFLAGS="${CFLAGS}"
         test -n "${WARN_CFLAGS}" && export STRICT_CFLAGS="${WARN_CFLAGS}"
+        export CFLAGS="${CFLAGS} ${STRICT_CFLAGS}"
       else
         test -z "${WARN_CFLAGS}"
+        export XORG_SAVED_CFLAGS="${CFLAGS}"
         dnl# just hardcode them instead of duplicating warning checks:
         export STRICT_CFLAGS="-pedantic -Werror -Werror=attributes"
+        export CFLAGS="${CFLAGS} ${STRICT_CFLAGS}"
       fi
     else
-      test -n "${STRICT_CFLAGS}"
+      export XORG_SAVED_CFLAGS="${CFLAGS}"
+      test -n "${STRICT_CFLAGS}" && export CFLAGS="${CFLAGS} ${STRICT_CFLAGS}"
     fi
   else
     if test "x${STRICT_CFLAGS}" = "x"; then
       test -z "${STRICT_CFLAGS}" && export STRICT_CFLAGS="-pedantic"
+      if test "x${CC}" = "xclang" || test "x${CLANGCC}" = "xyes"; then
+        export XORG_SAVED_CFLAGS="${CFLAGS}"
+        export STRICT_CFLAGS="${STRICT_CFLAGS} -Werror=ignored-attributes"
+        export CFLAGS="${CFLAGS} ${STRICT_CFLAGS}"
+      fi
     else
       test -n "${STRICT_CFLAGS}" && unset STRICT_CFLAGS
+      if test "x${CC}" = "xclang" || test "x${CLANGCC}" = "xyes"; then
+        export XORG_SAVED_CFLAGS="${CFLAGS}"
+        export STRICT_CFLAGS="-Werror=ignored-attributes"
+        export CFLAGS="${CFLAGS} ${STRICT_CFLAGS}"
+      fi
     fi
   fi
   AC_MSG_CHECKING([for thread local storage (TLS) support])
@@ -76,5 +91,11 @@ int ${ac_cv_tls} __attribute__((tls_model("initial-exec"))) test;]],[[]])],
     AC_DEFINE_UNQUOTED([TLS],[${xorg_tls}],
                        [The compiler-supported TLS storage class,
                         prefering initial-exec if tls_model is supported])
+  fi
+
+  if test "x${XORG_SAVED_CFLAGS}" != "x"; then
+    test -n "${XORG_SAVED_CFLAGS}" && export CFLAGS="${XORG_SAVED_CFLAGS}"
+  elif test "x${save_CFLAGS}" != "x"; then
+    test -n "${save_CFLAGS}" && export CFLAGS="${save_CFLAGS}"
   fi
 ])dnl

@@ -19414,19 +19414,34 @@ done
       { $as_echo "$as_me:${as_lineno-$LINENO}: need to set STRICT_CFLAGS for xorg-style checks" >&5
 $as_echo "$as_me: need to set STRICT_CFLAGS for xorg-style checks" >&6;}
       if test "x${WARN_CFLAGS}" != "x"; then
+        export XORG_SAVED_CFLAGS="${CFLAGS}"
         test -n "${WARN_CFLAGS}" && export STRICT_CFLAGS="${WARN_CFLAGS}"
+        export CFLAGS="${CFLAGS} ${STRICT_CFLAGS}"
       else
         test -z "${WARN_CFLAGS}"
+        export XORG_SAVED_CFLAGS="${CFLAGS}"
                 export STRICT_CFLAGS="-pedantic -Werror -Werror=attributes"
+        export CFLAGS="${CFLAGS} ${STRICT_CFLAGS}"
       fi
     else
-      test -n "${STRICT_CFLAGS}"
+      export XORG_SAVED_CFLAGS="${CFLAGS}"
+      test -n "${STRICT_CFLAGS}" && export CFLAGS="${CFLAGS} ${STRICT_CFLAGS}"
     fi
   else
     if test "x${STRICT_CFLAGS}" = "x"; then
       test -z "${STRICT_CFLAGS}" && export STRICT_CFLAGS="-pedantic"
+      if test "x${CC}" = "xclang" || test "x${CLANGCC}" = "xyes"; then
+        export XORG_SAVED_CFLAGS="${CFLAGS}"
+        export STRICT_CFLAGS="${STRICT_CFLAGS} -Werror=ignored-attributes"
+        export CFLAGS="${CFLAGS} ${STRICT_CFLAGS}"
+      fi
     else
       test -n "${STRICT_CFLAGS}" && unset STRICT_CFLAGS
+      if test "x${CC}" = "xclang" || test "x${CLANGCC}" = "xyes"; then
+        export XORG_SAVED_CFLAGS="${CFLAGS}"
+        export STRICT_CFLAGS="-Werror=ignored-attributes"
+        export CFLAGS="${CFLAGS} ${STRICT_CFLAGS}"
+      fi
     fi
   fi
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for thread local storage (TLS) support" >&5
@@ -19503,6 +19518,12 @@ cat >>confdefs.h <<_ACEOF
 #define TLS ${xorg_tls}
 _ACEOF
 
+  fi
+
+  if test "x${XORG_SAVED_CFLAGS}" != "x"; then
+    test -n "${XORG_SAVED_CFLAGS}" && export CFLAGS="${XORG_SAVED_CFLAGS}"
+  elif test "x${save_CFLAGS}" != "x"; then
+    test -n "${save_CFLAGS}" && export CFLAGS="${save_CFLAGS}"
   fi
 
 
@@ -23694,6 +23715,45 @@ $as_echo "#define volatile /**/" >>confdefs.h
 fi
 
 
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether the compiler generally respects inline" >&5
+$as_echo_n "checking whether the compiler generally respects inline... " >&6; }
+if ${gl_cv_c_inline_effective+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test "x${ac_cv_c_inline}" = "xno"; then
+       gl_cv_c_inline_effective=no
+     else
+                                          cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+#ifdef __NO_INLINE__
+               #error "inline is not effective"
+             #endif
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  gl_cv_c_inline_effective=yes
+else
+  gl_cv_c_inline_effective=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+     fi
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $gl_cv_c_inline_effective" >&5
+$as_echo "$gl_cv_c_inline_effective" >&6; }
+  if test "x${gl_cv_c_inline_effective}" = "xyes"; then
+
+$as_echo "#define HAVE_INLINE 1" >>confdefs.h
+
+  fi
+
+
 
 ac_fn_c_find_intX_t "$LINENO" "8" "ac_cv_c_int8_t"
 case $ac_cv_c_int8_t in #(
@@ -26199,9 +26259,7 @@ fi
 
 
 
-
-          GNULIB_EUIDACCESS=1
-
+       GNULIB_EUIDACCESS=1
 
 $as_echo "#define GNULIB_TEST_EUIDACCESS 1" >>confdefs.h
 
@@ -26236,9 +26294,7 @@ _ACEOF
 
 
 
-
-          GNULIB_FACCESSAT=1
-
+       GNULIB_FACCESSAT=1
 
 $as_echo "#define GNULIB_TEST_FACCESSAT 1" >>confdefs.h
 
@@ -26387,9 +26443,7 @@ fi
 
 
 
-
-          GNULIB_FTRUNCATE=1
-
+       GNULIB_FTRUNCATE=1
 
 $as_echo "#define GNULIB_TEST_FTRUNCATE 1" >>confdefs.h
 
@@ -26534,9 +26588,7 @@ fi
 
 
 
-
-          GNULIB_GETDELIM=1
-
+       GNULIB_GETDELIM=1
 
 $as_echo "#define GNULIB_TEST_GETDELIM 1" >>confdefs.h
 
@@ -26663,9 +26715,7 @@ fi
 
 
 
-
-          GNULIB_GETLINE=1
-
+       GNULIB_GETLINE=1
 
 $as_echo "#define GNULIB_TEST_GETLINE 1" >>confdefs.h
 
@@ -26695,9 +26745,7 @@ fi
 
 
 
-
-          GNULIB_GROUP_MEMBER=1
-
+       GNULIB_GROUP_MEMBER=1
 
 $as_echo "#define GNULIB_TEST_GROUP_MEMBER 1" >>confdefs.h
 
@@ -26866,9 +26914,7 @@ fi
 
 
 
-
-          GNULIB_MEMRCHR=1
-
+       GNULIB_MEMRCHR=1
 
 $as_echo "#define GNULIB_TEST_MEMRCHR 1" >>confdefs.h
 
@@ -27073,9 +27119,7 @@ _ACEOF
 
 
 
-
-          GNULIB_OPENAT=1
-
+       GNULIB_OPENAT=1
 
 $as_echo "#define GNULIB_TEST_OPENAT 1" >>confdefs.h
 
@@ -27344,9 +27388,7 @@ fi
 
 
 
-
-          GNULIB_PREAD=1
-
+       GNULIB_PREAD=1
 
 $as_echo "#define GNULIB_TEST_PREAD 1" >>confdefs.h
 
@@ -27470,9 +27512,7 @@ fi
 
 
 
-
-          GNULIB_PWRITE=1
-
+       GNULIB_PWRITE=1
 
 $as_echo "#define GNULIB_TEST_PWRITE 1" >>confdefs.h
 
@@ -27569,9 +27609,7 @@ fi
 
 
 
-
-          GNULIB_STRNDUP=1
-
+       GNULIB_STRNDUP=1
 
 $as_echo "#define GNULIB_TEST_STRNDUP 1" >>confdefs.h
 
@@ -27668,9 +27706,7 @@ fi
 
 
 
-
-          GNULIB_STRNLEN=1
-
+       GNULIB_STRNLEN=1
 
 $as_echo "#define GNULIB_TEST_STRNLEN 1" >>confdefs.h
 
@@ -27867,9 +27903,7 @@ fi
 
 
 
-
-          GNULIB_UNLINK=1
-
+       GNULIB_UNLINK=1
 
 $as_echo "#define GNULIB_TEST_UNLINK 1" >>confdefs.h
 
@@ -27909,9 +27943,7 @@ fi
 
 
 
-
-          GNULIB_UNLINKAT=1
-
+       GNULIB_UNLINKAT=1
 
 $as_echo "#define GNULIB_TEST_UNLINKAT 1" >>confdefs.h
 
@@ -28017,6 +28049,29 @@ done
 fi
 
 # Checks for declarations.
+ac_fn_c_check_decl "$LINENO" "program_invocation_name" "ac_cv_have_decl_program_invocation_name" "#include <errno.h>
+"
+if test "x$ac_cv_have_decl_program_invocation_name" = xyes; then :
+  ac_have_decl=1
+else
+  ac_have_decl=0
+fi
+
+cat >>confdefs.h <<_ACEOF
+#define HAVE_DECL_PROGRAM_INVOCATION_NAME $ac_have_decl
+_ACEOF
+ac_fn_c_check_decl "$LINENO" "program_invocation_short_name" "ac_cv_have_decl_program_invocation_short_name" "#include <errno.h>
+"
+if test "x$ac_cv_have_decl_program_invocation_short_name" = xyes; then :
+  ac_have_decl=1
+else
+  ac_have_decl=0
+fi
+
+cat >>confdefs.h <<_ACEOF
+#define HAVE_DECL_PROGRAM_INVOCATION_SHORT_NAME $ac_have_decl
+_ACEOF
+
 ac_fn_c_check_decl "$LINENO" "_STAT_VER" "ac_cv_have_decl__STAT_VER" "$ac_includes_default"
 if test "x$ac_cv_have_decl__STAT_VER" = xyes; then :
   ac_have_decl=1
@@ -29135,7 +29190,210 @@ $as_echo "yes" >&6; }
 fi
 LIBS="${LIBS} ${GMODULE_LIBS}"
 
-# Compiler warnings:
+# Compiler warnings section:
+   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $CC option to accept ISO C99" >&5
+$as_echo_n "checking for $CC option to accept ISO C99... " >&6; }
+if ${ac_cv_prog_cc_c99+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_cv_prog_cc_c99=no
+ac_save_CC=$CC
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <stdarg.h>
+#include <stdbool.h>
+#include <stdlib.h>
+#include <wchar.h>
+#include <stdio.h>
+
+// Check varargs macros.  These examples are taken from C99 6.10.3.5.
+#define debug(...) fprintf (stderr, __VA_ARGS__)
+#define showlist(...) puts (#__VA_ARGS__)
+#define report(test,...) ((test) ? puts (#test) : printf (__VA_ARGS__))
+static void
+test_varargs_macros (void)
+{
+  int x = 1234;
+  int y = 5678;
+  debug ("Flag");
+  debug ("X = %d\n", x);
+  showlist (The first, second, and third items.);
+  report (x>y, "x is %d but y is %d", x, y);
+}
+
+// Check long long types.
+#define BIG64 18446744073709551615ull
+#define BIG32 4294967295ul
+#define BIG_OK (BIG64 / BIG32 == 4294967297ull && BIG64 % BIG32 == 0)
+#if !BIG_OK
+  your preprocessor is broken;
+#endif
+#if BIG_OK
+#else
+  your preprocessor is broken;
+#endif
+static long long int bignum = -9223372036854775807LL;
+static unsigned long long int ubignum = BIG64;
+
+struct incomplete_array
+{
+  int datasize;
+  double data[];
+};
+
+struct named_init {
+  int number;
+  const wchar_t *name;
+  double average;
+};
+
+typedef const char *ccp;
+
+static inline int
+test_restrict (ccp restrict text)
+{
+  // See if C++-style comments work.
+  // Iterate through items via the restricted pointer.
+  // Also check for declarations in for loops.
+  for (unsigned int i = 0; *(text+i) != '\0'; ++i)
+    continue;
+  return 0;
+}
+
+// Check varargs and va_copy.
+static void
+test_varargs (const char *format, ...)
+{
+  va_list args;
+  va_start (args, format);
+  va_list args_copy;
+  va_copy (args_copy, args);
+
+  const char *str;
+  int number;
+  float fnumber;
+
+  while (*format)
+    {
+      switch (*format++)
+	{
+	case 's': // string
+	  str = va_arg (args_copy, const char *);
+	  break;
+	case 'd': // int
+	  number = va_arg (args_copy, int);
+	  break;
+	case 'f': // float
+	  fnumber = va_arg (args_copy, double);
+	  break;
+	default:
+	  break;
+	}
+    }
+  va_end (args_copy);
+  va_end (args);
+}
+
+int
+main ()
+{
+
+  // Check bool.
+  _Bool success = false;
+
+  // Check restrict.
+  if (test_restrict ("String literal") == 0)
+    success = true;
+  char *restrict newvar = "Another string";
+
+  // Check varargs.
+  test_varargs ("s, d' f .", "string", 65, 34.234);
+  test_varargs_macros ();
+
+  // Check flexible array members.
+  struct incomplete_array *ia =
+    malloc (sizeof (struct incomplete_array) + (sizeof (double) * 10));
+  ia->datasize = 10;
+  for (int i = 0; i < ia->datasize; ++i)
+    ia->data[i] = i * 1.234;
+
+  // Check named initializers.
+  struct named_init ni = {
+    .number = 34,
+    .name = L"Test wide string",
+    .average = 543.34343,
+  };
+
+  ni.number = 58;
+
+  int dynamic_array[ni.number];
+  dynamic_array[ni.number - 1] = 543;
+
+  // work around unused variable warnings
+  return (!success || bignum == 0LL || ubignum == 0uLL || newvar[0] == 'x'
+	  || dynamic_array[ni.number - 1] != 543);
+
+  ;
+  return 0;
+}
+_ACEOF
+for ac_arg in '' -std=gnu99 -std=c99 -c99 -AC99 -D_STDC_C99= -qlanglvl=extc99
+do
+  CC="$ac_save_CC $ac_arg"
+  if ac_fn_c_try_compile "$LINENO"; then :
+  ac_cv_prog_cc_c99=$ac_arg
+fi
+rm -f core conftest.err conftest.$ac_objext
+  test "x$ac_cv_prog_cc_c99" != "xno" && break
+done
+rm -f conftest.$ac_ext
+CC=$ac_save_CC
+
+fi
+# AC_CACHE_VAL
+case "x$ac_cv_prog_cc_c99" in
+  x)
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: none needed" >&5
+$as_echo "none needed" >&6; } ;;
+  xno)
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: unsupported" >&5
+$as_echo "unsupported" >&6; } ;;
+  *)
+    CC="$CC $ac_cv_prog_cc_c99"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_prog_cc_c99" >&5
+$as_echo "$ac_cv_prog_cc_c99" >&6; } ;;
+esac
+if test "x$ac_cv_prog_cc_c99" != xno; then :
+
+fi
+
+
+
+
+
+ac_fn_c_check_decl "$LINENO" "__clang__" "ac_cv_have_decl___clang__" "$ac_includes_default"
+if test "x$ac_cv_have_decl___clang__" = xyes; then :
+  CLANGCC="yes"
+else
+  CLANGCC="no"
+fi
+ac_fn_c_check_decl "$LINENO" "__INTEL_COMPILER" "ac_cv_have_decl___INTEL_COMPILER" "$ac_includes_default"
+if test "x$ac_cv_have_decl___INTEL_COMPILER" = xyes; then :
+  INTELCC="yes"
+else
+  INTELCC="no"
+fi
+ac_fn_c_check_decl "$LINENO" "__SUNPRO_C" "ac_cv_have_decl___SUNPRO_C" "$ac_includes_default"
+if test "x$ac_cv_have_decl___SUNPRO_C" = xyes; then :
+  SUNCC="yes"
+else
+  SUNCC="no"
+fi
+
+if test "x${CLANGCC}" = "xyes"; then
+  PRE_CLANG_CFLAGS="${CFLAGS}"
+  CFLAGS="${CFLAGS} -Werror=unknown-warning-option"
+fi
 
 
   if test -n "${GCC}"; then
@@ -29401,7 +29659,10 @@ warnings_to_skip="${warnings_to_skip} -Wc++-compat"      # too many for now
 warnings_to_skip="${warnings_to_skip} -Wswitch-enum"                  # meh
 warnings_to_skip="${warnings_to_skip} -Waggregate-return"             # ???
 warnings_to_skip="${warnings_to_skip} -Wwrite-strings" # too many for tests
-
+if test "x${CLANGCC}" = "xyes"; then
+  warnings_to_skip="${warnings_to_skip} -Wcast-align"   # I use casts a lot
+  warnings_to_skip="${warnings_to_skip} -Wvariadic-macros"   # too pedantic
+fi
 case ${host_cpu} in
   aarch64 | powerpc64 | x86_64)
     warnings_to_skip="${warnings_to_skip} -Wlong-long"  # "long long"=64bit
@@ -29525,6 +29786,10 @@ fi
     done
     ;;
 esac
+
+if test "x${CLANGCC}" = "xyes"; then
+  test -n "${PRE_CLANG_CFLAGS}" && CFLAGS="${PRE_CLANG_CFLAGS}"
+fi
 
 PACKAGE_CFLAGS="${GMODULE_CFLAGS} ${WARN_CFLAGS} -include config.h"
 

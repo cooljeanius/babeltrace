@@ -1539,7 +1539,11 @@ end:
 enum bt_ctf_byte_order bt_ctf_field_type_get_byte_order(
 		struct bt_ctf_field_type *type)
 {
+#if defined(BT_CTF_BYTE_ORDER_UNKNOWN) || !defined(__clang__)
 	enum bt_ctf_byte_order ret = BT_CTF_BYTE_ORDER_UNKNOWN;
+#else
+    enum bt_ctf_byte_order ret = -1;
+#endif /* BT_CTF_BYTE_ORDER_UNKNOWN || !__clang__ */
 
 	if (!type) {
 		goto end;
