@@ -27,26 +27,26 @@
  * SOFTWARE.
  */
 
-#ifdef __FreeBSD__
-#include <machine/endian.h>
+#if defined(__FreeBSD__) || defined(HAVE_MACHINE_ENDIAN_H)
+# include <machine/endian.h>
 #elif defined(__MINGW32__)
-#ifndef __BIG_ENDIAN
-#define __BIG_ENDIAN 4321
-#endif
-#ifndef __LITTLE_ENDIAN
-#define __LITTLE_ENDIAN 1234
-#endif
+# ifndef __BIG_ENDIAN
+#  define __BIG_ENDIAN 4321
+# endif /* !__BIG_ENDIAN */
+# ifndef __LITTLE_ENDIAN
+#  define __LITTLE_ENDIAN 1234
+# endif /* !__LITTLE_ENDIAN */
 
-#ifndef __BYTE_ORDER
-#define __BYTE_ORDER __LITTLE_ENDIAN
-#endif
+# ifndef __BYTE_ORDER
+#  define __BYTE_ORDER __LITTLE_ENDIAN
+# endif /* !__BYTE_ORDER */
 
-#define LITTLE_ENDIAN  __LITTLE_ENDIAN
-#define BIG_ENDIAN     __BIG_ENDIAN
-#define PDP_ENDIAN     __PDP_ENDIAN
-#define BYTE_ORDER     __BYTE_ORDER
+# define LITTLE_ENDIAN  __LITTLE_ENDIAN
+# define BIG_ENDIAN     __BIG_ENDIAN
+# define PDP_ENDIAN     __PDP_ENDIAN
+# define BYTE_ORDER     __BYTE_ORDER
 #else
-#include <endian.h>
+# include <endian.h>
 
 /*
  * htobe/betoh are not defined for glibc < 2.9, so add them explicitly
@@ -56,7 +56,7 @@
 /* Conversion interfaces. */
 #  include <byteswap.h>
 
-#  if __BYTE_ORDER == __LITTLE_ENDIAN
+#  if (__BYTE_ORDER == __LITTLE_ENDIAN)
 #   ifndef htobe16
 #    define htobe16(x) __bswap_16(x)
 #   endif
@@ -141,11 +141,11 @@
 #endif /* else -- __FreeBSD__ */
 
 #ifndef FLOAT_WORD_ORDER
-#ifdef __FLOAT_WORD_ORDER
-#define FLOAT_WORD_ORDER	__FLOAT_WORD_ORDER
-#else /* __FLOAT_WORD_ORDER */
-#define FLOAT_WORD_ORDER	BYTE_ORDER
-#endif /* __FLOAT_WORD_ORDER */
+# ifdef __FLOAT_WORD_ORDER
+#  define FLOAT_WORD_ORDER __FLOAT_WORD_ORDER
+# else /* __FLOAT_WORD_ORDER */
+#  define FLOAT_WORD_ORDER BYTE_ORDER
+# endif /* __FLOAT_WORD_ORDER */
 #endif /* FLOAT_WORD_ORDER */
 
 #endif /* _BABELTRACE_ENDIAN_H */

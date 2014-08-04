@@ -660,6 +660,8 @@ PYTHON_EXEC_PREFIX
 PYTHON_PREFIX
 PYTHON_VERSION
 PYTHON
+PYTHONPATH
+BACKUP_PYTHONPATH_FOR_PYTHON2
 SWIG_LIB
 SWIG
 USE_PYTHON_FALSE
@@ -5963,36 +5965,6 @@ fi
 
       pkglibexecdir='${libexecdir}/${PACKAGE}'
 
-
-case ${host_os} in
-  darwin*)
-    # dirty hack to get ./include/babeltrace/endian.h to use the correct
-    # header on darwin (freebsd should already define this by default):
-    if test "x${CPPFLAGS}" = "x"; then
-      test -z "${CPPFLAGS}" && export CPPFLAGS='-D__FreeBSD__=5'
-    fi
-    # try to silence warnings about functions ending in "64" being
-    # deprecated by forcing deployment target to Leopard:
-    saved_CFLAGS="${CFLAGS}"
-    CFLAGS="${CFLAGS} -mmacosx-version-min=10.5"
-    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-int
-main ()
-{
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
-
-else
-  CFLAGS="${saved_CFLAGS}"
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext    ;;
-esac
 
 # Checks for programs.
 if test "x${ac_cv_prog_cc_stdc}" = "x"; then
@@ -27947,6 +27919,156 @@ fi
 
 $as_echo "#define GNULIB_TEST_UNLINKAT 1" >>confdefs.h
 
+ac_fn_c_check_decl "$LINENO" "clearerr_unlocked" "ac_cv_have_decl_clearerr_unlocked" "$ac_includes_default"
+if test "x$ac_cv_have_decl_clearerr_unlocked" = xyes; then :
+  ac_have_decl=1
+else
+  ac_have_decl=0
+fi
+
+cat >>confdefs.h <<_ACEOF
+#define HAVE_DECL_CLEARERR_UNLOCKED $ac_have_decl
+_ACEOF
+
+ac_fn_c_check_decl "$LINENO" "feof_unlocked" "ac_cv_have_decl_feof_unlocked" "$ac_includes_default"
+if test "x$ac_cv_have_decl_feof_unlocked" = xyes; then :
+  ac_have_decl=1
+else
+  ac_have_decl=0
+fi
+
+cat >>confdefs.h <<_ACEOF
+#define HAVE_DECL_FEOF_UNLOCKED $ac_have_decl
+_ACEOF
+
+ac_fn_c_check_decl "$LINENO" "ferror_unlocked" "ac_cv_have_decl_ferror_unlocked" "$ac_includes_default"
+if test "x$ac_cv_have_decl_ferror_unlocked" = xyes; then :
+  ac_have_decl=1
+else
+  ac_have_decl=0
+fi
+
+cat >>confdefs.h <<_ACEOF
+#define HAVE_DECL_FERROR_UNLOCKED $ac_have_decl
+_ACEOF
+
+ac_fn_c_check_decl "$LINENO" "fflush_unlocked" "ac_cv_have_decl_fflush_unlocked" "$ac_includes_default"
+if test "x$ac_cv_have_decl_fflush_unlocked" = xyes; then :
+  ac_have_decl=1
+else
+  ac_have_decl=0
+fi
+
+cat >>confdefs.h <<_ACEOF
+#define HAVE_DECL_FFLUSH_UNLOCKED $ac_have_decl
+_ACEOF
+
+ac_fn_c_check_decl "$LINENO" "fgets_unlocked" "ac_cv_have_decl_fgets_unlocked" "$ac_includes_default"
+if test "x$ac_cv_have_decl_fgets_unlocked" = xyes; then :
+  ac_have_decl=1
+else
+  ac_have_decl=0
+fi
+
+cat >>confdefs.h <<_ACEOF
+#define HAVE_DECL_FGETS_UNLOCKED $ac_have_decl
+_ACEOF
+
+ac_fn_c_check_decl "$LINENO" "fputc_unlocked" "ac_cv_have_decl_fputc_unlocked" "$ac_includes_default"
+if test "x$ac_cv_have_decl_fputc_unlocked" = xyes; then :
+  ac_have_decl=1
+else
+  ac_have_decl=0
+fi
+
+cat >>confdefs.h <<_ACEOF
+#define HAVE_DECL_FPUTC_UNLOCKED $ac_have_decl
+_ACEOF
+
+ac_fn_c_check_decl "$LINENO" "fputs_unlocked" "ac_cv_have_decl_fputs_unlocked" "$ac_includes_default"
+if test "x$ac_cv_have_decl_fputs_unlocked" = xyes; then :
+  ac_have_decl=1
+else
+  ac_have_decl=0
+fi
+
+cat >>confdefs.h <<_ACEOF
+#define HAVE_DECL_FPUTS_UNLOCKED $ac_have_decl
+_ACEOF
+
+ac_fn_c_check_decl "$LINENO" "fread_unlocked" "ac_cv_have_decl_fread_unlocked" "$ac_includes_default"
+if test "x$ac_cv_have_decl_fread_unlocked" = xyes; then :
+  ac_have_decl=1
+else
+  ac_have_decl=0
+fi
+
+cat >>confdefs.h <<_ACEOF
+#define HAVE_DECL_FREAD_UNLOCKED $ac_have_decl
+_ACEOF
+
+ac_fn_c_check_decl "$LINENO" "fwrite_unlocked" "ac_cv_have_decl_fwrite_unlocked" "$ac_includes_default"
+if test "x$ac_cv_have_decl_fwrite_unlocked" = xyes; then :
+  ac_have_decl=1
+else
+  ac_have_decl=0
+fi
+
+cat >>confdefs.h <<_ACEOF
+#define HAVE_DECL_FWRITE_UNLOCKED $ac_have_decl
+_ACEOF
+
+ac_fn_c_check_decl "$LINENO" "getc_unlocked" "ac_cv_have_decl_getc_unlocked" "$ac_includes_default"
+if test "x$ac_cv_have_decl_getc_unlocked" = xyes; then :
+  ac_have_decl=1
+else
+  ac_have_decl=0
+fi
+
+cat >>confdefs.h <<_ACEOF
+#define HAVE_DECL_GETC_UNLOCKED $ac_have_decl
+_ACEOF
+
+ac_fn_c_check_decl "$LINENO" "getchar_unlocked" "ac_cv_have_decl_getchar_unlocked" "$ac_includes_default"
+if test "x$ac_cv_have_decl_getchar_unlocked" = xyes; then :
+  ac_have_decl=1
+else
+  ac_have_decl=0
+fi
+
+cat >>confdefs.h <<_ACEOF
+#define HAVE_DECL_GETCHAR_UNLOCKED $ac_have_decl
+_ACEOF
+
+ac_fn_c_check_decl "$LINENO" "putc_unlocked" "ac_cv_have_decl_putc_unlocked" "$ac_includes_default"
+if test "x$ac_cv_have_decl_putc_unlocked" = xyes; then :
+  ac_have_decl=1
+else
+  ac_have_decl=0
+fi
+
+cat >>confdefs.h <<_ACEOF
+#define HAVE_DECL_PUTC_UNLOCKED $ac_have_decl
+_ACEOF
+
+ac_fn_c_check_decl "$LINENO" "putchar_unlocked" "ac_cv_have_decl_putchar_unlocked" "$ac_includes_default"
+if test "x$ac_cv_have_decl_putchar_unlocked" = xyes; then :
+  ac_have_decl=1
+else
+  ac_have_decl=0
+fi
+
+cat >>confdefs.h <<_ACEOF
+#define HAVE_DECL_PUTCHAR_UNLOCKED $ac_have_decl
+_ACEOF
+
+
+
+$as_echo "#define USE_UNLOCKED_IO 1" >>confdefs.h
+
+
+
+
 
 # Keep autoscan from complaining about functions we replace.
 if test "x${ac_cv_func_euidaccess}" = "x"; then
@@ -28739,6 +28861,15 @@ $as_echo "$as_me: WARNING: cannot determine SWIG version" >&2;}
         fi
 
 
+    if test "x`echo ${PYTHONPATH} | grep python2`" != "x"; then
+    export BACKUP_PYTHONPATH_FOR_PYTHON2="${PYTHONPATH}"
+
+    unset PYTHONPATH
+  else
+
+    :
+  fi
+
 
 
 
@@ -29061,7 +29192,42 @@ fi
 else
   { $as_echo "$as_me:${as_lineno-$LINENO}: You may configure with --enable-python-bindings if you want Python bindings." >&5
 $as_echo "$as_me: You may configure with --enable-python-bindings if you want Python bindings." >&6;}
+  # this hack breaks the python bindings, so only do it here:
+  case ${host_os} in
+    darwin*)
+      # dirty hack to get ./include/babeltrace/endian.h to use the correct
+      # header on darwin (freebsd should already define this by default):
+      if test "x${CPPFLAGS}" = "x"; then
+        test -z "${CPPFLAGS}" && export CPPFLAGS='-D__FreeBSD__=5'
+      fi
+      ;;
+  esac
 fi
+
+case ${host_os} in
+  darwin*)
+    # try to silence warnings about functions ending in "64" being
+    # deprecated by forcing deployment target to Leopard:
+    saved_CFLAGS="${CFLAGS}"
+    CFLAGS="${CFLAGS} -mmacosx-version-min=10.5"
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+
+else
+  CFLAGS="${saved_CFLAGS}"
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext    ;;
+esac
 
 # Add some compiler flag checks near the end.
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking support for -Wl,--no-as-needed linker flag" >&5
@@ -29738,7 +29904,6 @@ case ${host_vendor} in
   apple)
     # manywarnings.m4 is missing these Apple-gcc-specific flags:
     for apple_gcc_warnflag in \
-      -Wmost \
       -Wfour-char-constants \
       -Wnewline-eof \
       -Wshorten-64-to-32 \

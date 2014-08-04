@@ -112,9 +112,10 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/alloca.m4 \
 	$(top_srcdir)/m4/strnlen.m4 $(top_srcdir)/m4/thread.m4 \
 	$(top_srcdir)/m4/threadlib.m4 $(top_srcdir)/m4/tls.m4 \
 	$(top_srcdir)/m4/unistd_h.m4 $(top_srcdir)/m4/unlink.m4 \
-	$(top_srcdir)/m4/unlinkat.m4 $(top_srcdir)/m4/warn-on-use.m4 \
-	$(top_srcdir)/m4/warnings.m4 $(top_srcdir)/m4/xorg-macros.m4 \
-	$(top_srcdir)/m4/xorg-tls.m4 $(top_srcdir)/configure.ac
+	$(top_srcdir)/m4/unlinkat.m4 $(top_srcdir)/m4/unlocked-io.m4 \
+	$(top_srcdir)/m4/warn-on-use.m4 $(top_srcdir)/m4/warnings.m4 \
+	$(top_srcdir)/m4/xorg-macros.m4 $(top_srcdir)/m4/xorg-tls.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -226,6 +227,7 @@ AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
 AWK = @AWK@
 BABELTRACE_LIBRARY_VERSION = @BABELTRACE_LIBRARY_VERSION@
+BACKUP_PYTHONPATH_FOR_PYTHON2 = @BACKUP_PYTHONPATH_FOR_PYTHON2@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
@@ -557,6 +559,7 @@ PRAGMA_COLUMNS = @PRAGMA_COLUMNS@
 PRAGMA_SYSTEM_HEADER = @PRAGMA_SYSTEM_HEADER@
 PROVE_BIN = @PROVE_BIN@
 PYTHON = @PYTHON@
+PYTHONPATH = @PYTHONPATH@
 PYTHON_CONFIG = @PYTHON_CONFIG@
 PYTHON_EXEC_PREFIX = @PYTHON_EXEC_PREFIX@
 PYTHON_INCLUDE = @PYTHON_INCLUDE@

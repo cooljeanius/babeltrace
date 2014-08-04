@@ -36,22 +36,6 @@ AC_SYS_LARGEFILE
 gl_COMMON_JUST_BODY
 gl_CONFIGMAKE_PREP
 
-case ${host_os} in
-  darwin*)
-    # dirty hack to get ./include/babeltrace/endian.h to use the correct
-    # header on darwin (freebsd should already define this by default):
-    if test "x${CPPFLAGS}" = "x"; then
-      test -z "${CPPFLAGS}" && export CPPFLAGS='-D__FreeBSD__=5'
-    fi
-    # try to silence warnings about functions ending in "64" being
-    # deprecated by forcing deployment target to Leopard:
-    saved_CFLAGS="${CFLAGS}"
-    CFLAGS="${CFLAGS} -mmacosx-version-min=10.5"
-    AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]],[[]])],
-                      [],[CFLAGS="${saved_CFLAGS}"])dnl
-    ;;
-esac
-
 # Checks for programs.
 if test "x${ac_cv_prog_cc_stdc}" = "x"; then
   test -z "${CC}" && test -z "${ac_cv_prog_cc_stdc}"
@@ -405,6 +389,8 @@ fi
 m4_ifdef([gl_UNISTD_MODULE_INDICATOR],[
   gl_UNISTD_MODULE_INDICATOR([unlinkat])dnl
 ])dnl
+dnl# unlocked-io module:
+gl_FUNC_GLIBC_UNLOCKED_IO
 
 # Keep autoscan from complaining about functions we replace.
 if test "x${ac_cv_func_euidaccess}" = "x"; then
@@ -617,6 +603,16 @@ if test "x${enable_python:-yes}" = "xyes"; then
   AX_PKG_SWIG([${swig_version}],[],[
     AC_MSG_ERROR([SWIG ${swig_version} or newer is needed for python])dnl
   ])dnl
+
+  dnl# We require python3, so unset PYTHONPATH if it contains python2:
+  if test "x`echo ${PYTHONPATH} | grep python2`" != "x"; then
+    export BACKUP_PYTHONPATH_FOR_PYTHON2="${PYTHONPATH}"
+    AC_SUBST([BACKUP_PYTHONPATH_FOR_PYTHON2])
+    unset PYTHONPATH
+  else
+    AC_SUBST([PYTHONPATH])
+    :
+  fi
   AM_PATH_PYTHON([3.0])dnl
 
   AC_ARG_VAR([PYTHON_INCLUDE],
@@ -642,7 +638,28 @@ else
   AC_MSG_NOTICE([You may configure with --enable-python-bindings ]dnl
 [if you want Python bindings.])dnl
 
+  # this hack breaks the python bindings, so only do it here:
+  case ${host_os} in
+    darwin*)
+      # dirty hack to get ./include/babeltrace/endian.h to use the correct
+      # header on darwin (freebsd should already define this by default):
+      if test "x${CPPFLAGS}" = "x"; then
+        test -z "${CPPFLAGS}" && export CPPFLAGS='-D__FreeBSD__=5'
+      fi
+      ;;
+  esac
 fi
+
+case ${host_os} in
+  darwin*)
+    # try to silence warnings about functions ending in "64" being
+    # deprecated by forcing deployment target to Leopard:
+    saved_CFLAGS="${CFLAGS}"
+    CFLAGS="${CFLAGS} -mmacosx-version-min=10.5"
+    AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]],[[]])],
+                      [],[CFLAGS="${saved_CFLAGS}"])dnl
+    ;;
+esac
 
 # Add some compiler flag checks near the end.
 AC_MSG_CHECKING([support for -Wl,--no-as-needed linker flag])
@@ -743,7 +760,6 @@ case ${host_vendor} in
   apple)
     # manywarnings.m4 is missing these Apple-gcc-specific flags:
     for apple_gcc_warnflag in \
-      -Wmost \
       -Wfour-char-constants \
       -Wnewline-eof \
       -Wshorten-64-to-32 \

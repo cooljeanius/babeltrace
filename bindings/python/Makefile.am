@@ -1,7 +1,8 @@
 ## automake Makefile for swig-based Python bindings to libbabeltrace
 
 babeltrace.i: babeltrace.i.in
-	$(SED) "s/BABELTRACE_VERSION_STR/Babeltrace $(PACKAGE_VERSION)/g" \		< $(top_srcdir)/bindings/python/babeltrace.i.in > \
+	$(SED) "s/BABELTRACE_VERSION_STR/Babeltrace $(PACKAGE_VERSION)/g" \
+		< $(top_srcdir)/bindings/python/babeltrace.i.in > \
 		$(top_builddir)/bindings/python/babeltrace.i
 
 AM_CFLAGS = $(PYTHON_INCLUDE) -I$(top_srcdir)/include/
@@ -27,4 +28,4 @@ babeltrace_wrap.c: babeltrace.i
 	$(SWIG) -python -Wall -I. -I$(top_srcdir)/include \
 		$(top_builddir)/bindings/python/babeltrace.i
 
-CLEANFILES = babeltrace.i babeltrace.py babeltrace_wrap.c
+CLEANFILES = babeltrace.i @MAINT@ babeltrace.py babeltrace_wrap.c

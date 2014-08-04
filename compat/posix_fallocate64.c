@@ -93,65 +93,70 @@ int __posix_fallocate64_l64(int fd, __off64_t offset, __off64_t len)
   struct stat64 st;
   struct statfs64 f;
 
-  /* `off64_t' is a signed type.  Therefore we can determine whether
-     OFFSET + LEN is too large if it is a negative value.  */
-  if (offset < 0 || len < 0)
+  /* `off64_t' is a signed type. Therefore we can determine whether
+   * OFFSET + LEN is too large if it is a negative value. */
+  if ((offset < 0) || (len < 0)) {
     return EINVAL;
-  if (offset + len < 0)
+  }
+  if ((offset + len) < 0) {
     return EFBIG;
+  }
 
-  /* First thing we have to make sure is that this is really a regular
-     file.  */
-  if (__fxstat64 (_STAT_VER, fd, &st) != 0)
+  /* First, we have to make sure this is really a regular file: */
+  if (__fxstat64(_STAT_VER, fd, &st) != 0) {
     return EBADF;
-  if (S_ISFIFO (st.st_mode))
+  }
+  if (S_ISFIFO(st.st_mode)) {
     return ESPIPE;
-  if (! S_ISREG (st.st_mode))
+  }
+  if (! S_ISREG(st.st_mode)) {
     return ENODEV;
+  }
 
-  if (len == 0)
-    {
-      if (st.st_size < offset)
-	{
-	  int ret = __ftruncate64 (fd, offset);
+  if (len == 0) {
+      if (st.st_size < offset) {
+          int ret = __ftruncate64(fd, offset);
 
-	  if (ret != 0)
-	    ret = errno;
-	  return ret;
-	}
+          if (ret != 0) {
+              ret = errno;
+          }
+          return ret;
+      }
       return 0;
-    }
+  }
 
   /* We have to know the block size of the filesystem to get at least some
-     sort of performance.  */
-  if (__fstatfs64 (fd, &f) != 0)
+   * sort of performance: */
+  if (__fstatfs64(fd, &f) != 0) {
     return errno;
+  }
 
-  /* Try to play safe.  */
-  if (f.f_bsize == 0)
+  /* Try to play safe: */
+  if (f.f_bsize == 0) {
     f.f_bsize = 512;
+  }
 
   /* Write something to every block.  */
-  for (offset += (len - 1) % f.f_bsize; len > 0; offset += f.f_bsize)
-    {
+  for ((offset += ((len - 1) % f.f_bsize)); (len > 0); (offset += f.f_bsize)) {
       len -= f.f_bsize;
 
-      if (offset < st.st_size)
-	{
-	  unsigned char c;
-	  ssize_t rsize = __libc_pread64 (fd, &c, 1, offset);
+      if (offset < st.st_size) {
+          unsigned char c;
+          ssize_t rsize = __libc_pread64(fd, &c, 1, offset);
 
-	  if (rsize < 0)
-	    return errno;
-	  /* If there is a non-zero byte, the block must have been
-	     allocated already.  */
-	  else if (rsize == 1 && c != 0)
-	    continue;
-	}
+          if (rsize < 0) {
+              return errno;
+          } else if ((rsize == 1) && (c != 0)) {
+              /* If there is a non-zero byte, the block must have been
+               * allocated already.  */
+              continue;
+          }
+      }
 
-      if (__libc_pwrite64 (fd, "", 1, offset) != 1)
-	return errno;
-    }
+      if (__libc_pwrite64(fd, "", 1, offset) != 1) {
+          return errno;
+      }
+  }
 
   return 0;
 }
@@ -176,10 +181,7 @@ compat_symbol(libc, __posix_fallocate64_l32, posix_fallocate64, GLIBC_2_2);
 # else
 strong_alias(__posix_fallocate64_l64, posix_fallocate64);
 # endif /* other _LIBC junk */
-#else /* outside of _LIBC: */
-# ifndef posix_fallocate64
-#  define posix_fallocate64 __posix_fallocate64_l64
-# endif /* !posix_fallocate64 */
+/* (moved "else" case to our fcntl.h header) */
 #endif /* _LIBC */
 
 /* EOF */
