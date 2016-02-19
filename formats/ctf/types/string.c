@@ -49,7 +49,7 @@ int ctf_string_read(struct bt_stream_pos *ppos, struct bt_definition *definition
 	if (pos->offset == EOF)
 		return -EFAULT;
 	/* Not counting \0. Counting in bits. */
-	max_len_bits = pos->packet_size - pos->offset - CHAR_BIT;
+	max_len_bits = (ssize_t)(pos->packet_size - pos->offset - CHAR_BIT);
 	if (max_len_bits < 0)
 		return -EFAULT;
 	/* Add \0, counting in bytes. */

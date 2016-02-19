@@ -107,7 +107,7 @@ AM_PATH_GLIB_2_0([2.22.0],[],
 
 # Check for gettext.
 AM_GNU_GETTEXT([external])dnl
-AM_GNU_GETTEXT_VERSION([0.19.2])dnl
+AM_GNU_GETTEXT_VERSION([0.19.7])dnl
 m4_ifdef([AM_LANGINFO_CODESET],[
   if test "x${am_cv_langinfo_codeset}" = "x"; then
     test -z "${am_cv_langinfo_codeset}"
@@ -229,7 +229,7 @@ AC_FUNC_STRFTIME
 AC_FUNC_STRNLEN
 AC_FUNC_VPRINTF
 AC_CHECK_FUNCS([__argz_count __argz_next __argz_stringify atexit \
-                be32toh be64toh bzero dup2 fchdir \
+                be32toh be64toh bzero dup2 fchdir floor \
                 ftruncate64 fstatfs fstatfs64 fstat64 fxstat64 \
                 getcwd gethostbyname gethostname gettimeofday \
                 htobe32 htobe64 iswprint localeconv localtime_r \
@@ -729,6 +729,8 @@ warnings_to_skip="${warnings_to_skip} -Waggregate-return"             # ???
 warnings_to_skip="${warnings_to_skip} -Wwrite-strings" # too many for tests
 warnings_to_skip="${warnings_to_skip} -Wshadow"     # too many with old gcc
 warnings_to_skip="${warnings_to_skip} -Wunreachable-code"     # often wrong
+warnings_to_skip="${warnings_to_skip} -Wtype-limits" # triggered on purpose
+warnings_to_skip="${warnings_to_skip} -Wbad-function-cast"             # ok
 if test "x${CLANGCC}" = "xyes"; then
   warnings_to_skip="${warnings_to_skip} -Wcast-align"   # I use casts a lot
   warnings_to_skip="${warnings_to_skip} -Wvariadic-macros"   # too pedantic
@@ -750,9 +752,18 @@ if test x${CFLAGS+set} = xset; then
 else
   warnings_to_skip="${warnings_to_skip} -Wunsafe-loop-optimizations"
 fi
+gl_WARN_ADD([-Wno-sign-compare])
+gl_WARN_ADD([-Wno-unused-parameter])
+gl_WARN_ADD([-Wno-shift-negative-value])
+gl_WARN_ADD([-Wno-type-limits])
+gl_WARN_ADD([-fno-strict-overflow])
 gl_MANYWARN_COMPLEMENT([actual_warnings_to_check],
                        [${warnings_to_check}],
                        [${warnings_to_skip}])
+gl_WARN_ADD([-Wshift-overflow=2])
+gl_WARN_ADD([-Wnull-dereference])
+gl_WARN_ADD([-Wduplicated-cond])
+gl_WARN_ADD([-Wmisleading-indentation])
 for fsf_gcc_warnflag in ${actual_warnings_to_check}; do
   gl_WARN_ADD([${fsf_gcc_warnflag}])
 done

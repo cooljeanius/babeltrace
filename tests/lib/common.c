@@ -26,6 +26,8 @@
 #include <babeltrace/context.h>
 #include <babeltrace/iterator.h>
 
+#include "common.h"
+
 struct bt_context *create_context_with_path(const char *path)
 {
 	struct bt_context *ctx;

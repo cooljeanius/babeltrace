@@ -1,0 +1,7 @@
+*.build
+build/*
+*.pbxindex
+*.pbxbtree
+*.pbxstrings
+*.pbxuser
+*.perspectivev3

@@ -59,6 +59,18 @@
 
 static uint64_t current_time = 42;
 
+/* prototypes: */
+extern void validate_metadata(char *, char *);
+extern void validate_trace(char *, char *);
+extern void append_simple_event(struct bt_ctf_stream_class *,
+								struct bt_ctf_stream *, struct bt_ctf_clock *);
+extern void append_complex_event(struct bt_ctf_stream_class *,
+								 struct bt_ctf_stream *, struct bt_ctf_clock *);
+extern void type_field_tests(void);
+extern void packet_resize_test(struct bt_ctf_stream_class *,
+							   struct bt_ctf_stream *, struct bt_ctf_clock *);
+
+/* actual functions: */
 void validate_metadata(char *parser_path, char *metadata_path)
 {
 	int ret = 0;
@@ -992,7 +1004,7 @@ void append_complex_event(struct bt_ctf_stream_class *stream_class,
 	bt_ctf_event_put(event);
 }
 
-void type_field_tests()
+void type_field_tests(void)
 {
 	struct bt_ctf_field *uint_12;
 	struct bt_ctf_field *int_16;

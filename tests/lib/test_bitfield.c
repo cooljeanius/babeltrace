@@ -32,6 +32,12 @@
 
 unsigned int glob;
 
+/* prototypes: */
+extern void fct(void);
+extern void run_test_unsigned(void);
+extern void run_test_signed(void);
+extern void run_test(void);
+
 /*
  * This function is only declared to show the size of a bitfield write in
  * objdump.

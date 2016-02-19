@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <config.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -30,9 +31,9 @@
 #  ifdef HAVE_SYS_STATVFS_H
 #   include <sys/statvfs.h>
 #  else
-#   if defined(__GNUC__) && !defined(__STRICT_ANSI__)
+#   if defined(__GNUC__) && !defined(__STRICT_ANSI__) && !defined(__PEDANTIC__)
 #    warning "posix_fallocate.c expects <sys/statfs.h> to be included."
-#   endif /* __GNUC__ && !__STRICT_ANSI__ */
+#   endif /* __GNUC__ && !__STRICT_ANSI__ && !__PEDANTIC__ */
 #  endif /* HAVE_SYS_STATVFS_H */
 # endif /* HAVE_SYS_MOUNT_H */
 #endif /* HAVE_SYS_STATFS_H */
@@ -74,7 +75,7 @@ int posix_fallocate(int fd, __off_t offset, __off_t len)
   if ((offset < 0) || (len < 0)) {
     return EINVAL;
   }
-  if ((offset + len) < 0) {
+  if ((offset + len) < 0L) {
     return EFBIG;
   }
 

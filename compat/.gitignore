@@ -9,3 +9,4 @@ warn-on-use.h
 unistd.h
 stdio.h
 string.h
+*.dSYM

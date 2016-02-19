@@ -29,6 +29,8 @@
 #include <babeltrace/babeltrace-internal.h>
 #include <babeltrace/align.h>
 
+#include "objstack.h"
+
 #define OBJSTACK_INIT_LEN		128
 #define OBJSTACK_POISON			0xcc
 

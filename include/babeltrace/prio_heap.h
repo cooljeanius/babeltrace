@@ -43,6 +43,9 @@ void check_heap(const struct ptr_heap *heap);
 static inline
 void check_heap(const struct ptr_heap *heap)
 {
+	if (heap == NULL) {
+		; /* ??? */
+	}
 }
 #endif
 

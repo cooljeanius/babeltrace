@@ -64,7 +64,8 @@ struct mmap_align *mmap_align(size_t length, int prot,
 	 * require a 2 pages page_aligned_length if the range crosses a page
 	 * boundary.
 	 */
-	mma->page_aligned_length = ALIGN(length + offset - page_aligned_offset, PAGE_SIZE);
+	mma->page_aligned_length =
+		(size_t)ALIGN(length + offset - page_aligned_offset, PAGE_SIZE);
 	mma->page_aligned_addr = mmap(NULL, mma->page_aligned_length,
 		prot, flags, fd, page_aligned_offset);
 	if (mma->page_aligned_addr == (void *) -1UL) {

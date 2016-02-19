@@ -37,12 +37,12 @@ pwrite (int fd, const void *buf, size_t nbyte, off_t offset)
      we can restore it later.  */
   int save_errno;
   ssize_t result;
-  off_t old_offset = __libc_lseek (fd, 0, SEEK_CUR);
-  if (old_offset == (off_t) -1)
+  off_t old_offset = __libc_lseek(fd, (off_t)0L, SEEK_CUR);
+  if (old_offset == (off_t)-1L)
     return -1;
 
-  /* Set to wanted position.  */
-  if (__libc_lseek (fd, offset, SEEK_SET) == (off_t) -1)
+  /* Set to wanted position: */
+  if (__libc_lseek(fd, offset, SEEK_SET) == (off_t)-1L)
     return -1;
 
   /* Write out the data.  */

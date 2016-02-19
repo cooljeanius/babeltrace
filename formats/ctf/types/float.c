@@ -262,7 +262,7 @@ int ctf_float_write(struct bt_stream_pos *ppos, struct bt_definition *definition
 	srcp.content_size = srcp.packet_size = sizeof(u) * CHAR_BIT;
 	switch (float_declaration->mantissa->len + 1) {
 	case FLT_MANT_DIG:
-		u.vf = float_definition->value;
+		u.vf = (float)float_definition->value;
 		break;
 	case DBL_MANT_DIG:
 		u.vd = float_definition->value;

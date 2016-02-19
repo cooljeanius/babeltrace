@@ -37,8 +37,7 @@ uint64_t clock_cycles_to_ns(struct ctf_clock *clock, uint64_t cycles)
 		/* 1GHZ freq, no need to scale cycles value */
 		return cycles;
 	} else {
-		return ((double)cycles * 1000000000.0f
-                / (double)clock->freq);
+		return (cycles * 1000000000.0f / clock->freq);
 	}
 }
 

@@ -55,7 +55,8 @@ int ctf_sequence_read(struct bt_stream_pos *ppos, struct bt_definition *definiti
 
 				g_string_assign(sequence_definition->string, "");
 				g_string_insert_len(sequence_definition->string,
-					0, (char *) ctf_get_pos_addr(pos), len);
+					(gssize)0, (const gchar *)ctf_get_pos_addr(pos),
+					(gssize)len);
 				if (!ctf_move_pos(pos, len * CHAR_BIT))
 					return -EFAULT;
 				return 0;
@@ -91,7 +92,7 @@ int ctf_sequence_write(struct bt_stream_pos *ppos, struct bt_definition *definit
 					return -EFAULT;
 
 				memcpy((char *) ctf_get_pos_addr(pos),
-					sequence_definition->string->str, len);
+					sequence_definition->string->str, (size_t)len);
 				if (!ctf_move_pos(pos, len * CHAR_BIT))
 					return -EFAULT;
 				return 0;

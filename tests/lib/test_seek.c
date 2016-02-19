@@ -39,6 +39,13 @@
 
 #define NR_TESTS	29
 
+/* prototypes: */
+extern void run_seek_begin(char *, uint64_t);
+extern void run_seek_last(char *, uint64_t);
+extern void run_seek_time_at_last(char *, uint64_t);
+extern void run_seek_cycles(char *, uint64_t, uint64_t);
+
+/* actual functions: */
 void run_seek_begin(char *path, uint64_t expected_begin)
 {
 	struct bt_context *ctx;

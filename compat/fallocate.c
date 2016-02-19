@@ -23,6 +23,9 @@
 /* FIXME: look at orig email for this file definition. */
 int rpl_fallocate (int fd, int mode, off_t offset, off_t len)
 {
+#if (defined(__APPLE__) && defined(__APPLE_CC__)) || defined(__MWERKS__)
+# pragma unused (fd, mode, offset, len)
+#endif /* (__APPLE__ && __APPLE_CC__) || __MWERKS__ */
   /* This is a valid replacement for missing glibc fallocate(),
      because code calling fallocate() must also handle this error
      in the case that the kernel or filesystem don't support this.  */

@@ -83,7 +83,7 @@ struct ctf_stream_pos {
 	int64_t data_offset;	/* offset of data in current packet */
 	uint64_t cur_index;	/* current index in packet index */
 	uint64_t last_events_discarded;	/* last known amount of event discarded */
-	void (*packet_seek)(struct bt_stream_pos *pos, size_t index,
+	void (*packet_seek)(struct bt_stream_pos *pos, size_t uindex,
 			int whence); /* function called to switch packet */
 
 	int dummy;		/* dummy position, for length calculation */
@@ -126,7 +126,7 @@ int ctf_sequence_read(struct bt_stream_pos *pos, struct bt_definition *definitio
 BT_HIDDEN
 int ctf_sequence_write(struct bt_stream_pos *pos, struct bt_definition *definition);
 
-void ctf_packet_seek(struct bt_stream_pos *pos, size_t index, int whence);
+void ctf_packet_seek(struct bt_stream_pos *pos, size_t uindex, int whence);
 
 int ctf_init_pos(struct ctf_stream_pos *pos, struct bt_trace_descriptor *trace,
 		int fd, int open_flags);

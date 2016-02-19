@@ -71,6 +71,13 @@ BT_HIDDEN
 int yyget_lineno(yyscan_t yyscanner);
 BT_HIDDEN
 char *yyget_text(yyscan_t yyscanner);
+BT_HIDDEN
+void yyerror(struct ctf_scanner *scanner, yyscan_t yyscanner, const char *str);
+BT_HIDDEN
+int yywrap(void);
+	
+extern void setstring(struct ctf_scanner *, YYSTYPE *, const char *);
+extern int import_string(struct ctf_scanner *, YYSTYPE *, const char *, char);
 
 static const char *node_type_to_str[] = {
 #define ENTRY(S)	[S] = #S,

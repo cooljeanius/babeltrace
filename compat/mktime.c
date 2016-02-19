@@ -213,9 +213,9 @@ ydhms_diff(long_int year1, long_int yday1, int hour1, int min1, int sec1,
   int intervening_leap_days = ((a4 - b4) - (a100 - b100) + (a400 - b400));
 
   /* Compute the desired time in time_t precision. Overflow might occur here: */
-  time_t tyear1 = year1;
+  time_t tyear1 = (time_t)year1;
   time_t years = (tyear1 - year0);
-  time_t days = ((365 * years) + yday1 - yday0 + intervening_leap_days);
+  time_t days = (time_t)((365 * years) + yday1 - yday0 + intervening_leap_days);
   time_t hours = ((24 * days) + hour1 - hour0);
   time_t minutes = ((60 * hours) + min1 - min0);
   time_t seconds = ((60 * minutes) + sec1 - sec0);

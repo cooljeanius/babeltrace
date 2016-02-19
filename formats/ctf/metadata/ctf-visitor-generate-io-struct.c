@@ -1031,7 +1031,7 @@ int ctf_enumerator_list_visit(FILE *fd, int depth,
 		last->u.s = end + 1;
 		bt_enum_signed_insert(enum_declaration, start, end, q);
 	} else {
-		uint64_t start, end;
+		uint64_t start, end = 0UL;
 		int nr_vals = 0;
 
 		bt_list_for_each_entry(iter, &enumerator->u.enumerator.values, siblings) {

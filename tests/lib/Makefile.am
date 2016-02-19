@@ -48,4 +48,5 @@ clean-local:
 			rm -f $(builddir)/$${script}; \
 		done; \
 	fi
+	-rm -rfv *.dSYM || rmdir *.dSYM
 .PHONY: clean-local

@@ -51,10 +51,10 @@ get_group_info (struct group_info *gi)
     return false;
 
   /* Avoid xnmalloc, as it goes awry when SIZE_MAX < n_group_slots.  */
-  if (xalloc_oversized (n_group_slots, sizeof *group))
-    xalloc_die ();
-  group = xmalloc (n_group_slots * sizeof *group);
-  n_groups = getgroups (n_group_slots, group);
+  if (xalloc_oversized((size_t)n_group_slots, sizeof(*group)))
+    xalloc_die();
+  group = xmalloc(n_group_slots * sizeof(*group));
+  n_groups = getgroups(n_group_slots, group);
 
   /* In case of error, the user loses. */
   if (n_groups < 0)

@@ -63,6 +63,11 @@
 #define NET4_URL_PREFIX	"net4://"
 #define NET6_URL_PREFIX	"net6://"
 
+extern int bt_context_add_traces_recursive(struct bt_context *, const char *,
+										   const char *,
+										   void (*)(struct bt_stream_pos *,
+													size_t, int));
+
 static char *opt_input_format, *opt_output_format;
 
 /*

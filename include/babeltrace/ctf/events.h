@@ -147,7 +147,7 @@ const struct bt_definition *bt_ctf_get_field(const struct bt_ctf_event *event,
  */
 const struct bt_definition *bt_ctf_get_index(const struct bt_ctf_event *event,
 		const struct bt_definition *field,
-		unsigned int index);
+		unsigned int uindex);
 
 /*
  * bt_ctf_field_name: returns the name of a field or NULL on error

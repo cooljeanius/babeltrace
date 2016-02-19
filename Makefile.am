@@ -17,7 +17,7 @@ pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = babeltrace.pc babeltrace-ctf.pc
 
 CLEANFILES = .DS_Store
-DISTCLEANFILES = .DS_Store *~ autoscan.log m4/.DS_Store m4/*~
+DISTCLEANFILES = .DS_Store *~ autoscan*.log m4/.DS_Store m4/*~
 DISTCLEANFILES += config/*~ po/.DS_Store po/*~
 
 distclean-local:

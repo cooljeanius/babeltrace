@@ -89,7 +89,7 @@ struct bt_declaration {
 	struct bt_definition *
 		(*definition_new)(struct bt_declaration *declaration,
 				  struct definition_scope *parent_scope,
-				  GQuark field_name, int index,
+				  GQuark field_name, int input_index,
 				  const char *root_name);
 	/*
 	 * definition_free called with definition ref is decremented to 0.
@@ -378,7 +378,7 @@ void bt_definition_unref(struct bt_definition *definition);
 struct declaration_integer *bt_integer_declaration_new(size_t len, int byte_order,
 				  int signedness, size_t alignment,
 				  int base, enum ctf_string_encoding encoding,
-				  struct ctf_clock *clock);
+				  struct ctf_clock *the_clock);
 uint64_t bt_get_unsigned_int(const struct bt_definition *field);
 int64_t bt_get_signed_int(const struct bt_definition *field);
 int bt_get_int_signedness(const struct bt_definition *field);
@@ -455,10 +455,10 @@ int bt_struct_declaration_lookup_field_index(struct declaration_struct *struct_d
  */
 struct declaration_field *
 bt_struct_declaration_get_field_from_index(struct declaration_struct *struct_declaration,
-					int index);
+					int the_index);
 struct bt_definition *
 bt_struct_definition_get_field_from_index(const struct definition_struct *struct_definition,
-				       int index);
+				       int the_index);
 int bt_struct_rw(struct bt_stream_pos *pos, struct bt_definition *definition);
 uint64_t bt_struct_declaration_len(const struct declaration_struct *struct_declaration);
 

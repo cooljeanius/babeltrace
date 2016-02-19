@@ -37,3 +37,4 @@ babeltrace-ctf.pc
 babeltrace-*.*.*/*
 tmpwrk*/*
 *.out
+*.dSYM

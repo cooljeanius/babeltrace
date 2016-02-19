@@ -72,6 +72,12 @@
 	((type) (a) > (type) (b) ? (type) (a) : (type) (b))
 #endif
 
+/* FIXME: move these prototypes for externed functions to a header: */
+extern int lttng_live_ctf_trace_assign(struct lttng_live_viewer_stream *,
+									   uint64_t);
+extern int lttng_live_create_viewer_session(struct lttng_live_ctx *);
+
+/* prototypes for static functions can stay here though: */
 static void ctf_live_packet_seek(struct bt_stream_pos *stream_pos,
 		size_t index, int whence);
 static void add_traces(gpointer key, gpointer value, gpointer user_data);
@@ -386,13 +392,13 @@ int lttng_live_ctf_trace_assign(struct lttng_live_viewer_stream *stream,
 	int ret = 0;
 
 	trace = g_hash_table_lookup(stream->session->ctf_traces,
-			(gpointer) ctf_trace_id);
+			(gpointer)(uintptr_t)ctf_trace_id);
 	if (!trace) {
 		trace = g_new0(struct lttng_live_ctf_trace, 1);
 		trace->ctf_trace_id = ctf_trace_id;
 		trace->streams = g_ptr_array_new();
 		g_hash_table_insert(stream->session->ctf_traces,
-				(gpointer) ctf_trace_id,
+				(gpointer)(uintptr_t)ctf_trace_id,
 				trace);
 	}
 	if (stream->metadata_flag)

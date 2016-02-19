@@ -11,4 +11,8 @@ elif [ -x "`which glibtoolize 2>/dev/null`" ]; then
   glibtoolize --force --copy --automake
 fi
 
-autoreconf -fvi -Wall
+if [ -z "${AUTORECONF}" ]; then
+  export AUTORECONF=autoreconf
+fi
+
+${AUTORECONF} -fvi -Wall

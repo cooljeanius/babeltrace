@@ -194,6 +194,8 @@ void *bt_heap_remove(struct ptr_heap *heap)
 	case 1:
 		(void) heap_set_len(heap, 0);
 		return heap->ptrs[0];
+	default:
+		break;
 	}
 	/* Shrink, replace the current max by previous last entry and heapify */
 	heap_set_len(heap, heap->len - 1);

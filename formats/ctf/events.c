@@ -89,6 +89,8 @@ const struct bt_definition *bt_ctf_get_top_level_scope(const struct bt_ctf_event
 		if (event->event_fields)
 			tmp = &event->event_fields->p;
 		break;
+	default:
+		break;
 	}
 	return tmp;
 
@@ -820,9 +822,11 @@ int bt_ctf_get_decl_fields(struct bt_ctf_event_decl *event_decl,
 		fields = event_decl->parent.stream->trace->packet_header_decl->fields;
 		fields_array = event_decl->packet_header_decl;
 		break;
+	default:
+		break;
 	}
 
-	for (i = 0; i < fields->len; i++) {
+	for (i = 0; (fields != NULL) && (i < fields->len); i++) {
 		g_ptr_array_add(fields_array,
 				&g_array_index(fields,
 					struct declaration_field, i));

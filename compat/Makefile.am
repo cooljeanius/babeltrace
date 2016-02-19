@@ -620,7 +620,7 @@ check_PROGRAMS += chdirlongtest
 chdirlongtest_SOURCES = chdir-long.c chdir-long.h closeout.h error.h
 chdirlongtest_LDADD = libcompat.la
 chdirlongtest_CPPFLAGS = -DTEST_CHDIR=1
-chdirlongtest_CFLAGS = $(chdirlongtest_CPPFLAGS) -O -ggdb3
+chdirlongtest_CFLAGS = $(chdirlongtest_CPPFLAGS) -O1 -ggdb3
 
 ## the program to test mktime:
 check_PROGRAMS += mktimetest
@@ -634,4 +634,5 @@ mktimetest_CFLAGS = $(mktimetest_CPPFLAGS) -Wall -Wextra -Os -ggdb3 -fwrapv
 test-clean: clean-checkPROGRAMS
 	-rm -fv $(mktimetest_OBJECTS)
 	-rm -fv $(check_PROGRAMS)
+	-rm -rfv *.dSYM || rmdir *.dSYM
 .PHONY: test-clean

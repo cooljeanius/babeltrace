@@ -39,6 +39,18 @@
 
 #include "events-private.h"
 
+/* FIXME: move these prototypes to a header: */
+extern struct bt_ctf_iter *bt_ctf_iter_create(struct bt_context *,
+											  const struct bt_iter_pos *,
+											  const struct bt_iter_pos *);
+extern void bt_ctf_iter_destroy(struct bt_ctf_iter *);
+extern struct bt_iter *bt_ctf_get_iter(struct bt_ctf_iter *);
+extern struct bt_ctf_event *bt_ctf_iter_read_event_flags(struct bt_ctf_iter *,
+														 int *);
+extern struct bt_ctf_event *bt_ctf_iter_read_event(struct bt_ctf_iter *);
+extern uint64_t bt_ctf_get_lost_events_count(struct bt_ctf_iter *iter);
+
+/* Actual functions now: */
 struct bt_ctf_iter *bt_ctf_iter_create(struct bt_context *ctx,
 		const struct bt_iter_pos *begin_pos,
 		const struct bt_iter_pos *end_pos)
@@ -191,3 +203,5 @@ uint64_t bt_ctf_get_lost_events_count(struct bt_ctf_iter *iter)
 
 	return iter->events_lost;
 }
+
+/* EOF */
