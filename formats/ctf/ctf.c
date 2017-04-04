@@ -2002,8 +2002,8 @@ int ctf_open_file_stream_read(struct ctf_trace *td, const char *path, int flags,
 		fprintf(stderr, "[error] Cannot allocate index filename\n");
 		goto error_def;
 	}
-	snprintf(index_name, strlen(path) + sizeof(INDEX_PATH),
-			INDEX_PATH, path);
+	snprintf(index_name, (strlen(path) + sizeof(INDEX_PATH)) * sizeof(char),
+			 INDEX_PATH, path);
 
 	if (faccessat(td->dirfd, index_name, O_RDONLY, flags) < 0) {
 		ret = create_stream_packet_index(td, file_stream);

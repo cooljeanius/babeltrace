@@ -480,7 +480,7 @@ const char *bt_ctf_get_enum_str(const struct bt_definition *field)
 		g_array_unref(array);
 		bt_ctf_field_set_error(-ENOENT);
 		return NULL;
-	}	
+	}
 	/* Return first string. Arbitrary choice. */
 	ret = g_quark_to_string(g_array_index(array, GQuark, 0));
 	g_array_unref(array);
@@ -831,8 +831,14 @@ int bt_ctf_get_decl_fields(struct bt_ctf_event_decl *event_decl,
 				&g_array_index(fields,
 					struct declaration_field, i));
 	}
-	ret_list = fields_array->pdata;
-	*count = fields->len;
+	if (fields_array != NULL) {
+		ret_list = fields_array->pdata;
+	}
+	if ((count != NULL) && (fields != NULL)) {
+		*count = fields->len;
+	} else {
+		(void)fields;
+	}
 
 end:
 	*list = (struct bt_ctf_field_decl const* const*) ret_list;

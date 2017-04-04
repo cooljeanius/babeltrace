@@ -76,21 +76,57 @@ if test ! -f "${srcdir}/formats/ctf/metadata/ctf-lexer.c"; then
 fi
 
 # Checks for libraries.
+if test "x${acl_cv_wl}" = "x"; then
+  test -z "${acl_cv_wl}" && export acl_cv_wl='-Wl,'
+fi
+AC_SUBST([acl_cv_wl])dnl
+
+AC_MSG_CHECKING([for linker flag to verify linked libraries have the correct architecture])
+pre_saved_LDFLAGS="${LDFLAGS}"
+LDFLAGS="${LDFLAGS} ${acl_cv_wl}-arch_errors_fatal"
+AC_LINK_IFELSE([AC_LANG_PROGRAM([[]],[[]])],
+               [LD_ARCHFLAGS="${acl_cv_wl}-arch_errors_fatal"],[])
+LDFLAGS="${pre_saved_LDFLAGS}"
+if test "x${LD_ARCHFLAGS}" != "x"; then
+  test -n "${LD_ARCHFLAGS}"
+  AC_MSG_RESULT([${LD_ARCHFLAGS}])
+  if test "x${ERROR_ON_WARNING}" = "xyes"; then
+    if test "x${WARN_LDFLAGS}" != "x"; then
+      test -n "${WARN_LDFLAGS}" && WARN_LDFLAGS="${WARN_LDFLAGS} ${LD_ARCHFLAGS}"
+    else
+      test -z "${WARN_LDFLAGS}" && WARN_LDFLAGS="${LD_ARCHFLAGS}"
+    fi
+  fi
+  AC_SUBST([LD_ARCHFLAGS])dnl
+  ## that should be all we need to do with them for now...
+else
+  test -z "${LD_ARCHFLAGS}"
+  AC_MSG_RESULT([none])
+fi
 LT_LIB_M
 AC_CHECK_LIB([iconv],[iconv],[],[
   AC_CHECK_LIB([iconv],[libiconv],[],[
+    PRE_ICONV_LDFLAGS="${LDFLAGS}"
+    LDFLAGS="${LDFLAGS} ${LD_ARCHFLAGS}"
     AC_CHECK_LIB([iconv],[main],[],[])dnl
+    LDFLAGS="${PRE_ICONV_LDFLAGS}"
   ])dnl
 ])dnl
 AC_CHECK_LIB([intl],[gettext],[],[
+  PRE_INTL_LDFLAGS="${LDFLAGS}"
+  LDFLAGS="${LDFLAGS} ${LD_ARCHFLAGS}"
   AC_CHECK_LIB([intl],[main],[],[])dnl
+  LDFLAGS="${PRE_INTL_LDFLAGS}"
 ])dnl
 
 # the first two functions checked in pthreads apparently can be used
 # as a replacement for thread-local storage on older versions of darwin:
 AC_CHECK_LIB([pthread],[pthread_getspecific],[],[
   AC_CHECK_LIB([pthread],[pthread_setspecific],[],[
+    PRE_PTHREAD_LDFLAGS="${LDFLAGS}"
+    LDFLAGS="${LDFLAGS} ${LD_ARCHFLAGS}"
     AC_CHECK_LIB([pthread],[main],[],[])dnl
+    LDFLAGS="${PRE_PTHREAD_LDFLAGS}"
   ])dnl
 ])dnl
 dnl# other threading checks:
@@ -760,10 +796,34 @@ gl_WARN_ADD([-fno-strict-overflow])
 gl_MANYWARN_COMPLEMENT([actual_warnings_to_check],
                        [${warnings_to_check}],
                        [${warnings_to_skip}])
-gl_WARN_ADD([-Wshift-overflow=2])
+gl_COMPILER_OPTION_IF([-Wshift-overflow=2],
+                      [WARN_CFLAGS="${WARN_CFLAGS} -Wshift-overflow=2"],
+                      [gl_WARN_ADD([-Wshift-overflow])])
 gl_WARN_ADD([-Wnull-dereference])
 gl_WARN_ADD([-Wduplicated-cond])
 gl_WARN_ADD([-Wmisleading-indentation])
+gl_WARN_ADD([-Wdangling-else])
+gl_WARN_ADD([-Wduplicate-decl-specifier])
+gl_WARN_ADD([-Wmemset-elt-size])
+gl_WARN_ADD([-Wswitch-unreachable])
+gl_WARN_ADD([-Wimplicit-fallthrough])
+gl_COMPILER_OPTION_IF([-Wformat-overflow=2],
+                      [WARN_CFLAGS="${WARN_CFLAGS} -Wformat-overflow=2"],
+                      [gl_WARN_ADD([-Wformat-overflow])])
+gl_COMPILER_OPTION_IF([-Wformat-truncation=2],
+                      [WARN_CFLAGS="${WARN_CFLAGS} -Wformat-truncation=2"],
+                      [gl_WARN_ADD([-Wformat-truncation])])
+gl_COMPILER_OPTION_IF([-Wstringop-overflow=2],
+                      [WARN_CFLAGS="${WARN_CFLAGS} -Wstringop-overflow=2"],
+                      [gl_WARN_ADD([-Wstringop-overflow])])
+gl_WARN_ADD([-Wexpansion-to-defined])
+gl_WARN_ADD([-Wrestrict])
+gl_WARN_ADD([-Wint-in-bool-context])
+gl_WARN_ADD([-Wpointer-compare])
+gl_WARN_ADD([-Wbool-operation])
+gl_WARN_ADD([-Walloc-zero])
+gl_WARN_ADD([-Wpsabi])
+gl_WARN_ADD([-Wbuiltin-declaration-mismatch])
 for fsf_gcc_warnflag in ${actual_warnings_to_check}; do
   gl_WARN_ADD([${fsf_gcc_warnflag}])
 done

@@ -75,7 +75,7 @@ BT_HIDDEN
 void yyerror(struct ctf_scanner *scanner, yyscan_t yyscanner, const char *str);
 BT_HIDDEN
 int yywrap(void);
-	
+
 extern void setstring(struct ctf_scanner *, YYSTYPE *, const char *);
 extern int import_string(struct ctf_scanner *, YYSTYPE *, const char *, char);
 
@@ -878,12 +878,12 @@ static int set_parent_node(struct ctf_node *node,
 		return reparent_typedef(node, parent);
 	case NODE_TYPEALIAS_TARGET:
 		if (parent->type == NODE_TYPEALIAS)
-			parent->u.typealias.target = node;
+			parent->u.typealias.target = node; /* FIXME: fallthrough? */
 		else
 			return -EINVAL;
 	case NODE_TYPEALIAS_ALIAS:
 		if (parent->type == NODE_TYPEALIAS)
-			parent->u.typealias.alias = node;
+			parent->u.typealias.alias = node; /* FIXME: fallthrough? */
 		else
 			return -EINVAL;
 	case NODE_TYPEALIAS:
@@ -947,12 +947,12 @@ void yyerror(struct ctf_scanner *scanner, yyscan_t yyscanner, const char *str)
 		"token \"%s\": %s\n",
 		yyget_text(scanner->scanner), str);
 }
- 
+
 BT_HIDDEN
 int yywrap(void)
 {
 	return 1;
-} 
+}
 
 #define reparent_error(scanner, str)				\
 do {								\
@@ -1112,7 +1112,7 @@ void ctf_scanner_free(struct ctf_scanner *scanner)
 %type <n> direct_declarator
 %type <n> type_declarator
 %type <n> direct_type_declarator
-%type <n> pointer	
+%type <n> pointer
 %type <n> ctf_assignment_expression_list
 %type <n> ctf_assignment_expression
 
@@ -1293,10 +1293,12 @@ unary_expression:
 		{
 			$$ = $2;
 			if ($$->u.unary_expression.type == UNARY_UNSIGNED_CONSTANT) {
+				/* Make it signed since it is not already: */
 				$$->u.unary_expression.type = UNARY_SIGNED_CONSTANT;
 				$$->u.unary_expression.u.signed_constant =
 					-($$->u.unary_expression.u.unsigned_constant);
-			} else if ($$->u.unary_expression.type == UNARY_UNSIGNED_CONSTANT) {
+			} else if ($$->u.unary_expression.type == UNARY_SIGNED_CONSTANT) {
+				/* Already signed so just do the assignment part: */
 				$$->u.unary_expression.u.signed_constant =
 					-($$->u.unary_expression.u.signed_constant);
 			} else {
@@ -2471,7 +2473,7 @@ direct_type_declarator:
 		}
 	;
 
-pointer:	
+pointer:
 		STAR
 		{
 			$$ = make_node(scanner, NODE_POINTER);

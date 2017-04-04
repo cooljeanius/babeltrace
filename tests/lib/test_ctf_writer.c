@@ -76,6 +76,7 @@ void validate_metadata(char *parser_path, char *metadata_path)
 	int ret = 0;
 	char parser_output_path[] = "/tmp/parser_output_XXXXXX";
 	int parser_output_fd = -1, metadata_fd = -1;
+	pid_t pid;
 
 	if (!metadata_path) {
 		ret = -1;
@@ -93,7 +94,7 @@ void validate_metadata(char *parser_path, char *metadata_path)
 		goto result;
 	}
 
-	pid_t pid = fork();
+	pid = fork();
 	if (pid) {
 		int status = 0;
 		waitpid(pid, &status, 0);
@@ -192,6 +193,7 @@ void validate_trace(char *parser_path, char *trace_path)
 	int ret = 0;
 	char babeltrace_output_path[] = "/tmp/babeltrace_output_XXXXXX";
 	int babeltrace_output_fd = -1;
+	pid_t pid;
 
 	if (!trace_path) {
 		ret = -1;
@@ -207,7 +209,7 @@ void validate_trace(char *parser_path, char *trace_path)
 		goto result;
 	}
 
-	pid_t pid = fork();
+	pid = fork();
 	if (pid) {
 		int status = 0;
 		waitpid(pid, &status, 0);

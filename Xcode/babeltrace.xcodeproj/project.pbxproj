@@ -948,7 +948,14 @@
 			isa = PBXProject;
 			buildConfigurationList = 619D58941C7679F700F07C54 /* Build configuration list for PBXProject "babeltrace" */;
 			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
 			hasScannedForEncodings = 0;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
 			mainGroup = 619D588F1C7679F700F07C54;
 			productRefGroup = 619D5B431C76804500F07C54 /* Products */;
 			projectDirPath = "";

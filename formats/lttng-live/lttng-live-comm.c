@@ -617,6 +617,10 @@ int append_metadata(struct lttng_live_ctx *ctx,
 		goto error;
 	}
 
+	if (metadata_buf == NULL) {
+		goto error;
+	}
+
 	metadata = viewer_stream->ctf_trace->metadata_stream;
 	metadata->ctf_trace->metadata_fp =
 		babeltrace_fmemopen(metadata_buf,
@@ -691,9 +695,9 @@ retry:
 		goto error;
 	}
 	if (ret_len != sizeof(rp)) {
-		fprintf(stderr, "[error] get_data_packet: expected %" PRId64
-				", received %" PRId64 "\n", sizeof(rp),
-				ret_len);
+		fprintf(stderr, "[error] get_data_packet: expected %" PRIu64
+				", received %" PRId64 "\n", (uint64_t)sizeof(rp),
+				(int64_t)ret_len);
 		goto error;
 	}
 
@@ -1415,6 +1419,12 @@ void add_traces(gpointer key, gpointer value, gpointer user_data)
 				goto end_free;
 			}
 
+			if (metadata_buf == NULL) {
+				fprintf(stderr, "[error] NULL metadata\n");
+				ret = -1;
+				goto end_free;
+			}
+
 			trace->metadata_fp = babeltrace_fmemopen(metadata_buf,
 					stream->metadata_len, "rb");
 			if (!trace->metadata_fp) {
@@ -1628,7 +1638,7 @@ int lttng_live_read(struct lttng_live_ctx *ctx)
 
 	for (i = 0; i < ctx->session_ids->len; i++) {
 		id = g_array_index(ctx->session_ids, uint64_t, i);
-		printf_verbose("Attaching to session %lu\n", id);
+		printf_verbose("Attaching to session %"PRIu64"\n", id);
 		ret = lttng_live_attach_session(ctx, id);
 		printf_verbose("Attaching session returns %d\n", ret);
 		if (ret < 0) {
