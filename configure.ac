@@ -143,7 +143,7 @@ AM_PATH_GLIB_2_0([2.22.0],[],
 
 # Check for gettext.
 AM_GNU_GETTEXT([external])dnl
-AM_GNU_GETTEXT_VERSION([0.19.7])dnl
+AM_GNU_GETTEXT_VERSION([0.19.8])dnl
 m4_ifdef([AM_LANGINFO_CODESET],[
   if test "x${am_cv_langinfo_codeset}" = "x"; then
     test -z "${am_cv_langinfo_codeset}"
@@ -341,6 +341,15 @@ fi
 m4_ifdef([gl_UNISTD_MODULE_INDICATOR],[
   gl_UNISTD_MODULE_INDICATOR([group-member])dnl
 ])dnl
+dnl# lstat module:
+gl_FUNC_LSTAT
+if test ${REPLACE_LSTAT} = 1; then
+  AC_LIBOBJ([lstat])
+  gl_PREREQ_LSTAT
+fi
+m4_ifdef([gl_SYS_STAT_MODULE_INDICATOR],[
+  gl_SYS_STAT_MODULE_INDICATOR([lstat])dnl
+])dnl
 dnl# malloc modules:
 AC_DEFUN([gl_MALLOC_MODULES],[
   AC_REQUIRE([gl_FUNC_MALLOC_GNU])dnl
@@ -359,8 +368,11 @@ m4_ifdef([gl_STRING_MODULE_INDICATOR],[
 dnl# we check mmap stuff elsewhere, but let us try the gnulib checks for
 dnl# mmap stuff as well here:
 gl_FUNC_MMAP_ANON
-dnl# openat module:
+dnl# openat modules:
 gl_FUNC_OPENAT
+m4_ifdef([gl_OPENAT_SAFER],[
+  gl_OPENAT_SAFER
+])
 if test ${HAVE_OPENAT} = 0 || test ${REPLACE_OPENAT} = 1; then
   AC_LIBOBJ([openat])dnl
   AC_LIBOBJ([openat-proc])dnl
@@ -368,6 +380,7 @@ if test ${HAVE_OPENAT} = 0 || test ${REPLACE_OPENAT} = 1; then
 fi
 m4_ifdef([gl_MODULE_INDICATOR],[
   gl_MODULE_INDICATOR([openat]) dnl# for lib/getcwd.c (if it exists)
+  gl_MODULE_INDICATOR([openat-safer])dnl
 ])dnl
 m4_ifdef([gl_FCNTL_MODULE_INDICATOR],[
   gl_FCNTL_MODULE_INDICATOR([openat])dnl

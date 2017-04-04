@@ -572,7 +572,7 @@ noinst_HEADERS += exitfail.h
 ## localcharset sources:
 libcompat_la_SOURCES += localcharset.h localcharset.c
 
-## openat sources:
+## openat[-safer] sources:
 libcompat_la_SOURCES += openat-safer.c
 libcompat_la_SOURCES += openat-die.c
 EXTRA_DIST += openat-priv.h openat-proc.c openat.h pathmax.h

@@ -672,9 +672,9 @@ BABELTRACE_BUILD_WITH_LIBUUID_FALSE
 BABELTRACE_BUILD_WITH_LIBUUID_TRUE
 BABELTRACE_BUILD_WITH_MINGW_FALSE
 BABELTRACE_BUILD_WITH_MINGW_TRUE
+REPLACE_MALLOC
 REPLACE_LSTAT
 HAVE_LSTAT
-REPLACE_MALLOC
 LIB_EACCESS
 GL_GENERATE_ALLOCA_H_FALSE
 GL_GENERATE_ALLOCA_H_TRUE
@@ -3243,13 +3243,13 @@ as_fn_append ac_header_list " stdio_ext.h"
 as_fn_append ac_func_list " __fpending"
 as_fn_append ac_func_list " ftruncate"
 as_fn_append ac_func_list " getdelim"
+as_fn_append ac_func_list " lstat"
 as_fn_append ac_func_list " openat"
 as_fn_append ac_header_list " sys/falloc.h"
 as_fn_append ac_header_list " linux/falloc.h"
 as_fn_append ac_func_list " pread"
 as_fn_append ac_func_list " pwrite"
 as_fn_append ac_func_list " strndup"
-as_fn_append ac_func_list " lstat"
 as_fn_append ac_header_list " direct.h"
 as_fn_append ac_header_list " io.h"
 as_fn_append ac_func_list " unlinkat"
@@ -21428,16 +21428,21 @@ else
 /* end confdefs.h.  */
 
 #include <libintl.h>
-$gt_revision_test_code
+#ifndef __GNU_GETTEXT_SUPPORTED_REVISION
 extern int _nl_msg_cat_cntr;
 extern int *_nl_domain_bindings;
+#define __GNU_GETTEXT_SYMBOL_EXPRESSION (_nl_msg_cat_cntr + *_nl_domain_bindings)
+#else
+#define __GNU_GETTEXT_SYMBOL_EXPRESSION 0
+#endif
+$gt_revision_test_code
 
 int
 main ()
 {
 
 bindtextdomain ("", "");
-return * gettext ("")$gt_expression_test_code + _nl_msg_cat_cntr + *_nl_domain_bindings
+return * gettext ("")$gt_expression_test_code + __GNU_GETTEXT_SYMBOL_EXPRESSION
 
   ;
   return 0;
@@ -22190,20 +22195,25 @@ else
 /* end confdefs.h.  */
 
 #include <libintl.h>
-$gt_revision_test_code
+#ifndef __GNU_GETTEXT_SUPPORTED_REVISION
 extern int _nl_msg_cat_cntr;
 extern
 #ifdef __cplusplus
 "C"
 #endif
 const char *_nl_expand_alias (const char *);
+#define __GNU_GETTEXT_SYMBOL_EXPRESSION (_nl_msg_cat_cntr + *_nl_expand_alias (""))
+#else
+#define __GNU_GETTEXT_SYMBOL_EXPRESSION 0
+#endif
+$gt_revision_test_code
 
 int
 main ()
 {
 
 bindtextdomain ("", "");
-return * gettext ("")$gt_expression_test_code + _nl_msg_cat_cntr + *_nl_expand_alias ("")
+return * gettext ("")$gt_expression_test_code + __GNU_GETTEXT_SYMBOL_EXPRESSION
 
   ;
   return 0;
@@ -22222,20 +22232,25 @@ rm -f core conftest.err conftest.$ac_objext \
 /* end confdefs.h.  */
 
 #include <libintl.h>
-$gt_revision_test_code
+#ifndef __GNU_GETTEXT_SUPPORTED_REVISION
 extern int _nl_msg_cat_cntr;
 extern
 #ifdef __cplusplus
 "C"
 #endif
 const char *_nl_expand_alias (const char *);
+#define __GNU_GETTEXT_SYMBOL_EXPRESSION (_nl_msg_cat_cntr + *_nl_expand_alias (""))
+#else
+#define __GNU_GETTEXT_SYMBOL_EXPRESSION 0
+#endif
+$gt_revision_test_code
 
 int
 main ()
 {
 
 bindtextdomain ("", "");
-return * gettext ("")$gt_expression_test_code + _nl_msg_cat_cntr + *_nl_expand_alias ("")
+return * gettext ("")$gt_expression_test_code + __GNU_GETTEXT_SYMBOL_EXPRESSION
 
   ;
   return 0;
@@ -27397,6 +27412,99 @@ $as_echo "#define GNULIB_TEST_GROUP_MEMBER 1" >>confdefs.h
 
 
 
+
+          { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether lstat correctly handles trailing slash" >&5
+$as_echo_n "checking whether lstat correctly handles trailing slash... " >&6; }
+if ${gl_cv_func_lstat_dereferences_slashed_symlink+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  rm -f conftest.sym conftest.file
+     echo >conftest.file
+     if test "${as_ln_s}" = "ln -s" && ln -s conftest.file conftest.sym; then
+       if test "$cross_compiling" = yes; then :
+  case "${host_os}" in
+                    # Guess yes on glibc systems.
+            *-gnu*) gl_cv_func_lstat_dereferences_slashed_symlink="guessing yes" ;;
+                    # If we do NOT know, then assume the worst.
+            *)      gl_cv_func_lstat_dereferences_slashed_symlink="guessing no" ;;
+          esac
+
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+$ac_includes_default
+int
+main ()
+{
+struct stat sbuf;
+              /* Linux will dereference the symlink and fail, as required
+               * by POSIX. That is better in the sense that it means that
+               * we will not have to compile and use the lstat wrapper. */
+              return (lstat("conftest.sym/", &sbuf) == 0);
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_run "$LINENO"; then :
+  gl_cv_func_lstat_dereferences_slashed_symlink=yes
+else
+  gl_cv_func_lstat_dereferences_slashed_symlink=no
+fi
+rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
+  conftest.$ac_objext conftest.beam conftest.$ac_ext
+fi
+
+     else
+       # If the 'ln -s' command failed, then we probably do NOT even
+       # have an lstat function.
+       gl_cv_func_lstat_dereferences_slashed_symlink="guessing no"
+     fi
+     rm -f conftest.sym conftest.file
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $gl_cv_func_lstat_dereferences_slashed_symlink" >&5
+$as_echo "$gl_cv_func_lstat_dereferences_slashed_symlink" >&6; }
+  case "${gl_cv_func_lstat_dereferences_slashed_symlink}" in
+    *yes)
+
+cat >>confdefs.h <<_ACEOF
+#define LSTAT_FOLLOWS_SLASHED_SYMLINK 1
+_ACEOF
+
+      ;;
+  esac
+
+
+
+    HAVE_LSTAT=1;
+    REPLACE_LSTAT=0;
+
+  if test "x${ac_cv_func_lstat}" = "xyes"; then
+
+    case "${gl_cv_func_lstat_dereferences_slashed_symlink}" in
+      *no)
+        REPLACE_LSTAT=1
+        ;;
+    esac
+  else
+    HAVE_LSTAT=0
+  fi
+
+if test ${REPLACE_LSTAT} = 1; then
+  case " $LIBOBJS " in
+  *" lstat.$ac_objext "* ) ;;
+  *) LIBOBJS="$LIBOBJS lstat.$ac_objext"
+ ;;
+esac
+
+
+
+  :
+
+fi
+
+
     if test "x${REPLACE_MALLOC}" = "x"; then
       test -z "${REPLACE_MALLOC}" && export REPLACE_MALLOC=0;
     fi
@@ -27628,69 +27736,6 @@ $as_echo "#define HAVE_MAP_ANONYMOUS 1" >>confdefs.h
 
 
 
-          { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether lstat correctly handles trailing slash" >&5
-$as_echo_n "checking whether lstat correctly handles trailing slash... " >&6; }
-if ${gl_cv_func_lstat_dereferences_slashed_symlink+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  rm -f conftest.sym conftest.file
-     echo >conftest.file
-     if test "${as_ln_s}" = "ln -s" && ln -s conftest.file conftest.sym; then
-       if test "$cross_compiling" = yes; then :
-  case "${host_os}" in
-                    # Guess yes on glibc systems.
-            *-gnu*) gl_cv_func_lstat_dereferences_slashed_symlink="guessing yes" ;;
-                    # If we do NOT know, then assume the worst.
-            *)      gl_cv_func_lstat_dereferences_slashed_symlink="guessing no" ;;
-          esac
-
-else
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-$ac_includes_default
-int
-main ()
-{
-struct stat sbuf;
-              /* Linux will dereference the symlink and fail, as required
-               * by POSIX. That is better in the sense that it means that
-               * we will not have to compile and use the lstat wrapper. */
-              return (lstat("conftest.sym/", &sbuf) == 0);
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_run "$LINENO"; then :
-  gl_cv_func_lstat_dereferences_slashed_symlink=yes
-else
-  gl_cv_func_lstat_dereferences_slashed_symlink=no
-fi
-rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
-  conftest.$ac_objext conftest.beam conftest.$ac_ext
-fi
-
-     else
-       # If the 'ln -s' command failed, then we probably do NOT even
-       # have an lstat function.
-       gl_cv_func_lstat_dereferences_slashed_symlink="guessing no"
-     fi
-     rm -f conftest.sym conftest.file
-
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $gl_cv_func_lstat_dereferences_slashed_symlink" >&5
-$as_echo "$gl_cv_func_lstat_dereferences_slashed_symlink" >&6; }
-  case "${gl_cv_func_lstat_dereferences_slashed_symlink}" in
-    *yes)
-
-cat >>confdefs.h <<_ACEOF
-#define LSTAT_FOLLOWS_SLASHED_SYMLINK 1
-_ACEOF
-
-      ;;
-  esac
-
-
 
 
 
@@ -27706,6 +27751,7 @@ _ACEOF
     HAVE_OPENAT=0
     ;;
   esac
+
 
 if test ${HAVE_OPENAT} = 0 || test ${REPLACE_OPENAT} = 1; then
   case " $LIBOBJS " in
@@ -27759,6 +27805,12 @@ fi
 
 cat >>confdefs.h <<_ACEOF
 #define GNULIB_OPENAT 1
+_ACEOF
+
+
+
+cat >>confdefs.h <<_ACEOF
+#define GNULIB_OPENAT_SAFER 1
 _ACEOF
 
 
@@ -28355,24 +28407,6 @@ fi
        GNULIB_STRNLEN=1
 
 $as_echo "#define GNULIB_TEST_STRNLEN 1" >>confdefs.h
-
-
-
-
-
-    HAVE_LSTAT=1;
-    REPLACE_LSTAT=0;
-
-  if test "x${ac_cv_func_lstat}" = "xyes"; then
-
-    case "${gl_cv_func_lstat_dereferences_slashed_symlink}" in
-      *no)
-        REPLACE_LSTAT=1
-        ;;
-    esac
-  else
-    HAVE_LSTAT=0
-  fi
 
 
 

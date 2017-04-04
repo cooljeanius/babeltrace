@@ -52,6 +52,11 @@
    present (i.e. if we can use openat). */
 #undef GNULIB_OPENAT
 
+/* Define to a C preprocessor expression (for openat-safer) that evaluates to
+   1 or 0, depending on whether the gnulib module openat-safer shall be
+   considered to be present (i.e. if we can use openat-safer). */
+#undef GNULIB_OPENAT_SAFER
+
 /* Define to a C preprocessor expression (for scanf) that evaluates to 1 or 0,
    depending on whether the gnulib module scanf shall be considered to be
    present (i.e. if we can use scanf). */
