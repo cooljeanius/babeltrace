@@ -205,7 +205,7 @@ extern void __obstack_free(struct obstack *obstack, void *block);
    more memory.  This can be set to a user defined function which
    should either abort gracefully or use longjump - but shouldn't
    return.  The default action is to print a message and abort.  */
-extern void (*obstack_alloc_failed_handler) (void);
+extern _Noreturn void (*obstack_alloc_failed_handler)(void);
 
 /* Exit value used when 'print_and_abort' is used.  */
 extern int obstack_exit_failure;

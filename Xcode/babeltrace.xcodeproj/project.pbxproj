@@ -316,9 +316,9 @@
 		619D5ADA1C767D6D00F07C54 /* xalloc-oversized.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "xalloc-oversized.h"; sourceTree = "<group>"; };
 		619D5ADB1C767D6D00F07C54 /* xalloc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xalloc.h; sourceTree = "<group>"; };
 		619D5ADC1C767D6D00F07C54 /* xmalloc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = xmalloc.c; sourceTree = "<group>"; };
-		619D5B421C76804500F07C54 /* liblibcompat.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblibcompat.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		619D5C3C1C768A0E00F07C54 /* liblibprio_heap.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblibprio_heap.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		619D5C761C768BDB00F07C54 /* liblibctf-types.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "liblibctf-types.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		619D5B421C76804500F07C54 /* libcompat.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libcompat.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		619D5C3C1C768A0E00F07C54 /* libprio_heap.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libprio_heap.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		619D5C761C768BDB00F07C54 /* libctf-types.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libctf-types.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -824,9 +824,9 @@
 		619D5B431C76804500F07C54 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				619D5B421C76804500F07C54 /* liblibcompat.a */,
-				619D5C3C1C768A0E00F07C54 /* liblibprio_heap.a */,
-				619D5C761C768BDB00F07C54 /* liblibctf-types.a */,
+				619D5B421C76804500F07C54 /* libcompat.a */,
+				619D5C3C1C768A0E00F07C54 /* libprio_heap.a */,
+				619D5C761C768BDB00F07C54 /* libctf-types.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -904,7 +904,7 @@
 			);
 			name = libcompat;
 			productName = libcompat;
-			productReference = 619D5B421C76804500F07C54 /* liblibcompat.a */;
+			productReference = 619D5B421C76804500F07C54 /* libcompat.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		619D5C3B1C768A0E00F07C54 /* libprio_heap */ = {
@@ -921,7 +921,7 @@
 			);
 			name = libprio_heap;
 			productName = libprio_heap;
-			productReference = 619D5C3C1C768A0E00F07C54 /* liblibprio_heap.a */;
+			productReference = 619D5C3C1C768A0E00F07C54 /* libprio_heap.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		619D5C751C768BDB00F07C54 /* libctf-types */ = {
@@ -938,7 +938,7 @@
 			);
 			name = "libctf-types";
 			productName = "libctf-types";
-			productReference = 619D5C761C768BDB00F07C54 /* liblibctf-types.a */;
+			productReference = 619D5C761C768BDB00F07C54 /* libctf-types.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -1104,6 +1104,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = NO;
+				EXECUTABLE_PREFIX = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -1137,6 +1138,7 @@
 					"-Wformat=2",
 					"-Wstrict-prototypes",
 					"-Wold-style-definition",
+					"-Wmissing-noreturn",
 					"-Wswitch-default",
 				);
 			};
@@ -1148,6 +1150,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				EXECUTABLE_PREFIX = "";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_MODEL_TUNING = G5;
 				INSTALL_PATH = /usr/local/lib;
@@ -1162,6 +1165,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = NO;
+				EXECUTABLE_PREFIX = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -1203,6 +1207,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				EXECUTABLE_PREFIX = "";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_MODEL_TUNING = G5;
 				INSTALL_PATH = /usr/local/lib;
@@ -1217,6 +1222,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = NO;
+				EXECUTABLE_PREFIX = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -1264,6 +1270,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				EXECUTABLE_PREFIX = "";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_MODEL_TUNING = G5;
 				INSTALL_PATH = /usr/local/lib;
