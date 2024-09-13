@@ -5,3 +5,6 @@ build/*
 *.pbxstrings
 *.pbxuser
 *.perspectivev3
+*.xcuserstate
+*/xcuserdata/*
+*.xcuserdatad

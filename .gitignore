@@ -38,6 +38,3 @@ babeltrace-*.*.*/*
 tmpwrk*/*
 *.out
 *.dSYM
-*.xcuserstate
-*/xcuserdata/*
-*.xcuserdatad
