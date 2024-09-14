@@ -31809,7 +31809,7 @@ printf "%s\n" "#define USE_UNLOCKED_IO 1" >>confdefs.h
 
 # Keep autoscan from complaining about functions we replace.
 if test "x${ac_cv_func_euidaccess}" = "x"; then
-  test -z "${ac_cv_func_euidaccess}"
+  test -z "${ac_cv_func_euidaccess}" || unset ac_cv_func_euidaccess
   ac_fn_c_check_func "$LINENO" "euidaccess" "ac_cv_func_euidaccess"
 if test "x$ac_cv_func_euidaccess" = xyes
 then :
@@ -31819,7 +31819,7 @@ fi
 
 fi
 if test "x${ac_cv_func___fpending}" = "x"; then
-  test -z "${ac_cv_func___fpending}"
+  test -z "${ac_cv_func___fpending}" || unset ac_cv_func___fpending
   ac_fn_c_check_func "$LINENO" "__fpending" "ac_cv_func___fpending"
 if test "x$ac_cv_func___fpending" = xyes
 then :
@@ -31829,7 +31829,7 @@ fi
 
 fi
 if test "x${ac_cv_func_ftruncate}" = "x"; then
-  test -z "${ac_cv_func_ftruncate}"
+  test -z "${ac_cv_func_ftruncate}" || unset ac_cv_func_ftruncate
   ac_fn_c_check_func "$LINENO" "ftruncate" "ac_cv_func_ftruncate"
 if test "x$ac_cv_func_ftruncate" = xyes
 then :
@@ -31839,7 +31839,7 @@ fi
 
 fi
 if test "x${ac_cv_func_getdelim}" = "x"; then
-  test -z "${ac_cv_func_getdelim}"
+  test -z "${ac_cv_func_getdelim}" || unset ac_cv_func_getdelim
   ac_fn_c_check_func "$LINENO" "getdelim" "ac_cv_func_getdelim"
 if test "x$ac_cv_func_getdelim" = xyes
 then :
@@ -31849,7 +31849,7 @@ fi
 
 fi
 if test "x${ac_cv_func_getline}" = "x"; then
-  test -z "${ac_cv_func_getline}"
+  test -z "${ac_cv_func_getline}" || unset ac_cv_func_getline
   ac_fn_c_check_func "$LINENO" "getline" "ac_cv_func_getline"
 if test "x$ac_cv_func_getline" = xyes
 then :
@@ -31859,7 +31859,7 @@ fi
 
 fi
 if test "x${ac_cv_func_strndup}" = "x"; then
-  test -z "${ac_cv_func_strndup}"
+  test -z "${ac_cv_func_strndup}" || unset ac_cv_func_strndup
   ac_fn_c_check_func "$LINENO" "strndup" "ac_cv_func_strndup"
 if test "x$ac_cv_func_strndup" = xyes
 then :
@@ -31869,7 +31869,7 @@ fi
 
 fi
 if test "x${ac_cv_func_unlinkat}" = "x"; then
-  test -z "${ac_cv_func_unlinkat}"
+  test -z "${ac_cv_func_unlinkat}" || unset ac_cv_func_unlinkat
   ac_fn_c_check_func "$LINENO" "unlinkat" "ac_cv_func_unlinkat"
 if test "x$ac_cv_func_unlinkat" = xyes
 then :

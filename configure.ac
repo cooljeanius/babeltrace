@@ -1,6 +1,7 @@
 dnl#                                               -*- Autoconf -*-
 dnl# Process this file with autoconf to produce a configure script.
 
+AC_PREREQ([2.50])
 AC_INIT([babeltrace],[1.2.2],[mathieu dot desnoyers at efficios dot com])
 
 # Following the numbering scheme proposed by libtool for the library
@@ -11,7 +12,7 @@ AC_SUBST([BABELTRACE_LIBRARY_VERSION],[1:0:0])dnl
 AC_CONFIG_AUX_DIR([config])dnl
 AC_CANONICAL_TARGET dnl# also checks the "_HOST" version
 gl_USE_SYSTEM_EXTENSIONS
-AM_INIT_AUTOMAKE([1.9 gnits dist-bzip2 no-dist-gzip])
+AM_INIT_AUTOMAKE([1.10 gnits dist-bzip2 no-dist-gzip])
 export USE_MAINTAINER_MODE=no
 if test -d .git; then
   AM_MAINTAINER_MODE([enable])
@@ -48,6 +49,7 @@ if test "x${ac_cv_prog_make_make_set}" = "x"; then
 fi
 AC_PROG_CXX
 LT_INIT([win32-dll dlopen])dnl
+LT_PREREQ([2.2])dnl
 AC_DEFUN([AC_REQUIRE_RANLIB],[
   AC_REQUIRE([AC_PROG_RANLIB])dnl
 ])
@@ -480,31 +482,31 @@ gl_FUNC_GLIBC_UNLOCKED_IO
 
 # Keep autoscan from complaining about functions we replace.
 if test "x${ac_cv_func_euidaccess}" = "x"; then
-  test -z "${ac_cv_func_euidaccess}"
+  test -z "${ac_cv_func_euidaccess}" || unset ac_cv_func_euidaccess
   AC_CHECK_FUNCS([euidaccess])
 fi
 if test "x${ac_cv_func___fpending}" = "x"; then
-  test -z "${ac_cv_func___fpending}"
+  test -z "${ac_cv_func___fpending}" || unset ac_cv_func___fpending
   AC_CHECK_FUNCS([__fpending])
 fi
 if test "x${ac_cv_func_ftruncate}" = "x"; then
-  test -z "${ac_cv_func_ftruncate}"
+  test -z "${ac_cv_func_ftruncate}" || unset ac_cv_func_ftruncate
   AC_CHECK_FUNCS([ftruncate])
 fi
 if test "x${ac_cv_func_getdelim}" = "x"; then
-  test -z "${ac_cv_func_getdelim}"
+  test -z "${ac_cv_func_getdelim}" || unset ac_cv_func_getdelim
   AC_CHECK_FUNCS([getdelim])
 fi
 if test "x${ac_cv_func_getline}" = "x"; then
-  test -z "${ac_cv_func_getline}"
+  test -z "${ac_cv_func_getline}" || unset ac_cv_func_getline
   AC_CHECK_FUNCS([getline])
 fi
 if test "x${ac_cv_func_strndup}" = "x"; then
-  test -z "${ac_cv_func_strndup}"
+  test -z "${ac_cv_func_strndup}" || unset ac_cv_func_strndup
   AC_CHECK_FUNCS([strndup])
 fi
 if test "x${ac_cv_func_unlinkat}" = "x"; then
-  test -z "${ac_cv_func_unlinkat}"
+  test -z "${ac_cv_func_unlinkat}" || unset ac_cv_func_unlinkat
   AC_CHECK_FUNCS([unlinkat])
 fi
 
