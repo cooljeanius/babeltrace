@@ -1,13 +1,14 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.69])
+AC_PREREQ([2.72])
 AC_INIT([FULL-PACKAGE-NAME], [VERSION], [BUG-REPORT-ADDRESS])
 AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_HEADERS([config.h])
 
 # Checks for programs.
 AC_PROG_CXX
+AC_PROG_AR
 AC_PROG_AWK
 AC_PROG_CC
 AC_PROG_CPP
@@ -17,26 +18,26 @@ AC_PROG_MAKE_SET
 AC_PROG_RANLIB
 
 # Checks for libraries.
-# FIXME: Replace `main' with a function in `-lc':
+# FIXME: Replace 'main' with a function in '-lc':
 AC_CHECK_LIB([c], [main])
-# FIXME: Replace `main' with a function in `-liconv':
+# FIXME: Replace 'main' with a function in '-liconv':
 AC_CHECK_LIB([iconv], [main])
-# FIXME: Replace `main' with a function in `-lintl':
+# FIXME: Replace 'main' with a function in '-lintl':
 AC_CHECK_LIB([intl], [main])
-# FIXME: Replace `main' with a function in `-lole32':
+# FIXME: Replace 'main' with a function in '-lole32':
 AC_CHECK_LIB([ole32], [main])
-# FIXME: Replace `main' with a function in `-lpopt':
+# FIXME: Replace 'main' with a function in '-lpopt':
 AC_CHECK_LIB([popt], [main])
-# FIXME: Replace `main' with a function in `-lpthread':
+# FIXME: Replace 'main' with a function in '-lpthread':
 AC_CHECK_LIB([pthread], [main])
-# FIXME: Replace `main' with a function in `-lrpcrt4':
+# FIXME: Replace 'main' with a function in '-lrpcrt4':
 AC_CHECK_LIB([rpcrt4], [main])
-# FIXME: Replace `main' with a function in `-luuid':
+# FIXME: Replace 'main' with a function in '-luuid':
 AC_CHECK_LIB([uuid], [main])
 
 # Checks for header files.
 AC_FUNC_ALLOCA
-AC_CHECK_HEADERS([OS.h fcntl.h float.h inttypes.h langinfo.h libintl.h limits.h locale.h mach/mach.h malloc.h netdb.h netinet/in.h stddef.h stdint.h stdio_ext.h stdlib.h string.h sys/mount.h sys/param.h sys/socket.h sys/statfs.h sys/statvfs.h unistd.h wchar.h wctype.h])
+AC_CHECK_HEADERS([OS.h fcntl.h inttypes.h langinfo.h libintl.h mach/mach.h malloc.h netdb.h netinet/in.h stdint.h stdio_ext.h sys/mount.h sys/param.h sys/socket.h sys/statfs.h sys/statvfs.h unistd.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_CHECK_HEADER_STDBOOL

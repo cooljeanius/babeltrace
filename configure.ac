@@ -20,6 +20,7 @@ else
 fi
 AC_SUBST([USE_MAINTAINER_MODE])dnl
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])dnl
+  ## need newline:
 AM_CONDITIONAL([PASS_ON_SILENT_RULES],
                [test ${AM_DEFAULT_VERBOSITY} = 0])
 
@@ -56,6 +57,21 @@ if test "x${RANLIB}" = "x"; then
 else
   test ! -z "${RANLIB}" && export RANLIB
   AC_SUBST([RANLIB])
+fi
+if test "x${AR}" = "x"; then
+  test -z "${AR}" || unset AR
+  AC_CHECK_TOOLS([AR],[ar gar])dnl
+  ## might want to switch around these checks...
+  if test "x${ac_cv_prog_AR}" = "x"; then
+    test -z "${ac_cv_prog_AR}" || unset ac_cv_prog_AR
+    m4_ifdef([AC_PROG_AR],[
+      AC_PROG_AR
+    ],[
+      test -x "`which ar`" && echo "first ar in path is `which ar`"
+    ])
+  fi
+else
+  test -n "${AR}" && export AR
 fi
 AC_PROG_YACC
 AM_PROG_LEX
@@ -165,26 +181,42 @@ AC_CHECK_HEADERS([OS.h argz.h bits/wordsize.h endian.h errno.h \
                   libkern/OSByteOrder.h limits.h mach/mach.h \
                   machine/endian.h malloc.h malloc/malloc.h \
                   netdb.h netinet/in.h osreldate.h portable_endian.h \
-                  shlib-compat.h stddef.h stdio.h sys/endian.h \
-                  sys/mount.h sys/mman.h sys/socket.h \
-                  sys/statfs.h sys/statvfs.h winsock2.h wctype.h])dnl
+                  shlib-compat.h stddef.h sys/endian.h sys/mount.h \
+                  sys/mman.h sys/socket.h sys/statfs.h sys/statvfs.h \
+                  winsock2.h wctype.h])dnl
 
 # Keep autoscan from complaining about headers we check in other ways.
+if test "x${ac_cv_header_inttypes_h}" = "x"; then
+  test -z "${ac_cv_header_inttypes_h}" || unset ac_cv_header_inttypes_h
+  AC_CHECK_HEADERS([inttypes.h])
+fi
 if test "x${ac_cv_header_locale_h}" = "x"; then
-  test -z "${ac_cv_header_locale_h}"
+  test -z "${ac_cv_header_locale_h}" || unset ac_cv_header_locale_h
   AC_CHECK_HEADERS([locale.h])
 fi
+if test "x${ac_cv_header_stdio_h}" = "x"; then
+  test -z "${ac_cv_header_stdio_h}" || unset ac_cv_header_stdio_h
+  AC_CHECK_HEADERS([stdio.h])
+fi
 if test "x${ac_cv_header_stdio_ext_h}" = "x"; then
-  test -z "${ac_cv_header_stdio_ext_h}"
+  test -z "${ac_cv_header_stdio_ext_h}" || unset ac_cv_header_stdio_ext_h
   AC_CHECK_HEADERS([stdio_ext.h])
 fi
+if test "x${ac_cv_header_stdint_h}" = "x"; then
+  test -z "${ac_cv_header_stdint_h}" || unset ac_cv_header_stdint_h
+  AC_CHECK_HEADERS([stdint.h])
+fi
 if test "x${ac_cv_header_sys_param_h}" = "x"; then
-  test -z "${ac_cv_header_sys_param_h}"
+  test -z "${ac_cv_header_sys_param_h}" || unset ac_cv_header_sys_param_h
   AC_CHECK_HEADERS([sys/param.h])
 fi
 if test "x${ac_cv_header_wchar_h}" = "x"; then
-  test -z "${ac_cv_header_wchar_h}"
+  test -z "${ac_cv_header_wchar_h}" || unset ac_cv_header_wchar_h
   AC_CHECK_HEADERS([wchar.h])
+fi
+if test "x${ac_cv_header_unistd_h}" = "x"; then
+  test -z "${ac_cv_header_unistd_h}" || unset ac_cv_header_unistd_h
+  AC_CHECK_HEADERS([unistd.h])
 fi
 
 # Checks for headers that gnulib can replace (libcompat here).
@@ -269,12 +301,17 @@ AC_CHECK_FUNCS([__argz_count __argz_next __argz_stringify atexit \
                 ftruncate64 fstatfs fstatfs64 fstat64 fxstat64 \
                 getcwd gethostbyname gethostname gettimeofday \
                 htobe32 htobe64 iswprint localeconv localtime_r \
-                mblen mbrlen memchr mempcpy memset mkdir munmap \
+                lstatat mblen mbrlen memchr mempcpy memset mkdir munmap \
                 nl_langinfo open posix_fallocate pread64 pwrite64 rmdir \
                 send setenv setlocale socket statfs statfs64 stpcpy \
                 strcasecmp strcspn strchr strdup strerror strrchr \
                 strspn strstr strtoul strtoull sysconf tzset \
                 uname uuid_compare])dnl
+
+if test "x${ac_cv_func_getpagesize}" = "x"; then
+  test -z "${ac_cv_func_getpagesize}" || unset ac_cv_func_getpagesize
+  AC_CHECK_FUNCS([getpagesize])
+fi
 
 # Checks for functions from gnulib (libcompat here).
 gl_FUNC_ALLOCA
@@ -780,6 +817,8 @@ warnings_to_skip="${warnings_to_skip} -Wshadow"     # too many with old gcc
 warnings_to_skip="${warnings_to_skip} -Wunreachable-code"     # often wrong
 warnings_to_skip="${warnings_to_skip} -Wtype-limits" # triggered on purpose
 warnings_to_skip="${warnings_to_skip} -Wbad-function-cast"             # ok
+warnings_to_skip="${warnings_to_skip} -Wchkp"         # no longer supported
+warnings_to_skip="${warnings_to_skip} -Wabi"    # requires a numerical arg.
 if test "x${CLANGCC}" = "xyes"; then
   warnings_to_skip="${warnings_to_skip} -Wcast-align"   # I use casts a lot
   warnings_to_skip="${warnings_to_skip} -Wvariadic-macros"   # too pedantic

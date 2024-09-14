@@ -24,7 +24,7 @@ dnl# CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 dnl# TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 dnl# SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# serial 119
+# serial 120
 # (serial is the first two fields of the version, with the period removed)
 
 # XORG_MACROS_VERSION([required-version])
@@ -1531,7 +1531,9 @@ AC_LANG_CASE([C],[
   AC_REQUIRE([AC_PROG_CXX])
 ])dnl
 AC_CHECK_DECL([__clang__],[CLANGCC="yes"],[CLANGCC="no"])dnl
+  ## need newline:
 AC_CHECK_DECL([__INTEL_COMPILER],[INTELCC="yes"],[INTELCC="no"])dnl
+  ## need newline:
 AC_CHECK_DECL([__SUNPRO_C],[SUNCC="yes"],[SUNCC="no"])dnl
 ])dnl# XORG_COMPILER_BRAND
 
