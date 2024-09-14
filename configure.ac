@@ -14,7 +14,7 @@ AC_CANONICAL_TARGET dnl# also checks the "_HOST" version
 gl_USE_SYSTEM_EXTENSIONS
 AM_INIT_AUTOMAKE([1.10 gnits dist-bzip2 no-dist-gzip])
 export USE_MAINTAINER_MODE=no
-if test -d .git; then
+if test -d .git && test "x${GITHUB_ACTIONS}" != "xtrue"; then
   AM_MAINTAINER_MODE([enable])
 else
   AM_MAINTAINER_MODE

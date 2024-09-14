@@ -6355,7 +6355,7 @@ fi
 
 
 export USE_MAINTAINER_MODE=no
-if test -d .git; then
+if test -d .git && test "x${GITHUB_ACTIONS}" != "xtrue"; then
 
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether to enable maintainer-specific portions of Makefiles" >&5
 printf %s "checking whether to enable maintainer-specific portions of Makefiles... " >&6; }
