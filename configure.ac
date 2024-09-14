@@ -270,6 +270,7 @@ AC_CHECK_TYPES([off64_t],[
     _AC_CHECK_TYPE_OLD([off64_t],[long int])
   fi
 ])dnl
+gl_PROMOTED_TYPE_MODE_T
 AC_CHECK_TYPES([ptrdiff_t])dnl
 AC_TYPE_SIZE_T
 AC_TYPE_SSIZE_T

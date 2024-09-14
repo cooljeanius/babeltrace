@@ -27458,6 +27458,39 @@ fi
  ;;
 esac
 fi
+
+    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for promoted mode_t type" >&5
+printf %s "checking for promoted mode_t type... " >&6; }
+if test ${gl_cv_promoted_mode_t+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e)
+                    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <sys/types.h>
+int
+main (void)
+{
+typedef int array[(2 * (sizeof(mode_t) < sizeof(int)) - 1)];
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"
+then :
+  gl_cv_promoted_mode_t='int'
+else case e in #(
+  e) gl_cv_promoted_mode_t='mode_t' ;;
+esac
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext   ;;
+esac
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $gl_cv_promoted_mode_t" >&5
+printf "%s\n" "$gl_cv_promoted_mode_t" >&6; }
+printf "%s\n" "#define PROMOTED_MODE_T ${gl_cv_promoted_mode_t}" >>confdefs.h
+
 ac_fn_c_check_type "$LINENO" "ptrdiff_t" "ac_cv_type_ptrdiff_t" "$ac_includes_default"
 if test "x$ac_cv_type_ptrdiff_t" = xyes
 then :
@@ -30770,39 +30803,6 @@ esac
   *) LIBOBJS="$LIBOBJS openat-proc.$ac_objext"
  ;;
 esac
-
-    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for promoted mode_t type" >&5
-printf %s "checking for promoted mode_t type... " >&6; }
-if test ${gl_cv_promoted_mode_t+y}
-then :
-  printf %s "(cached) " >&6
-else case e in #(
-  e)
-                    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#include <sys/types.h>
-int
-main (void)
-{
-typedef int array[(2 * (sizeof(mode_t) < sizeof(int)) - 1)];
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_compile "$LINENO"
-then :
-  gl_cv_promoted_mode_t='int'
-else case e in #(
-  e) gl_cv_promoted_mode_t='mode_t' ;;
-esac
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext   ;;
-esac
-fi
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $gl_cv_promoted_mode_t" >&5
-printf "%s\n" "$gl_cv_promoted_mode_t" >&6; }
-printf "%s\n" "#define PROMOTED_MODE_T ${gl_cv_promoted_mode_t}" >>confdefs.h
-
 
 
   :
